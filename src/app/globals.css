@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: var(--font-playfair), serif;
+  --font-mono: var(--font-jetbrains), monospace;
+  --color-bg: #1a1412;
+  --color-bg-card: #2a2218;
+  --color-ochre: #c4a862;
+  --color-text: #e8e0d4;
+  --color-ascii: #b8ad9e;
+}
