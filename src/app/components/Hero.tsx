@@ -86,6 +86,9 @@ export function Hero() {
 
       {/* Install block — anchored to bottom */}
       <div className="absolute bottom-[100px] md:bottom-[124px] left-0 right-0 z-10 text-center pointer-events-none px-4 md:px-0">
+        <p className="mb-4 font-mono text-sm text-[#e8dfcc] drop-shadow">
+          Copy this to your agent
+        </p>
         <InstallBlock />
       </div>
     </section>
