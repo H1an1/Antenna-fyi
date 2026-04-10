@@ -50,7 +50,7 @@ export function Hero() {
         style={{ transform: `translateX(${offset}px)` }}
       >
         {/* Mobile scale wrapper */}
-        <div className="absolute inset-0 scale-[0.55] origin-right md:scale-100">
+        <div className="absolute inset-0 scale-[0.55] origin-right -translate-x-[40px] md:scale-100 md:translate-x-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/hand-wash.png"
