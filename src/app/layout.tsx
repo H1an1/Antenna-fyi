@@ -39,7 +39,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${cormorant.variable} ${jetbrains.variable}`}>
-      <body className="bg-[#1a1412] text-[#e8e0d4] antialiased">
+      <body className="bg-[#1a1412] text-[#e8e0d4] antialiased overflow-x-hidden">
         {children}
       </body>
     </html>

@@ -49,8 +49,10 @@ export function Hero() {
         className="absolute inset-0 pointer-events-none will-change-transform"
         style={{ transform: `translateX(${offset}px)` }}
       >
-        {/* Mobile scale wrapper */}
-        <div className="absolute inset-0 scale-[0.55] origin-right -translate-x-[40px] md:scale-100 md:translate-x-0">
+        {/* On mobile: container extends to 180vw wide, shifted left so
+            the hand region (~right half of 2048px image) lands on screen.
+            On desktop: normal inset-0. */}
+        <div className="absolute top-0 bottom-0 w-[180vw] -left-[50vw] md:w-full md:left-0 md:right-0 scale-[0.5] md:scale-100 origin-center md:origin-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/hand-wash.png"
