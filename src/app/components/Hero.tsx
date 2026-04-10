@@ -22,7 +22,7 @@ export function Hero() {
 
   return (
     <section
-      className="relative h-screen w-full overflow-hidden z-[1]"
+      className="relative h-screen w-full overflow-y-hidden z-[1]"
       style={{
         backgroundColor: "#1a1412",
         backgroundImage: "url(/hand-bg.png)",
@@ -36,9 +36,9 @@ export function Hero() {
       <img
         src="/lefthand.png"
         alt=""
-        className="absolute pointer-events-none will-change-transform w-[65%] md:w-[45%]"
+        className="absolute pointer-events-none will-change-transform w-[80%] md:w-[45%]"
         style={{
-          left: "calc(2% + 40px)",
+          left: "calc(2% + 0px)",
           top: "calc(18% + 100px)",
           height: "auto",
           transform: `translateX(${-offset}px)`,
@@ -47,7 +47,7 @@ export function Hero() {
 
       {/* Right ASCII hand group: wash + dynamic characters */}
       <div
-        className="absolute inset-0 pointer-events-none will-change-transform scale-[0.45] origin-right -translate-x-[140px] md:scale-100 md:translate-x-0"
+        className="absolute inset-0 pointer-events-none will-change-transform scale-[0.45] origin-right -translate-x-[100px] md:scale-100 md:translate-x-0"
         style={{ transform: `translateX(${offset}px)` }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
