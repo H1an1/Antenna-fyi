@@ -1,43 +1,89 @@
-import Image from "next/image";
-import { AsciiHand } from "./AsciiHand";
+"use client";
+
+import { useEffect, useState } from "react";
+import { DynamicAsciiHand } from "./DynamicAsciiHand";
+import ScrambledText from "./ScrambledText";
+import { InstallBlock } from "./InstallBlock";
+
+const DISPLACEMENT = 80; // initial offset in px
+const SCROLL_RANGE = 400; // scroll px over which hands converge
 
 export function Hero() {
-  return (
-    <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden bg-[#1a1412]">
-      {/* Hands composition */}
-      <div className="flex items-center justify-center w-full max-w-6xl px-4 gap-0">
-        {/* Oil painting hand */}
-        <div className="relative w-1/2 flex justify-end">
-          <Image
-            src="/hand.jpg"
-            alt="Renaissance hand reaching out"
-            width={800}
-            height={450}
-            className="object-contain max-h-[50vh]"
-            preload
-          />
-        </div>
+  const [offset, setOffset] = useState(DISPLACEMENT);
 
-        {/* ASCII hand */}
-        <div className="w-1/2 flex justify-start -ml-4 overflow-hidden">
-          <AsciiHand />
-        </div>
+  useEffect(() => {
+    const onScroll = () => {
+      const progress = Math.min(window.scrollY / SCROLL_RANGE, 1);
+      setOffset(DISPLACEMENT * (1 - progress));
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <section
+      className="relative h-screen w-full overflow-hidden z-[1]"
+      style={{
+        backgroundColor: "#1a1412",
+        backgroundImage: "url(/hand-bg.png)",
+        backgroundSize: "cover",
+        backgroundPosition: "center center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      {/* Oil painting left hand */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/lefthand.png"
+        alt=""
+        className="absolute pointer-events-none will-change-transform"
+        style={{
+          left: "calc(2% + 40px)",
+          top: "calc(18% + 100px)",
+          width: "45%",
+          height: "auto",
+          transform: `translateX(${-offset}px)`,
+        }}
+      />
+
+      {/* Right ASCII hand group: wash + dynamic characters */}
+      <div
+        className="absolute inset-0 pointer-events-none will-change-transform"
+        style={{ transform: `translateX(${offset}px)` }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/hand-wash.png"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <DynamicAsciiHand />
       </div>
 
-      {/* Text overlay */}
-      <div className="mt-8 text-center">
-        <h1 className="font-serif text-5xl md:text-7xl tracking-tight text-[#e8e0d4]">
-          Antenna
-        </h1>
-        <p className="mt-4 font-mono text-sm md:text-base text-[#b8ad9e] max-w-md mx-auto">
-          AI-powered social discovery. Find interesting people nearby.
-        </p>
-        <a
-          href="#download"
-          className="mt-8 inline-block px-8 py-3 border border-[#c4a862] text-[#c4a862] font-mono text-sm hover:bg-[#c4a862] hover:text-[#1a1412] transition-colors"
+      {/* Scanline + flicker overlay */}
+      <div className="absolute inset-0 pointer-events-none scanline-overlay" />
+
+      {/* Title */}
+      <div className="absolute top-[60px] md:top-[84px] left-0 right-0 z-10 pointer-events-none text-center">
+        <ScrambledText
+          className="antenna-scramble"
+          radius={70}
+          duration={1.1}
+          speed={0.55}
+          scrambleChars=".:"
         >
-          Get Antenna
-        </a>
+          Antenna
+        </ScrambledText>
+        <p className="mt-3 font-mono text-sm md:text-base text-[#e8dfcc] max-w-md mx-auto drop-shadow leading-relaxed">
+          AI-powered social discovery.
+          <br />
+          Find interesting people nearby.
+        </p>
+      </div>
+
+      {/* Install block — anchored to bottom */}
+      <div className="absolute bottom-[108px] md:bottom-[124px] left-0 right-0 z-10 text-center pointer-events-none">
+        <InstallBlock />
       </div>
     </section>
   );

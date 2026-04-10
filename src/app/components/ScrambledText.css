@@ -1,0 +1,25 @@
+.text-block {
+  font-family: monospace;
+  color: #fff;
+}
+
+.text-block p {
+  margin: 0;
+}
+
+.char {
+  will-change: transform;
+  display: inline-block;
+}
+
+/* Antenna hero heading — large Cormorant, white-cream, centered. */
+.antenna-scramble {
+  font-family: var(--font-cormorant), serif;
+  font-size: clamp(3rem, 9vw, 8rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #e8e0d4;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+  pointer-events: auto;
+  cursor: default;
+}
