@@ -59,8 +59,8 @@ export function InstallBlock() {
       </div>
 
       {/* Command + copy */}
-      <div className="flex items-center justify-between gap-4 px-5 py-3">
-        <code className="font-mono text-[11px] md:text-[13px] text-[#e8dfcc] select-all whitespace-nowrap overflow-x-auto">
+      <div className="flex items-start justify-between gap-3 px-5 py-3">
+        <code className="font-mono text-[11px] md:text-[13px] text-[#e8dfcc] select-all break-words whitespace-normal md:whitespace-nowrap">
           {COMMANDS[active]}
         </code>
         <button

@@ -67,7 +67,7 @@ export function Hero() {
       <div className="absolute inset-0 pointer-events-none scanline-overlay" />
 
       {/* Title */}
-      <div className="absolute top-[60px] md:top-[84px] left-0 right-0 z-10 pointer-events-none text-center">
+      <div className="absolute top-[80px] md:top-[84px] left-0 right-0 z-10 pointer-events-none text-center">
         <ScrambledText
           className="antenna-scramble"
           radius={70}
@@ -85,7 +85,7 @@ export function Hero() {
       </div>
 
       {/* Install block — anchored to bottom */}
-      <div className="absolute bottom-[60px] md:bottom-[124px] left-0 right-0 z-10 text-center pointer-events-none px-4 md:px-0">
+      <div className="absolute bottom-[100px] md:bottom-[124px] left-0 right-0 z-10 text-center pointer-events-none px-4 md:px-0">
         <InstallBlock />
       </div>
     </section>
