@@ -17,7 +17,19 @@ const jetbrains = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Antenna — Discover Interesting People Nearby",
   description:
-    "AI-powered social discovery. Find interesting people within 500 meters. Privacy-first, ephemeral connections.",
+    "AI-powered social discovery. Your agent finds people worth meeting within 500 meters. Privacy-first, ephemeral, gone in 24 hours.",
+  openGraph: {
+    title: "Antenna — Discover Interesting People Nearby",
+    description: "Your AI agent finds people worth meeting. Privacy-first, ephemeral connections that disappear in 24 hours.",
+    url: "https://www.antenna.fyi",
+    siteName: "Antenna",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Antenna — AI-Powered Social Discovery",
+    description: "Your agent finds interesting people nearby. Gone in 24 hours.",
+  },
 };
 
 export default function RootLayout({

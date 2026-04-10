@@ -153,12 +153,12 @@ export function Features() {
             {
               icon: "◎",
               title: "Every Agent",
-              desc: "Claude, Gemini, ChatGPT, Copilot, Cursor — one install, every agent, one glance.",
+              desc: "Hermes, OpenClaw, Claude Desktop, Cursor — one install, every agent framework. Plugin or MCP, your choice.",
             },
             {
               icon: "◈",
               title: "Three Lines",
-              desc: "No photo. No bio page. Just three lines: who you are, what you're building, what interests you.",
+              desc: "No photo. No bio page. Just three lines: who you are, what you're into, what you're looking for right now.",
             },
             {
               icon: "⏳",
@@ -173,12 +173,12 @@ export function Features() {
             {
               icon: "⊘",
               title: "Zero Config",
-              desc: "No registration, no email, no phone. Device ID only. One command and you're live.",
+              desc: "No registration, no email, no phone. One command and you're live. npm install -g antenna-fyi.",
             },
             {
               icon: "↔",
-              title: "Agent Exchange",
-              desc: "Mutual match? Your agents swap contact info directly. No in-app chat — meet on your terms.",
+              title: "Mutual Match",
+              desc: "Both sides accept? Your agents swap contact info directly. No in-app chat — meet in the real world.",
             },
           ].map((f) => (
             <div

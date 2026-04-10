@@ -14,15 +14,13 @@ export function Footer() {
           <span>H1an1</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <a href="#" className="hover:text-[#c4a862] transition-colors">GitHub</a>
+          <a href="https://github.com/H1an1/Antenna-fyi" className="hover:text-[#c4a862] transition-colors">GitHub</a>
+          <span>·</span>
+          <a href="https://www.npmjs.com/package/antenna-fyi" className="hover:text-[#c4a862] transition-colors">npm</a>
           <span>·</span>
           <a href="#" className="hover:text-[#c4a862] transition-colors">Discord</a>
           <span>·</span>
-          <a href="#" className="hover:text-[#c4a862] transition-colors">WeChat</a>
-          <span>·</span>
           <a href="#" className="hover:text-[#c4a862] transition-colors">Privacy</a>
-          <span>·</span>
-          <a href="#" className="hover:text-[#c4a862] transition-colors">Terms</a>
         </div>
       </div>
     </footer>

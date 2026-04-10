@@ -5,10 +5,10 @@ import { useState, useCallback } from "react";
 const MANAGERS = ["pnpm", "npm", "yarn", "bun"] as const;
 
 const COMMANDS: Record<(typeof MANAGERS)[number], string> = {
-  pnpm: "pnpx antenna-init",
-  npm: "npx antenna-init",
-  yarn: "yarn dlx antenna-init",
-  bun: "bunx antenna-init",
+  pnpm: "pnpm add -g antenna-fyi",
+  npm: "npm install -g antenna-fyi",
+  yarn: "yarn global add antenna-fyi",
+  bun: "bun add -g antenna-fyi",
 };
 
 export function InstallBlock() {
@@ -28,7 +28,7 @@ export function InstallBlock() {
         backgroundColor: "rgba(26, 20, 18, 0.85)",
         border: "1px solid rgba(184, 173, 158, 0.15)",
         borderRadius: "0",
-        minWidth: "420px",
+        minWidth: "min(420px, 90vw)",
         backdropFilter: "blur(8px)",
       }}
     >
