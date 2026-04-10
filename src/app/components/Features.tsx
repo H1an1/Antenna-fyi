@@ -153,7 +153,7 @@ export function Features() {
             {
               icon: "◎",
               title: "Every Agent",
-              desc: "Hermes, OpenClaw, Claude Desktop, Cursor — one install, every agent framework. Plugin or MCP, your choice.",
+              desc: "Works with any AI agent — OpenClaw, Hermes, Claude, or your own. One install.",
             },
             {
               icon: "◈",
@@ -173,7 +173,7 @@ export function Features() {
             {
               icon: "⊘",
               title: "Zero Config",
-              desc: "No registration, no email, no phone. One command and you're live. npm install -g antenna-fyi.",
+              desc: "No signup. No app. One command and your agent handles the rest.",
             },
             {
               icon: "↔",
