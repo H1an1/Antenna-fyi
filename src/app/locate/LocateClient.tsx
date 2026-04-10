@@ -53,14 +53,22 @@ export default function LocateClient() {
       const lat = Math.round(pos.coords.latitude * 1000) / 1000;
       const lng = Math.round(pos.coords.longitude * 1000) / 1000;
 
+      // Update profile location
       sb.rpc("upsert_profile_location", {
         p_device_id: deviceId,
         p_lng: lng,
         p_lat: lat,
       }).then(({ error: err }) => {
-        if (err) {
-          console.error("Location update failed:", err);
-        } else {
+        if (err) console.error("Location update failed:", err);
+      });
+
+      // Notify agent via location_events (Realtime)
+      sb.rpc("insert_location_event", {
+        p_device_id: deviceId,
+        p_lat: lat,
+        p_lng: lng,
+      }).then(({ error: err }) => {
+        if (!err) {
           setLastUpdate(new Date().toLocaleTimeString());
           setStatus("tracking");
         }
