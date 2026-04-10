@@ -12,7 +12,7 @@ export function Features() {
         <img
           src="/lefthand.png"
           alt=""
-          className="absolute pointer-events-none"
+          className="absolute pointer-events-none hidden md:block"
           style={{
             left: 0,
             top: "50%",
@@ -22,7 +22,7 @@ export function Features() {
           }}
         />
 
-        <div className="relative ml-auto w-full md:w-[65%] flex items-center justify-center py-24 px-6 md:pr-10">
+        <div className="relative ml-auto w-full md:w-[65%] flex items-center justify-center py-16 md:py-24 px-5 md:px-6 md:pr-10">
           <span
             className="absolute font-serif select-none pointer-events-none"
             style={{
@@ -73,9 +73,9 @@ export function Features() {
 
       {/* ── Section 2: HOW ── left card + right hand ── */}
       <ScrollReveal className="relative min-h-screen w-full overflow-hidden flex items-center" style={{ backgroundColor: "transparent" }}>
-        {/* Right ASCII hand group: wash + dynamic characters */}
+        {/* Right ASCII hand group: wash + dynamic characters — hidden on mobile */}
         <div
-          className="absolute pointer-events-none"
+          className="absolute pointer-events-none hidden md:block"
           style={{
             top: "calc(5% - 150px)",
             right: "0",
@@ -92,7 +92,7 @@ export function Features() {
           <DynamicAsciiHand />
         </div>
 
-        <div className="relative mr-auto w-full md:w-[65%] flex items-center justify-center py-24 px-6 md:pl-10" style={{ transform: "translateY(-150px)" }}>
+        <div className="relative mr-auto w-full md:w-[65%] flex items-center justify-center py-16 md:py-24 px-5 md:px-6 md:pl-10 md:-translate-y-[150px]">
           {/* HOW — large background text */}
           <span
             className="absolute font-serif select-none pointer-events-none"
@@ -145,7 +145,7 @@ export function Features() {
 
       {/* ── Section 3: Feature grid ── */}
       <ScrollReveal
-        className="relative w-full overflow-hidden px-6 md:px-12 pb-[300px]"
+        className="relative w-full overflow-hidden px-5 md:px-12 pb-[150px] md:pb-[300px]"
         style={{ backgroundColor: "transparent", marginTop: "-100px" }}
       >
         <div className="max-w-5xl mx-auto w-full grid grid-cols-1 md:grid-cols-3 gap-4">

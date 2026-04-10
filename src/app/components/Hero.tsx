@@ -31,12 +31,12 @@ export function Hero() {
         backgroundRepeat: "no-repeat",
       }}
     >
-      {/* Oil painting left hand */}
+      {/* Oil painting left hand — hidden on mobile, too cramped */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/lefthand.png"
         alt=""
-        className="absolute pointer-events-none will-change-transform"
+        className="absolute pointer-events-none will-change-transform hidden md:block"
         style={{
           left: "calc(2% + 40px)",
           top: "calc(18% + 100px)",
@@ -82,7 +82,7 @@ export function Hero() {
       </div>
 
       {/* Install block — anchored to bottom */}
-      <div className="absolute bottom-[108px] md:bottom-[124px] left-0 right-0 z-10 text-center pointer-events-none">
+      <div className="absolute bottom-[60px] md:bottom-[124px] left-0 right-0 z-10 text-center pointer-events-none px-4 md:px-0">
         <InstallBlock />
       </div>
     </section>
