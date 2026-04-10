@@ -48,7 +48,7 @@ export function Hero() {
 
       {/* Right ASCII hand group: wash + dynamic characters */}
       <div
-        className="absolute inset-0 pointer-events-none will-change-transform hidden md:block"
+        className="absolute inset-0 pointer-events-none will-change-transform scale-[0.6] origin-right md:scale-100"
         style={{ transform: `translateX(${offset}px)` }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
