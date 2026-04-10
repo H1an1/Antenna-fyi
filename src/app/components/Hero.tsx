@@ -36,9 +36,8 @@ export function Hero() {
       <img
         src="/lefthand.png"
         alt=""
-        className="absolute pointer-events-none will-change-transform w-[80%] md:w-[45%]"
+        className="absolute pointer-events-none will-change-transform w-[85%] left-[-30px] md:w-[45%] md:left-[calc(2%+40px)]"
         style={{
-          left: "calc(2% + 0px)",
           top: "calc(18% + 100px)",
           height: "auto",
           transform: `translateX(${-offset}px)`,
@@ -47,7 +46,7 @@ export function Hero() {
 
       {/* Right ASCII hand group: wash + dynamic characters */}
       <div
-        className="absolute inset-0 pointer-events-none will-change-transform scale-[0.45] origin-right -translate-x-[100px] md:scale-100 md:translate-x-0"
+        className="absolute inset-0 pointer-events-none will-change-transform scale-[0.55] origin-center translate-x-[15%] -translate-y-[5%] md:scale-100 md:translate-x-0 md:translate-y-0 md:origin-center"
         style={{ transform: `translateX(${offset}px)` }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
