@@ -36,7 +36,7 @@ export function Hero() {
       <img
         src="/lefthand.png"
         alt=""
-        className="absolute pointer-events-none will-change-transform w-[65%] left-[-90px] md:w-[45%] md:left-[calc(2%+40px)]"
+        className="absolute pointer-events-none will-change-transform w-[55%] left-[-90px] md:w-[45%] md:left-[calc(2%+40px)]"
         style={{
           top: "calc(18% + 100px)",
           height: "auto",
@@ -52,7 +52,7 @@ export function Hero() {
         {/* On mobile: container extends to 180vw wide, shifted left so
             the hand region (~right half of 2048px image) lands on screen.
             On desktop: normal inset-0. */}
-        <div className="absolute top-0 bottom-0 w-[250vw] -left-[85vw] -translate-y-[60px] md:w-full md:left-0 md:right-0 md:translate-y-0 scale-[0.42] md:scale-100 origin-center md:origin-center">
+        <div className="absolute top-0 bottom-0 w-[250vw] -left-[85vw] -translate-y-[60px] md:w-full md:left-0 md:right-0 md:translate-y-0 scale-[0.35] md:scale-100 origin-center md:origin-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/hand-wash.png"
