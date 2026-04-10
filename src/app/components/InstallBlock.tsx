@@ -2,17 +2,22 @@
 
 import { useState, useCallback } from "react";
 
-const MANAGERS = ["pnpm", "npm", "yarn", "bun"] as const;
+const PLATFORMS = ["npm", "OpenClaw", "Hermes"] as const;
 
-const COMMANDS: Record<(typeof MANAGERS)[number], string> = {
-  pnpm: "pnpm add -g antenna-fyi",
+const COMMANDS: Record<(typeof PLATFORMS)[number], string> = {
   npm: "npm install -g antenna-fyi",
-  yarn: "yarn global add antenna-fyi",
-  bun: "bun add -g antenna-fyi",
+  OpenClaw: "openclaw plugins install antenna-openclaw-plugin",
+  Hermes: "npm install -g antenna-fyi",
+};
+
+const NOTES: Record<(typeof PLATFORMS)[number], string> = {
+  npm: "CLI + MCP server for any agent",
+  OpenClaw: "Plugin + Skill, one step",
+  Hermes: "Auto-installs Plugin + Skill + deps",
 };
 
 export function InstallBlock() {
-  const [active, setActive] = useState<(typeof MANAGERS)[number]>("npm");
+  const [active, setActive] = useState<(typeof PLATFORMS)[number]>("npm");
   const [copied, setCopied] = useState(false);
 
   const handleCopy = useCallback(() => {
@@ -28,7 +33,7 @@ export function InstallBlock() {
         backgroundColor: "rgba(26, 20, 18, 0.85)",
         border: "1px solid rgba(184, 173, 158, 0.15)",
         borderRadius: "0",
-        minWidth: "min(420px, 90vw)",
+        minWidth: "min(460px, 90vw)",
         backdropFilter: "blur(8px)",
       }}
     >
@@ -37,7 +42,7 @@ export function InstallBlock() {
         className="flex gap-1 px-4 pt-3 pb-2"
         style={{ borderBottom: "1px solid rgba(184, 173, 158, 0.08)" }}
       >
-        {MANAGERS.map((m) => (
+        {PLATFORMS.map((m) => (
           <button
             key={m}
             onClick={() => setActive(m)}
@@ -54,8 +59,8 @@ export function InstallBlock() {
       </div>
 
       {/* Command + copy */}
-      <div className="flex items-center justify-between gap-4 px-5 py-4">
-        <code className="font-mono text-[13px] text-[#e8dfcc] select-all whitespace-nowrap">
+      <div className="flex items-center justify-between gap-4 px-5 py-3">
+        <code className="font-mono text-[13px] text-[#e8dfcc] select-all whitespace-nowrap overflow-x-auto">
           {COMMANDS[active]}
         </code>
         <button
@@ -78,6 +83,16 @@ export function InstallBlock() {
             </svg>
           )}
         </button>
+      </div>
+
+      {/* Note */}
+      <div
+        className="px-5 pb-3"
+        style={{ borderTop: "1px solid rgba(184, 173, 158, 0.05)" }}
+      >
+        <p className="font-mono text-[10px] text-[#b8ad9e]/60 pt-2">
+          {NOTES[active]}
+        </p>
       </div>
     </div>
   );
