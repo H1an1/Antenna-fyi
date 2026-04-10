@@ -11,16 +11,16 @@ export function Footer() {
         <div className="flex items-center gap-1.5">
           <span>&copy; 2026 Antenna</span>
           <span>·</span>
-          <span>H1an1</span>
+          <a href="mailto:hi@antenna.fyi" className="hover:text-[#c4a862] transition-colors">hi@antenna.fyi</a>
         </div>
         <div className="flex items-center gap-1.5">
-          <a href="https://github.com/H1an1/Antenna-fyi" className="hover:text-[#c4a862] transition-colors">GitHub</a>
+          <a href="https://github.com/H1an1" className="hover:text-[#c4a862] transition-colors">GitHub</a>
+          <span>·</span>
+          <a href="https://x.com/thisishan1_" className="hover:text-[#c4a862] transition-colors">@Yi</a>
           <span>·</span>
           <a href="https://www.npmjs.com/package/antenna-fyi" className="hover:text-[#c4a862] transition-colors">npm</a>
           <span>·</span>
-          <a href="#" className="hover:text-[#c4a862] transition-colors">Discord</a>
-          <span>·</span>
-          <a href="#" className="hover:text-[#c4a862] transition-colors">Privacy</a>
+          <a href="/privacy" className="hover:text-[#c4a862] transition-colors">Privacy</a>
         </div>
       </div>
     </footer>
