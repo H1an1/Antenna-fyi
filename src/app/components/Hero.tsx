@@ -36,7 +36,7 @@ export function Hero() {
       <img
         src="/lefthand.png"
         alt=""
-        className="absolute pointer-events-none will-change-transform w-[85%] left-[-30px] md:w-[45%] md:left-[calc(2%+40px)]"
+        className="absolute pointer-events-none will-change-transform w-[75%] left-[-50px] md:w-[45%] md:left-[calc(2%+40px)]"
         style={{
           top: "calc(18% + 100px)",
           height: "auto",
@@ -44,18 +44,21 @@ export function Hero() {
         }}
       />
 
-      {/* Right ASCII hand group: wash + dynamic characters */}
+      {/* Right ASCII hand group: scroll offset wrapper */}
       <div
-        className="absolute inset-0 pointer-events-none will-change-transform scale-[0.55] origin-center translate-x-[15%] -translate-y-[5%] md:scale-100 md:translate-x-0 md:translate-y-0 md:origin-center"
+        className="absolute inset-0 pointer-events-none will-change-transform"
         style={{ transform: `translateX(${offset}px)` }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/hand-wash.png"
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        <DynamicAsciiHand />
+        {/* Mobile scale wrapper */}
+        <div className="absolute inset-0 scale-[0.55] origin-right md:scale-100">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/hand-wash.png"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <DynamicAsciiHand />
+        </div>
       </div>
 
       {/* Scanline + flicker overlay */}
