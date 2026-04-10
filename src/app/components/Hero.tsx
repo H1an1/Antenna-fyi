@@ -52,7 +52,7 @@ export function Hero() {
         {/* On mobile: container extends to 180vw wide, shifted left so
             the hand region (~right half of 2048px image) lands on screen.
             On desktop: normal inset-0. */}
-        <div className="absolute top-0 bottom-0 w-[180vw] -left-[50vw] md:w-full md:left-0 md:right-0 scale-[0.5] md:scale-100 origin-center md:origin-center">
+        <div className="absolute top-0 bottom-0 w-[250vw] -left-[90vw] -translate-y-[20px] md:w-full md:left-0 md:right-0 md:translate-y-0 scale-[0.5] md:scale-100 origin-center md:origin-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/hand-wash.png"
