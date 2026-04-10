@@ -145,7 +145,7 @@ export function Features() {
 
       {/* ── Section 3: Feature grid ── */}
       <ScrollReveal
-        className="relative w-full overflow-hidden px-6 md:px-12 pb-[200px]"
+        className="relative w-full overflow-hidden px-6 md:px-12 pb-[300px]"
         style={{ backgroundColor: "transparent", marginTop: "-100px" }}
       >
         <div className="max-w-5xl mx-auto w-full grid grid-cols-1 md:grid-cols-3 gap-4">
