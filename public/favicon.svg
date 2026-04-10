@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <rect width="32" height="32" fill="#1a1412"/>
+  <text font-family="'Courier New', monospace" font-size="3.2" fill="#c4a862">
+    <tspan x="6" y="6">%$#</tspan>
+    <tspan x="5" y="8.5">@&amp;$#</tspan>
+    <tspan x="4" y="11">#*%&amp;$</tspan>
+    <tspan x="3" y="13.5">$@#%&amp;$</tspan>
+    <tspan x="4" y="16">%#@$&amp;</tspan>
+    <tspan x="6" y="18.5">$#@%</tspan>
+    <tspan x="7" y="21">#$@%</tspan>
+    <tspan x="6" y="23.5">@#$&amp;</tspan>
+    <tspan x="4" y="26">%$#@&amp;$</tspan>
+    <tspan x="3" y="28.5">@#%$&amp;*#</tspan>
+  </text>
+</svg>
