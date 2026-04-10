@@ -36,9 +36,9 @@ export function Hero() {
       <img
         src="/lefthand.png"
         alt=""
-        className="absolute pointer-events-none will-change-transform w-[55%] left-[-90px] md:w-[45%] md:left-[calc(2%+40px)]"
+        className="absolute pointer-events-none will-change-transform w-[55%] left-[-60px] md:w-[45%] md:left-[calc(2%+40px)]"
         style={{
-          top: "calc(18% + 100px)",
+          top: "calc(18% + 110px)",
           height: "auto",
           transform: `translateX(${-offset}px)`,
         }}
