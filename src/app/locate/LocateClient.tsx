@@ -18,7 +18,9 @@ export default function LocateClient() {
   const [status, setStatus] = useState<Status>("loading");
   const [deviceId, setDeviceId] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<string | null>(null);
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
   const watchRef = useRef<number | null>(null);
 
   // Verify token
@@ -39,63 +41,71 @@ export default function LocateClient() {
     });
   }, [token]);
 
-  // Start GPS tracking once we have device_id
-  const startTracking = useCallback(() => {
-    if (!deviceId) return;
+  const sendLocation = useCallback(
+    (lat: number, lng: number) => {
+      if (!deviceId) return;
+      const fLat = Math.round(lat * 1000) / 1000;
+      const fLng = Math.round(lng * 1000) / 1000;
 
-    if (!navigator.geolocation) {
-      setStatus("error");
-      setError("Geolocation not supported");
-      return;
-    }
-
-    const updateLocation = (pos: GeolocationPosition) => {
-      const lat = Math.round(pos.coords.latitude * 1000) / 1000;
-      const lng = Math.round(pos.coords.longitude * 1000) / 1000;
+      setCoords({ lat: fLat, lng: fLng });
 
       // Update profile location
       sb.rpc("upsert_profile_location", {
         p_device_id: deviceId,
-        p_lng: lng,
-        p_lat: lat,
+        p_lng: fLng,
+        p_lat: fLat,
       }).then(({ error: err }) => {
         if (err) console.error("Location update failed:", err);
       });
 
-      // Notify agent via location_events (Realtime)
+      // Notify agent via location_events
       sb.rpc("insert_location_event", {
         p_device_id: deviceId,
-        p_lat: lat,
-        p_lng: lng,
+        p_lat: fLat,
+        p_lng: fLng,
       }).then(({ error: err }) => {
         if (!err) {
           setLastUpdate(new Date().toLocaleTimeString());
           setStatus("tracking");
+          setRefreshing(false);
         }
       });
-    };
+    },
+    [deviceId],
+  );
 
-    const onError = (err: GeolocationPositionError) => {
-      if (err.code === err.PERMISSION_DENIED) {
-        setStatus("denied");
-      } else {
+  const onGeoError = useCallback((err: GeolocationPositionError) => {
+    setRefreshing(false);
+    if (err.code === err.PERMISSION_DENIED) {
+      setStatus("denied");
+    } else {
+      setStatus("error");
+      setError(err.message);
+    }
+  }, []);
+
+  // Start GPS tracking once we have device_id
+  const startTracking = useCallback(() => {
+    if (!deviceId || !navigator.geolocation) {
+      if (!navigator.geolocation) {
         setStatus("error");
-        setError(err.message);
+        setError("Geolocation not supported");
       }
-    };
+      return;
+    }
 
-    // Get initial position
-    navigator.geolocation.getCurrentPosition(updateLocation, onError, {
-      enableHighAccuracy: true,
-      timeout: 10000,
-    });
+    navigator.geolocation.getCurrentPosition(
+      (pos) => sendLocation(pos.coords.latitude, pos.coords.longitude),
+      onGeoError,
+      { enableHighAccuracy: true, timeout: 10000 },
+    );
 
-    // Watch for updates
-    watchRef.current = navigator.geolocation.watchPosition(updateLocation, onError, {
-      enableHighAccuracy: true,
-      maximumAge: 30000,
-    });
-  }, [deviceId]);
+    watchRef.current = navigator.geolocation.watchPosition(
+      (pos) => sendLocation(pos.coords.latitude, pos.coords.longitude),
+      onGeoError,
+      { enableHighAccuracy: true, maximumAge: 30000 },
+    );
+  }, [deviceId, sendLocation, onGeoError]);
 
   useEffect(() => {
     if (status === "requesting") {
@@ -107,6 +117,32 @@ export default function LocateClient() {
       }
     };
   }, [status, startTracking]);
+
+  // Manual refresh
+  const handleRefresh = () => {
+    if (!navigator.geolocation) return;
+    setRefreshing(true);
+
+    // Clear existing watch
+    if (watchRef.current !== null) {
+      navigator.geolocation.clearWatch(watchRef.current);
+      watchRef.current = null;
+    }
+
+    // Force a fresh position (maximumAge: 0)
+    navigator.geolocation.getCurrentPosition(
+      (pos) => sendLocation(pos.coords.latitude, pos.coords.longitude),
+      onGeoError,
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 },
+    );
+
+    // Restart watch
+    watchRef.current = navigator.geolocation.watchPosition(
+      (pos) => sendLocation(pos.coords.latitude, pos.coords.longitude),
+      onGeoError,
+      { enableHighAccuracy: true, maximumAge: 30000 },
+    );
+  };
 
   return (
     <main
@@ -148,12 +184,45 @@ export default function LocateClient() {
 
         {status === "tracking" && (
           <div>
-            <p className="font-mono text-sm text-[#c4a862] mb-2">📍 Location active</p>
+            <p className="font-mono text-sm text-[#c4a862] mb-3">📍 Location active</p>
+
+            {coords && (
+              <div
+                className="mb-4 py-3 px-4 text-left"
+                style={{
+                  backgroundColor: "rgba(196, 168, 98, 0.06)",
+                  border: "1px solid rgba(184, 173, 158, 0.1)",
+                }}
+              >
+                <p className="font-mono text-[11px] text-[#b8ad9e]/70 mb-1">Your location (blurred)</p>
+                <p className="font-mono text-[13px] text-[#e8e0d4]">
+                  {coords.lat.toFixed(3)}, {coords.lng.toFixed(3)}
+                </p>
+              </div>
+            )}
+
             <p className="font-mono text-xs text-[#b8ad9e] mb-4">
               Your agent can now see your location. Keep this page open.
             </p>
+
+            <button
+              onClick={handleRefresh}
+              disabled={refreshing}
+              className="font-mono text-xs px-4 py-2 transition-colors"
+              style={{
+                border: "1px solid rgba(184, 173, 158, 0.2)",
+                color: refreshing ? "rgba(184, 173, 158, 0.3)" : "#c4a862",
+                backgroundColor: refreshing
+                  ? "transparent"
+                  : "rgba(196, 168, 98, 0.06)",
+                cursor: refreshing ? "not-allowed" : "pointer",
+              }}
+            >
+              {refreshing ? "Refreshing..." : "↻ Refresh location"}
+            </button>
+
             {lastUpdate && (
-              <p className="font-mono text-[10px] text-[#b8ad9e]/50">
+              <p className="font-mono text-[10px] text-[#b8ad9e]/50 mt-3">
                 Last update: {lastUpdate}
               </p>
             )}
