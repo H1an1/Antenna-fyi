@@ -46,7 +46,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${jetbrains.variable}`}>
+    <html lang="en" className={`${cormorant.variable} ${jetbrains.variable} overflow-x-hidden`}>
       <body className="bg-[#1a1412] text-[#e8e0d4] antialiased overflow-x-hidden">
         {children}
       </body>
