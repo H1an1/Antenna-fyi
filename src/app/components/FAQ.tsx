@@ -28,6 +28,10 @@ const FAQS = [
     q: "Do I need an AI agent to use Antenna?",
     a: "Yes. Antenna is built for AI agents — your agent reads nearby people's cards, decides who's worth meeting, and tells you why. Without an agent, there's no matching, no recommendations, no magic. If you don't have one yet, start with Hermes (hermes-agent.nousresearch.com) or OpenClaw (openclaw.ai).",
   },
+  {
+    q: "Why is the OpenClaw install command different?",
+    a: "OpenClaw has its own plugin system with native hooks — it can auto-detect when you share a location and trigger a scan without you asking. That deeper integration requires installing through OpenClaw's plugin manager (openclaw plugins install) rather than npm. Hermes uses a Python plugin that npm can copy directly. Both give you the same features, just different install paths.",
+  },
 ];
 
 function FaqItem({ q, a }: { q: string; a: string }) {
