@@ -29,6 +29,10 @@ const FAQS = [
     a: "Yes. Antenna is built for AI agents — your agent reads nearby people's cards, decides who's worth meeting, and tells you why. Without an agent, there's no matching, no recommendations, no magic. If you don't have one yet, start with Hermes (hermes-agent.nousresearch.com) or OpenClaw (openclaw.ai).",
   },
   {
+    q: "Why does OpenClaw block the install?",
+    a: "Antenna's OpenClaw plugin uses shell commands (child_process) to send you real-time notifications and manage follow-up timers. OpenClaw's security scanner flags this as potentially unsafe \u2014 which is the right default. To install, add the force flag: openclaw plugins install antenna-openclaw-plugin --dangerously-force-unsafe-install. The plugin only calls openclaw's own CLI (agent --deliver and cron add/remove), nothing else.",
+  },
+  {
     q: "Why is the OpenClaw install command different?",
     a: "OpenClaw has its own plugin system with native hooks — it can auto-detect when you share a location and trigger a scan without you asking. That deeper integration requires installing through OpenClaw's plugin manager (openclaw plugins install) rather than npm. Hermes uses a Python plugin that npm can copy directly. Both give you the same features, just different install paths.",
   },
