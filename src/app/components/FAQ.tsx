@@ -25,8 +25,8 @@ const FAQS = [
     a: "One command for any platform. OpenClaw: openclaw plugins install antenna-openclaw-plugin. Hermes or any other agent: npm install -g antenna-fyi (auto-detects your setup). Claude Desktop: same install, then add the MCP server config.",
   },
   {
-    q: "Can I use it without an AI agent?",
-    a: "Yes. Open antenna.fyi on your phone, create a three-line card, and share your location. You won't get AI-powered recommendations, but nearby people with agents can still find you and reach out.",
+    q: "Do I need an AI agent to use Antenna?",
+    a: "Yes. Antenna is built for AI agents — your agent reads nearby people's cards, decides who's worth meeting, and tells you why. Without an agent, there's no matching, no recommendations, no magic. If you don't have one yet, start with Hermes (hermes-agent.nousresearch.com) or OpenClaw (openclaw.ai).",
   },
 ];
 
