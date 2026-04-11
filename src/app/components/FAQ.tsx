@@ -5,40 +5,28 @@ import { ScrollReveal } from "./ScrollReveal";
 
 const FAQS = [
   {
-    q: "Do I need to download an app?",
-    a: "No. Install a CLI tool with one command, and your AI agent gets Antenna built in. Or open antenna.fyi in your phone's browser — no install needed.",
-  },
-  {
-    q: "How is my privacy protected?",
-    a: "GPS coordinates are blurred to ~150m before leaving your device. No registration, no photos, no real name. All data auto-deletes after 24 hours.",
-  },
-  {
-    q: "How does my agent know who to recommend?",
-    a: "Your agent reads each person's three-line card and compares it against everything it knows about you — your interests, your work, your recent conversations. It's not random matching.",
-  },
-  {
-    q: "What happens after a mutual match?",
-    a: "Your agents exchange contact info (WeChat, Telegram, phone — whatever you choose to share). Then go meet in person. Antenna doesn't do chat.",
+    q: "Does my data leave my device?",
+    a: "Your exact GPS never leaves your phone. Coordinates are blurred to ~150m before being sent anywhere. No email, no phone number, no photos are collected. All data auto-deletes after 24 hours. We don't run analytics or ads.",
   },
   {
     q: "Why does everything disappear after 24 hours?",
-    a: "Because real-world connections shouldn't be hoarded. If you don't act, it's gone. This is by design.",
+    a: "Because real-world connections shouldn't be hoarded. Antenna is for right now — the person next to you at this café, this meetup, this moment. If you don't act, it's gone. That's the point.",
   },
   {
-    q: "How do I install on OpenClaw?",
-    a: "One command: openclaw plugins install antenna-openclaw-plugin. Plugin + Skill installed automatically.",
+    q: "How does matching work?",
+    a: "Your agent reads each person's three-line card and compares it against everything it knows about you — your interests, your work, your recent conversations. It writes a personalized reason for each recommendation. No swiping, no algorithm. Your AI decides.",
   },
   {
-    q: "How do I install on Hermes?",
-    a: "One command: npm install -g antenna-fyi. It auto-detects Hermes and installs the Plugin, Skill, and Python dependencies.",
+    q: "What happens after a mutual match?",
+    a: "Both agents exchange whatever contact info you chose to share — WeChat, Telegram, phone, Instagram. Then go meet in person. Antenna doesn't do chat. The connection happens in the real world.",
   },
   {
-    q: "What about Claude Desktop or other agents?",
-    a: "Run npm install -g antenna-fyi, then configure the MCP server: set command to \"antenna\" with args [\"serve\"]. Works with any MCP-compatible agent.",
+    q: "How do I install it?",
+    a: "One command for any platform. OpenClaw: openclaw plugins install antenna-openclaw-plugin. Hermes or any other agent: npm install -g antenna-fyi (auto-detects your setup). Claude Desktop: same install, then add the MCP server config.",
   },
   {
-    q: "Do I need Node.js?",
-    a: "Yes, for the CLI install. If you don't have Node.js, you can use the web version at antenna.fyi — your agent generates a link, you open it on your phone, done.",
+    q: "Can I use it without an AI agent?",
+    a: "Yes. Open antenna.fyi on your phone, create a three-line card, and share your location. You won't get AI-powered recommendations, but nearby people with agents can still find you and reach out.",
   },
 ];
 
