@@ -6,7 +6,7 @@ import { GlitchBackground } from "./components/GlitchBackground";
 
 export default function Home() {
   return (
-    <main className="relative">
+    <main className="relative overflow-x-hidden">
       {/* Agent-readable content (hidden visually, visible to web_fetch/crawlers) */}
       <noscript>
         <article>

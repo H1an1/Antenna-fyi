@@ -22,7 +22,7 @@ export function Hero() {
 
   return (
     <section
-      className="relative h-screen w-full overflow-y-hidden z-[1]"
+      className="relative h-screen w-full overflow-hidden z-[1]"
       style={{
         backgroundColor: "#1a1412",
         backgroundImage: "url(/hand-bg.png)",
