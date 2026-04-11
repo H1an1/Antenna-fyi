@@ -23,8 +23,6 @@ export function Footer() {
           <span>·</span>
           <a href="https://github.com/H1an1" className="hover:text-[#c4a862] transition-colors">GitHub</a>
           <span>·</span>
-          <a href="https://www.npmjs.com/package/antenna-fyi" className="hover:text-[#c4a862] transition-colors">npm</a>
-          <span>·</span>
           <a href="/wechat-qr.jpg" target="_blank" className="hover:text-[#c4a862] transition-colors">WeChat</a>
           <span>·</span>
           <a href="/privacy" className="hover:text-[#c4a862] transition-colors">Privacy</a>
