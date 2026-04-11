@@ -12,6 +12,25 @@ const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 type Status = "loading" | "invalid" | "requesting" | "tracking" | "error" | "denied";
 
+async function reverseGeocode(lat: number, lng: number): Promise<string> {
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&zoom=14&addressdetails=1`,
+      { headers: { "Accept-Language": "en" } },
+    );
+    const data = await res.json();
+    // Build a short area name from address parts
+    const a = data.address || {};
+    const parts = [
+      a.neighbourhood || a.suburb || a.quarter || "",
+      a.city || a.town || a.village || a.county || "",
+    ].filter(Boolean);
+    return parts.length > 0 ? `Near ${parts.join(", ")}` : "";
+  } catch {
+    return "";
+  }
+}
+
 export default function LocateClient() {
   const params = useSearchParams();
   const token = params.get("token");
@@ -19,9 +38,13 @@ export default function LocateClient() {
   const [deviceId, setDeviceId] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<string | null>(null);
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [areaName, setAreaName] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [debugLog, setDebugLog] = useState<string[]>([]);
   const watchRef = useRef<number | null>(null);
+
+  const log = (msg: string) => setDebugLog((prev) => [...prev.slice(-4), msg]);
 
   // Verify token
   useEffect(() => {
@@ -30,52 +53,74 @@ export default function LocateClient() {
       return;
     }
 
+    log("Verifying token...");
     sb.rpc("verify_bind_token", { p_token: token }).then(({ data, error: err }) => {
-      if (err || !data?.valid) {
+      if (err) {
+        log(`Token error: ${err.message}`);
         setStatus("invalid");
-        setError(data?.error || err?.message || "Invalid token");
+        setError(err.message);
         return;
       }
+      if (!data || !data.valid) {
+        log(`Token invalid: ${data?.error || "unknown"}`);
+        setStatus("invalid");
+        setError(data?.error || "Invalid token");
+        return;
+      }
+      log(`Token valid: ${data.device_id}`);
       setDeviceId(data.device_id);
       setStatus("requesting");
     });
   }, [token]);
 
   const sendLocation = useCallback(
-    (lat: number, lng: number) => {
+    async (lat: number, lng: number) => {
       if (!deviceId) return;
       const fLat = Math.round(lat * 1000) / 1000;
       const fLng = Math.round(lng * 1000) / 1000;
 
       setCoords({ lat: fLat, lng: fLng });
+      log(`GPS: ${fLat}, ${fLng}`);
+
+      // Reverse geocode for area name
+      reverseGeocode(lat, lng).then((name) => {
+        if (name) setAreaName(name);
+      });
 
       // Update profile location
-      sb.rpc("upsert_profile_location", {
+      const { error: locErr } = await sb.rpc("upsert_profile_location", {
         p_device_id: deviceId,
         p_lng: fLng,
         p_lat: fLat,
-      }).then(({ error: err }) => {
-        if (err) console.error("Location update failed:", err);
       });
+      if (locErr) {
+        log(`Location write failed: ${locErr.message}`);
+      } else {
+        log("Location updated ✓");
+      }
 
       // Notify agent via location_events
-      sb.rpc("insert_location_event", {
+      const { error: evtErr } = await sb.rpc("insert_location_event", {
         p_device_id: deviceId,
         p_lat: fLat,
         p_lng: fLng,
-      }).then(({ error: err }) => {
-        if (!err) {
-          setLastUpdate(new Date().toLocaleTimeString());
-          setStatus("tracking");
-          setRefreshing(false);
-        }
       });
+      if (evtErr) {
+        log(`Event write failed: ${evtErr.message}`);
+      } else {
+        log("Agent notified ✓");
+      }
+
+      setLastUpdate(new Date().toLocaleTimeString());
+      setStatus("tracking");
+      setRefreshing(false);
     },
     [deviceId],
   );
 
   const onGeoError = useCallback((err: GeolocationPositionError) => {
     setRefreshing(false);
+    log(`GPS error: ${err.message}`);
     if (err.code === err.PERMISSION_DENIED) {
       setStatus("denied");
     } else {
@@ -94,6 +139,7 @@ export default function LocateClient() {
       return;
     }
 
+    log("Requesting GPS...");
     navigator.geolocation.getCurrentPosition(
       (pos) => sendLocation(pos.coords.latitude, pos.coords.longitude),
       onGeoError,
@@ -122,21 +168,19 @@ export default function LocateClient() {
   const handleRefresh = () => {
     if (!navigator.geolocation) return;
     setRefreshing(true);
+    log("Refreshing GPS...");
 
-    // Clear existing watch
     if (watchRef.current !== null) {
       navigator.geolocation.clearWatch(watchRef.current);
       watchRef.current = null;
     }
 
-    // Force a fresh position (maximumAge: 0)
     navigator.geolocation.getCurrentPosition(
       (pos) => sendLocation(pos.coords.latitude, pos.coords.longitude),
       onGeoError,
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 },
     );
 
-    // Restart watch
     watchRef.current = navigator.geolocation.watchPosition(
       (pos) => sendLocation(pos.coords.latitude, pos.coords.longitude),
       onGeoError,
@@ -194,10 +238,13 @@ export default function LocateClient() {
                   border: "1px solid rgba(184, 173, 158, 0.1)",
                 }}
               >
-                <p className="font-mono text-[11px] text-[#b8ad9e]/70 mb-1">Your location (blurred)</p>
+                <p className="font-mono text-[11px] text-[#b8ad9e]/70 mb-1">Your location (blurred ~150m)</p>
                 <p className="font-mono text-[13px] text-[#e8e0d4]">
                   {coords.lat.toFixed(3)}, {coords.lng.toFixed(3)}
                 </p>
+                {areaName && (
+                  <p className="font-mono text-[11px] text-[#c4a862] mt-1">{areaName}</p>
+                )}
               </div>
             )}
 
@@ -242,6 +289,17 @@ export default function LocateClient() {
           <div>
             <p className="font-mono text-sm text-[#c4a862] mb-2">⚠ Error</p>
             <p className="font-mono text-xs text-[#b8ad9e]">{error}</p>
+          </div>
+        )}
+
+        {/* Debug log — small text at bottom */}
+        {debugLog.length > 0 && (
+          <div className="mt-6 pt-4" style={{ borderTop: "1px solid rgba(184, 173, 158, 0.05)" }}>
+            {debugLog.map((msg, i) => (
+              <p key={i} className="font-mono text-[9px] text-[#b8ad9e]/30 leading-relaxed">
+                {msg}
+              </p>
+            ))}
           </div>
         )}
       </div>
