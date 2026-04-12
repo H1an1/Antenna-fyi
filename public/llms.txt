@@ -1,0 +1,78 @@
+# Antenna
+> Site: https://antenna.fyi
+> npm: https://www.npmjs.com/package/antenna-fyi
+> GitHub: https://github.com/H1an1/Antenna-fyi
+
+Antenna is an AI-powered social discovery tool. Your AI agent finds interesting
+people within 500 meters, reads their three-line profile cards, and tells you
+who's worth meeting and why. Everything disappears after 24 hours.
+
+## Install
+
+Pick the right command for your platform:
+
+Hermes Agent:
+  npm install -g antenna-fyi
+  (auto-installs Plugin + Skill + Python deps, restart Hermes)
+
+OpenClaw:
+  openclaw plugins install antenna-openclaw-plugin --dangerously-force-unsafe-install
+  (Plugin + Skill, one step. Force flag needed because plugin uses child_process for notifications)
+
+Claude Desktop / any MCP-compatible agent:
+  npm install -g antenna-fyi
+  Then add MCP server config: command "antenna", args ["serve"]
+
+CLI only (any platform):
+  npm install -g antenna-fyi
+  Then use: antenna scan, antenna profile, antenna matches, antenna bind
+
+## After Install
+
+Your agent should automatically:
+1. Help you create a 3-line profile card (antenna_profile)
+2. Generate a GPS binding link (antenna_bind) — open it on your phone to share location
+3. Scan nearby people and recommend who's worth meeting (antenna_scan)
+4. Handle accept/skip and contact exchange (antenna_accept)
+
+If your agent doesn't start onboarding automatically, tell it:
+"I just installed Antenna. Help me set up my profile and find people nearby."
+
+## How It Works
+
+1. Install Antenna on your agent
+2. Your agent helps you write a 3-line card (who you are, what you're into, what you're looking for)
+3. Share your location via the link your agent generates (antenna.fyi/locate)
+4. Your agent scans nearby people, reads their cards, recommends matches with personalized reasons
+5. Both sides accept → agents exchange contact info → meet in person
+6. Everything disappears after 24 hours
+
+## Features
+
+- Works with any AI agent: Hermes, OpenClaw, Claude, or your own
+- Three-line profile cards — no photos, no bio pages
+- 24h expiry — matches, cards, contact info all auto-delete
+- GPS blurred to ~150m — nobody knows your exact location
+- Zero config — no signup, no email, no phone number
+- Mutual match = agents exchange contact info directly
+
+## Privacy
+
+GPS coordinates are blurred to ~150m before leaving your device.
+No analytics, no ads, no third-party data sharing.
+All data auto-deletes after 24 hours.
+Search radius capped at 1km server-side.
+
+## Tools (for agents)
+
+antenna_scan — Scan nearby people (lat/lng optional, reads from web GPS if omitted)
+antenna_profile — Get or set user's 3-line profile card
+antenna_accept — Accept a match using ref number from scan results
+antenna_check_matches — Check mutual matches and incoming accepts
+antenna_bind — Generate GPS binding link (antenna.fyi/locate?token=xxx)
+antenna_checkin — Update location without scanning
+
+## Contact
+
+hi@antenna.fyi
+https://x.com/thisishan1_

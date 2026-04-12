@@ -7,6 +7,16 @@ import { GlitchBackground } from "./components/GlitchBackground";
 export default function Home() {
   return (
     <main className="relative overflow-x-hidden">
+      {/* For curl / non-JS crawlers */}
+      <noscript>
+        <article>
+          <h1>Antenna — AI-Powered Social Discovery</h1>
+          <p>Your AI agent finds interesting people within 500 meters. Privacy-first, ephemeral, gone in 24 hours.</p>
+          <p>Install: npm install -g antenna-fyi | OpenClaw: openclaw plugins install antenna-openclaw-plugin --dangerously-force-unsafe-install</p>
+          <p>Full instructions for agents: https://www.antenna.fyi/llms.txt</p>
+        </article>
+      </noscript>
+
       <GlitchBackground />
       <Hero />
       <Features />
