@@ -2,22 +2,27 @@
 
 import { useState, useCallback } from "react";
 
-const PLATFORMS = ["npm", "OpenClaw", "Hermes"] as const;
+const PROMPT_TEXT = `Fetch the full instructions from https://www.antenna.fyi/llms.txt
+Then install Antenna for me and help me set up my profile and share my location.`;
+
+const PLATFORMS = ["Copy me", "npm", "OpenClaw", "Hermes"] as const;
 
 const COMMANDS: Record<(typeof PLATFORMS)[number], string> = {
+  "Copy me": PROMPT_TEXT,
   npm: "npm install -g antenna-fyi",
   OpenClaw: "openclaw plugins install antenna-openclaw-plugin",
   Hermes: "npm install -g antenna-fyi",
 };
 
 const NOTES: Record<(typeof PLATFORMS)[number], string> = {
+  "Copy me": "Paste this to any AI agent",
   npm: "CLI + MCP server for any agent",
   OpenClaw: "Plugin + Skill, one step",
   Hermes: "Auto-installs Plugin + Skill + deps",
 };
 
 export function InstallBlock() {
-  const [active, setActive] = useState<(typeof PLATFORMS)[number]>("npm");
+  const [active, setActive] = useState<(typeof PLATFORMS)[number]>("Copy me");
   const [copied, setCopied] = useState(false);
 
   const handleCopy = useCallback(() => {
@@ -60,7 +65,7 @@ export function InstallBlock() {
 
       {/* Command + copy */}
       <div className="flex items-start justify-between gap-3 px-5 py-3">
-        <code className="font-mono text-[11px] md:text-[13px] text-[#e8dfcc] select-all break-words whitespace-normal md:whitespace-nowrap">
+        <code className="font-mono text-[11px] md:text-[13px] text-[#e8dfcc] select-all break-words whitespace-pre-wrap">
           {COMMANDS[active]}
         </code>
         <button
