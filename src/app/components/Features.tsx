@@ -127,7 +127,7 @@ export function Features() {
               </p>
               <p>
                 Antenna runs quietly alongside your agent. When someone
-                interesting comes within 500 meters, your AI figures out
+                interesting comes within 1 kilometer, your AI figures out
                 why you two might click — shared obsessions, complementary
                 skills, the kind of overlap that only emerges from real
                 context, not checkboxes.

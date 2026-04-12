@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   title: "Antenna — Discover Interesting People Nearby",
   description:
-    "AI-powered social discovery. Your agent finds people worth meeting within 500 meters. Privacy-first, ephemeral, gone in 24 hours.",
+    "AI-powered social discovery. Your agent finds people worth meeting within 1 kilometer. Privacy-first, ephemeral, gone in 24 hours.",
   openGraph: {
     title: "Antenna — Discover Interesting People Nearby",
     description: "Your AI agent finds people worth meeting. Privacy-first, ephemeral connections that disappear in 24 hours.",

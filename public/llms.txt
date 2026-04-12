@@ -4,7 +4,7 @@
 > GitHub: https://github.com/H1an1/Antenna-fyi
 
 Antenna is an AI-powered social discovery tool. Your AI agent finds interesting
-people within 500 meters, reads their three-line profile cards, and tells you
+people within 1 kilometer, reads their three-line profile cards, and tells you
 who's worth meeting and why. Everything disappears after 24 hours.
 
 ## Install
