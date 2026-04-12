@@ -65,7 +65,7 @@ Search radius capped at 1km server-side.
 
 ## Tools (for agents)
 
-antenna_scan — Scan nearby people (lat/lng optional, reads from web GPS if omitted)
+antenna_scan — Scan nearby people (lat/lng optional, default radius 500m, max 1km)
 antenna_profile — Get or set user's 3-line profile card
 antenna_accept — Accept a match using ref number from scan results
 antenna_check_matches — Check mutual matches and incoming accepts
