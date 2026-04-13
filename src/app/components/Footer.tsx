@@ -21,7 +21,7 @@ export function Footer() {
             @thisishan1_
           </a>
           <span>·</span>
-          <a href="https://github.com/H1an1" className="hover:text-[#c4a862] transition-colors">GitHub</a>
+          <a href="https://github.com/H1an1/Antenna" className="hover:text-[#c4a862] transition-colors">GitHub</a>
           <span>·</span>
           <a href="/wechat-qr.jpg" target="_blank" className="hover:text-[#c4a862] transition-colors">WeChat</a>
           <span>·</span>
