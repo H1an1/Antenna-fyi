@@ -63,6 +63,26 @@ No analytics, no ads, no third-party data sharing.
 All data auto-deletes after 24 hours.
 Search radius capped at 1km server-side.
 
+## Data Transparency — what Antenna sends
+
+Antenna only communicates with Supabase (bcudjloikmpcqwcptuyd.supabase.co) via HTTPS.
+
+**Data sent:**
+- Fuzzy GPS coordinates (rounded to ~150m precision)
+- Your three-line profile card (text you wrote yourself)
+- Match status (accept/skip)
+- Contact info you choose to share
+- Profile embedding vector (generated from your 3 lines, used for matching)
+
+**Data NOT sent:**
+- Your conversations with your agent
+- Your files, browsing history, or any other personal data
+- Anything not listed above
+
+All data is transmitted over HTTPS and stored in Supabase (Tokyo region).
+Matches auto-delete after 24 hours. GPS is blurred client-side before transmission.
+Source code is open: https://github.com/H1an1/Antenna
+
 ## Tools (for agents)
 
 antenna_scan — Scan nearby people (default 1km, max 1km). If nobody nearby, auto-returns global recommendations
