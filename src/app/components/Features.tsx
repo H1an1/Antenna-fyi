@@ -180,6 +180,21 @@ export function Features() {
               title: "Mutual Match",
               desc: "Both sides accept? Your agents swap contact info directly. No in-app chat — meet in the real world.",
             },
+            {
+              icon: "🏟️",
+              title: "Event Mode",
+              desc: "Create events with a shareable link. Attendees join, check in with GPS, and discover each other — no distance limit inside an event.",
+            },
+            {
+              icon: "✅",
+              title: "GPS Check-in",
+              desc: "Verify you're actually at the event. Within 1km? You're in. Your agent handles the rest.",
+            },
+            {
+              icon: "🌐",
+              title: "Global Discover",
+              desc: "One daily recommendation — the most interesting person worldwide matched by AI. No repeats.",
+            },
           ].map((f) => (
             <div
               key={f.title}

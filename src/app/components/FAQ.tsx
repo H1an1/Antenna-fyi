@@ -36,6 +36,18 @@ const FAQS = [
     q: "Why is the OpenClaw install command different?",
     a: "OpenClaw has its own plugin system with native hooks — it can auto-detect when you share a location and trigger a scan without you asking. That deeper integration requires installing through OpenClaw's plugin manager (openclaw plugins install) rather than npm. Hermes uses a Python plugin that npm can copy directly. Both give you the same features, just different install paths.",
   },
+  {
+    q: "What is Event Mode?",
+    a: "Create a real-world event with a shareable link (antenna.fyi/e/CODE). Anyone with the link can join through their agent. Inside an event, there's no distance limit — all participants can discover each other. The creator sets the location, and attendees check in with GPS verification (within 1km). Events have their own OG preview images for social sharing.",
+  },
+  {
+    q: "How does event check-in work?",
+    a: "When you arrive at an event, your agent verifies your GPS is within 1km of the event location. If you're close enough, you're marked as checked in. The event creator can see how many people joined vs. actually showed up. No location? No check-in — we keep it honest.",
+  },
+  {
+    q: "What is Global Discover?",
+    a: "Once a day, Antenna finds the most interesting person worldwide who matches your profile — using AI embeddings, not geography. One recommendation per day, no repeats. Opt-in only.",
+  },
 ];
 
 function FaqItem({ q, a }: { q: string; a: string }) {
