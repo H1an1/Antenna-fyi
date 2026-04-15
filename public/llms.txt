@@ -93,9 +93,10 @@ antenna_check_matches — Check mutual matches and incoming accepts
 antenna_bind — Generate GPS binding link (antenna.fyi/locate?token=xxx)
 antenna_checkin — Update location without scanning
 antenna_discover — Get today's global recommendation (1 per day, no repeats)
-antenna_event_create — Create an event with a shareable link
+antenna_event_create — Create an event with a shareable link. Optional: description, og_image (URL for social sharing preview)
 antenna_event_join — Join an event by code
 antenna_event_scan — Scan people in an event, no distance limit
+antenna_event_end — End an event (creator only)
 
 ## Contact
 
