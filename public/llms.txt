@@ -85,7 +85,7 @@ Source code is open: https://github.com/H1an1/Antenna
 
 ## Tools (for agents)
 
-antenna_scan — Scan nearby people (default 1km, max 1km). If nobody nearby, auto-returns global recommendations
+antenna_scan — Scan nearby people and events (people within 1km, events within 5km)
 antenna_profile — Get or set user's 3-line profile card
 antenna_accept — Accept a match using ref number from scan results
 antenna_pass — Pass/skip a person. They won't be recommended again.
