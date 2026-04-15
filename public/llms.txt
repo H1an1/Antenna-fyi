@@ -97,6 +97,7 @@ antenna_event_create — Create an event with a shareable link. Optional: descri
 antenna_event_join — Join an event by code
 antenna_event_scan — Scan people in an event, no distance limit
 antenna_event_end — End an event (creator only)
+antenna_event_checkin — Check in at an event, marks you as present at the location
 
 ## Contact
 
