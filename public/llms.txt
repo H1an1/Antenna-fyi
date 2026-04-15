@@ -88,9 +88,14 @@ Source code is open: https://github.com/H1an1/Antenna
 antenna_scan — Scan nearby people (default 1km, max 1km). If nobody nearby, auto-returns global recommendations
 antenna_profile — Get or set user's 3-line profile card
 antenna_accept — Accept a match using ref number from scan results
+antenna_pass — Pass/skip a person. They won't be recommended again.
 antenna_check_matches — Check mutual matches and incoming accepts
 antenna_bind — Generate GPS binding link (antenna.fyi/locate?token=xxx)
 antenna_checkin — Update location without scanning
+antenna_discover — Get today's global recommendation (1 per day, no repeats)
+antenna_event_create — Create an event with a shareable link
+antenna_event_join — Join an event by code
+antenna_event_scan — Scan people in an event, no distance limit
 
 ## Contact
 
