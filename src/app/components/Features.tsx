@@ -161,14 +161,9 @@ export function Features() {
               desc: "No photo. No bio page. Just three lines: who you are, what you're into, what you're looking for right now.",
             },
             {
-              icon: "⏳",
-              title: "24h Expiry",
-              desc: "Matches, cards, contact info — everything auto-deletes. No history, no archive, no baggage.",
-            },
-            {
               icon: "◇",
-              title: "GPS Blurred",
-              desc: "Coordinates fuzzy-hashed to ~150m. Nobody knows exactly where you are. Not even us.",
+              title: "Private by Default",
+              desc: "GPS blurred to ~150m. Everything auto-deletes after 24 hours. No email, no phone, no photos collected. Not even we know where you are.",
             },
             {
               icon: "⊘",
@@ -185,22 +180,13 @@ export function Features() {
               title: "Event Mode",
               desc: "Create events with a shareable link. Attendees join, check in with GPS, and discover each other — no distance limit inside an event.",
             },
-            {
-              icon: "✅",
-              title: "GPS Check-in",
-              desc: "Verify you're actually at the event. Within 1km? You're in. Your agent handles the rest.",
-            },
-            {
-              icon: "🌐",
-              title: "Global Discover",
-              desc: "One daily recommendation — the most interesting person worldwide matched by AI. No repeats.",
-            },
           ].map((f) => (
             <div
               key={f.title}
               className="border border-[#b8ad9e]/10 p-6 backdrop-blur-sm"
               style={{
                 backgroundColor: "rgba(42, 34, 24, 0.6)",
+                minHeight: "180px",
               }}
             >
               <span className="block text-xl text-[#c4a862] mb-3 font-mono">{f.icon}</span>
