@@ -36,6 +36,8 @@ export default function LocateClient() {
   const token = params.get("token");
   const [status, setStatus] = useState<Status>("loading");
   const [deviceId, setDeviceId] = useState<string | null>(null);
+  const [purpose, setPurpose] = useState<string>("profile");
+  const [eventCode, setEventCode] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<string | null>(null);
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [areaName, setAreaName] = useState<string>("");
@@ -67,8 +69,10 @@ export default function LocateClient() {
         setError(data?.error || "Invalid token");
         return;
       }
-      log(`Token valid: ${data.device_id}`);
+      log(`Token valid: ${data.device_id} purpose=${data.purpose || "profile"}`);
       setDeviceId(data.device_id);
+      setPurpose(data.purpose || "profile");
+      setEventCode(data.event_code || null);
       setStatus("requesting");
     });
   }, [token]);
@@ -87,28 +91,55 @@ export default function LocateClient() {
         if (name) setAreaName(name);
       });
 
-      // Update profile location
-      const { error: locErr } = await sb.rpc("upsert_profile_location", {
-        p_device_id: deviceId,
-        p_lng: fLng,
-        p_lat: fLat,
-      });
-      if (locErr) {
-        log(`Location write failed: ${locErr.message}`);
-      } else {
-        log("Location updated ✓");
-      }
+      // Branch on purpose
+      if (purpose === "event" && eventCode) {
+        // Update event location (no fuzzy — event GPS is precise)
+        const { error: evtLocErr } = await sb.rpc("update_event_location", {
+          p_code: eventCode,
+          p_lat: lat,
+          p_lng: lng,
+        });
+        if (evtLocErr) {
+          log(`Event location write failed: ${evtLocErr.message}`);
+        } else {
+          log(`Event location updated ✓ (precise: ${lat}, ${lng})`);
+        }
 
-      // Notify agent via location_events
-      const { error: evtErr } = await sb.rpc("insert_location_event", {
-        p_device_id: deviceId,
-        p_lat: fLat,
-        p_lng: fLng,
-      });
-      if (evtErr) {
-        log(`Event write failed: ${evtErr.message}`);
+        // Still notify agent
+        const { error: evtErr } = await sb.rpc("insert_location_event", {
+          p_device_id: deviceId,
+          p_lat: lat,
+          p_lng: lng,
+        });
+        if (evtErr) {
+          log(`Event notify failed: ${evtErr.message}`);
+        } else {
+          log("Agent notified ✓");
+        }
       } else {
-        log("Agent notified ✓");
+        // Update profile location
+        const { error: locErr } = await sb.rpc("upsert_profile_location", {
+          p_device_id: deviceId,
+          p_lng: fLng,
+          p_lat: fLat,
+        });
+        if (locErr) {
+          log(`Location write failed: ${locErr.message}`);
+        } else {
+          log("Location updated ✓");
+        }
+
+        // Notify agent via location_events
+        const { error: evtErr } = await sb.rpc("insert_location_event", {
+          p_device_id: deviceId,
+          p_lat: fLat,
+          p_lng: fLng,
+        });
+        if (evtErr) {
+          log(`Event write failed: ${evtErr.message}`);
+        } else {
+          log("Agent notified ✓");
+        }
       }
 
       setLastUpdate(new Date().toLocaleTimeString());
