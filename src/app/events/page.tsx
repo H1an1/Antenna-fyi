@@ -1,6 +1,6 @@
 import { EventsHero } from "../components/EventsHero";
-import { Features } from "../components/Features";
-import { FAQ } from "../components/FAQ";
+import { EventFeatures } from "../components/EventFeatures";
+import { EventFAQ } from "../components/EventFAQ";
 import { Footer } from "../components/Footer";
 import { GlitchBackground } from "../components/GlitchBackground";
 
@@ -9,17 +9,16 @@ export default function Events() {
     <main className="relative overflow-x-hidden">
       <noscript>
         <article>
-          <h1>Antenna — AI-Powered Social Discovery</h1>
-          <p>Your AI agent finds interesting people within 1 kilometer. Privacy-first, ephemeral, gone in 24 hours.</p>
-          <p>Install: npm install -g antenna-fyi | OpenClaw: openclaw plugins install antenna-openclaw-plugin --dangerously-force-unsafe-install</p>
-          <p>Full instructions for agents: https://www.antenna.fyi/llms.txt</p>
+          <h1>Antenna Events — AI-Powered Event Networking</h1>
+          <p>Create events where everyone&apos;s AI agent handles the networking. GPS check-in, no distance limits, real connections.</p>
+          <p>Install: npm install -g antenna-fyi</p>
         </article>
       </noscript>
 
       <GlitchBackground />
       <EventsHero />
-      <Features />
-      <FAQ />
+      <EventFeatures />
+      <EventFAQ />
       <Footer />
     </main>
   );
