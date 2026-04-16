@@ -2,6 +2,9 @@
 
 import { DynamicAsciiHand } from "./DynamicAsciiHand";
 import { ScrollReveal } from "./ScrollReveal";
+import { Cpu, AlignLeft, Timer, MapPinOff, Settings2, Handshake } from "lucide-react";
+
+const ICON_PROPS = { size: 22, color: "#c4a862", strokeWidth: 1.5 } as const;
 
 export function Features() {
   return (
@@ -151,32 +154,32 @@ export function Features() {
         <div className="max-w-5xl mx-auto w-full grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
             {
-              icon: "◎",
+              icon: <Cpu {...ICON_PROPS} />,
               title: "Every Agent",
               desc: "Works with any AI agent — OpenClaw, Hermes, Claude, or your own. One install.",
             },
             {
-              icon: "◈",
+              icon: <AlignLeft {...ICON_PROPS} />,
               title: "Three Lines",
               desc: "No photo. No bio page. Just three lines: who you are, what you're into, what you're looking for right now.",
             },
             {
-              icon: "◇",
+              icon: <MapPinOff {...ICON_PROPS} />,
               title: "Private by Default",
               desc: "GPS blurred to ~150m. Everything auto-deletes after 24 hours. No email, no phone, no photos collected. Not even we know where you are.",
             },
             {
-              icon: "⊘",
+              icon: <Settings2 {...ICON_PROPS} />,
               title: "Zero Config",
               desc: "No signup. No app. One command and your agent handles the rest.",
             },
             {
-              icon: "↔",
+              icon: <Handshake {...ICON_PROPS} />,
               title: "Mutual Match",
               desc: "Both sides accept? Your agents swap contact info directly. No in-app chat — meet in the real world.",
             },
             {
-              icon: "🏟️",
+              icon: <Timer {...ICON_PROPS} />,
               title: "Event Mode",
               desc: "Create events with a shareable link. Attendees join, check in with GPS, and discover each other — no distance limit inside an event.",
             },
@@ -189,7 +192,7 @@ export function Features() {
                 minHeight: "180px",
               }}
             >
-              <span className="block text-xl text-[#c4a862] mb-3 font-mono">{f.icon}</span>
+              <span className="block text-xl text-[#c4a862] mb-3">{f.icon}</span>
               <h3 className="font-serif text-lg text-[#e8e0d4] mb-2">
                 {f.title}
               </h3>
