@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { ScrollReveal } from "./ScrollReveal";
 
 const FAQS = [
@@ -37,26 +38,45 @@ const FAQS = [
   },
 ];
 
+function FaqItem({ q, a }: { q: string; a: string }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div
+      className="border-b border-[#b8ad9e]/10 cursor-pointer"
+      onClick={() => setOpen(!open)}
+    >
+      <div className="flex items-center justify-between py-4 gap-4">
+        <h3 className="font-mono text-[13px] text-[#e8e0d4]">{q}</h3>
+        <span
+          className="text-[#c4a862] text-lg shrink-0 transition-transform duration-200"
+          style={{ transform: open ? "rotate(45deg)" : "rotate(0deg)" }}
+        >
+          +
+        </span>
+      </div>
+      {open && (
+        <p className="font-mono text-[12px] text-[#b8ad9e] pb-4 leading-relaxed">
+          {a}
+        </p>
+      )}
+    </div>
+  );
+}
+
 export function EventFAQ() {
   return (
     <ScrollReveal
-      className="relative w-full overflow-hidden px-5 md:px-12 pb-24"
+      className="relative w-full overflow-hidden px-6 md:px-12 pb-24"
       style={{ backgroundColor: "transparent" }}
     >
-      <div className="max-w-4xl mx-auto">
-        <h2 className="font-serif text-3xl md:text-4xl text-[#e8e0d4] mb-12 tracking-tight text-center">
-          Questions
+      <div className="max-w-2xl mx-auto w-full">
+        <h2 className="font-serif text-3xl md:text-4xl text-[#e8e0d4] mb-8 tracking-tight text-center">
+          FAQ
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+        <div>
           {FAQS.map((faq) => (
-            <div key={faq.q}>
-              <h3 className="font-mono text-[13px] text-[#c4a862] mb-2">
-                {faq.q}
-              </h3>
-              <p className="font-mono text-[11px] text-[#b8ad9e]/70 leading-relaxed">
-                {faq.a}
-              </p>
-            </div>
+            <FaqItem key={faq.q} q={faq.q} a={faq.a} />
           ))}
         </div>
       </div>
