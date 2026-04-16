@@ -62,8 +62,7 @@ export function Hero() {
         {/* Hands clipped to the inner gold border. clip-path keeps hand
             coordinates intact so the scroll-reveal still slides them in. */}
         <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ clipPath: `inset(${INNER_FRAME_INSET})` }}
+          className="absolute inset-0 pointer-events-none md:[clip-path:inset(calc(7%+10px)_calc(5%+10px)_calc(8%+10px)_calc(5%+10px))]"
         >
           {/* Oil painting left hand — hidden on mobile, too cramped */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
