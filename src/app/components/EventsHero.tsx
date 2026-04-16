@@ -32,8 +32,9 @@ export function EventsHero() {
             DynamicAsciiFlame reads the same image and paints the flame swirl
             in animated ASCII over the cover-fitted background. */}
         <div
-          className="absolute inset-0 pointer-events-none bg-cover bg-center
-                     md:inset-auto md:top-[calc(7%+10px)] md:right-[calc(5%+10px)] md:bottom-[calc(8%+10px)] md:left-[calc(5%+10px)]"
+          className="absolute pointer-events-none bg-cover bg-center
+                     top-[calc(7%+10px)] bottom-[calc(8%+10px)] left-0 right-0
+                     md:left-[calc(5%+10px)] md:right-[calc(5%+10px)]"
           style={{
             backgroundImage: "url(/events-bg.png)",
             backgroundRepeat: "no-repeat",
