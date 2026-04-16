@@ -118,6 +118,12 @@ export function Hero() {
             <br />
             Find interesting people nearby.
           </p>
+          <a
+            href="/events"
+            className="mt-5 inline-block pointer-events-auto font-mono text-sm px-6 py-2 border border-[#c4a862] text-[#c4a862] rounded hover:bg-[#c4a862]/15 transition-colors"
+          >
+            Events
+          </a>
         </div>
 
         {/* Install block — anchored to bottom of the painting */}
