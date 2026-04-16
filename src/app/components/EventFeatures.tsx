@@ -68,58 +68,59 @@ export function EventFeatures() {
         </div>
       </ScrollReveal>
 
-      {/* ── Features: horizontal strips ── */}
+      {/* ── Features: grid ── */}
       <ScrollReveal
         className="relative w-full overflow-hidden px-5 md:px-12 pb-24"
         style={{ backgroundColor: "transparent" }}
       >
-        <div className="max-w-3xl mx-auto space-y-0">
+        <div className="max-w-5xl mx-auto w-full grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
             {
-              icon: "\ud83c\udfdf\ufe0f",
+              icon: "◎",
               title: "No Distance Limit",
-              desc: "Inside an event, everyone can discover everyone.",
+              desc: "Inside an event, everyone can discover everyone. Your AI scans all participants, not just people within 1km.",
             },
             {
-              icon: "\u2705",
+              icon: "◈",
               title: "GPS Verified",
-              desc: "Check-in requires being within 1km. No faking.",
+              desc: "Check-in requires being within 1km of the venue. No faking attendance. The organizer sees joined vs. checked in.",
             },
             {
-              icon: "\ud83d\udc51",
+              icon: "◇",
               title: "Organizer Tools",
-              desc: "End events early. See participation stats. Creator badge.",
+              desc: "Creator gets a special role. End the event early, see participation stats. Attendees see who's the host.",
             },
             {
-              icon: "\ud83d\uddbc\ufe0f",
+              icon: "⊘",
               title: "Custom Preview",
-              desc: "Upload a cover image for social sharing.",
+              desc: "Upload a cover image for your event. Social sharing shows your custom OG preview instead of a generic card.",
             },
             {
-              icon: "\ud83d\udce1",
+              icon: "↔",
               title: "Nearby Discovery",
-              desc: "Scanning for people also shows active events within 5km.",
+              desc: "When someone scans for people nearby, they also see active events within 5km. Free exposure for your event.",
             },
             {
-              icon: "\ud83d\udd12",
+              icon: "▣",
               title: "Same Privacy",
-              desc: "GPS blurred. 24h expiry. No accounts. Always.",
+              desc: "GPS blurred. 24h expiry. No accounts. Everything that makes Antenna private applies inside events too.",
             },
           ].map((f) => (
             <div
               key={f.title}
-              className="flex items-start gap-5 py-5"
-              style={{ borderBottom: "1px solid rgba(184, 173, 158, 0.08)" }}
+              className="border border-[#b8ad9e]/10 p-6 backdrop-blur-sm"
+              style={{
+                backgroundColor: "rgba(42, 34, 24, 0.6)",
+                minHeight: "180px",
+              }}
             >
-              <span className="text-xl shrink-0 mt-0.5">{f.icon}</span>
-              <div>
-                <h3 className="font-mono text-[13px] text-[#e8e0d4] mb-1">
-                  {f.title}
-                </h3>
-                <p className="font-mono text-[11px] text-[#b8ad9e]/70 leading-relaxed">
-                  {f.desc}
-                </p>
-              </div>
+              <span className="block text-xl text-[#c4a862] mb-3 font-mono">{f.icon}</span>
+              <h3 className="font-serif text-lg text-[#e8e0d4] mb-2">
+                {f.title}
+              </h3>
+              <p className="font-mono text-[11px] md:text-[12px] text-[#b8ad9e] leading-relaxed">
+                {f.desc}
+              </p>
             </div>
           ))}
         </div>
