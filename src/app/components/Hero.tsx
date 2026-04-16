@@ -8,13 +8,6 @@ import { InstallBlock } from "./InstallBlock";
 const DISPLACEMENT = 80; // initial offset in px
 const SCROLL_RANGE = 400; // scroll px over which hands converge
 
-// hand-bg.png is 2048 × 1143
-const PAINTING_ASPECT = 2048 / 1143;
-
-// Inner gold-edge inset of the painted frame. Tweak to match the gilded inner border.
-// Order: top right bottom left.
-const INNER_FRAME_INSET =
-  "calc(7% + 10px) calc(5% + 10px) calc(8% + 10px) calc(5% + 10px)";
 
 export function Hero() {
   const leftHandRef = useRef<HTMLImageElement>(null);
@@ -47,23 +40,17 @@ export function Hero() {
 
   return (
     <section className="relative h-screen w-full overflow-hidden z-[1] bg-[#1a1412]">
-      {/* Painting wrapper — mobile: fill section (cover). Desktop: fit-contain
-          centered so the whole gilded frame is visible. */}
+      {/* Painting wrapper — mobile: no frame, just dark bg. Desktop: fit-contain
+          centered with gilded frame visible. */}
       <div
-        className="absolute inset-0 bg-cover bg-center
+        className="absolute inset-0
                    md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2
                    md:w-[min(100vw,calc(100vh*2048/1143))] md:h-[min(100vh,calc(100vw*1143/2048))]
-                   md:bg-[length:100%_100%]"
-        style={{
-          backgroundImage: "url(/hand-bg.png)",
-          backgroundRepeat: "no-repeat",
-        }}
+                   md:bg-[url(/hand-bg.png)] md:bg-[length:100%_100%] md:bg-no-repeat"
       >
-        {/* Hands clipped to the inner gold border. clip-path keeps hand
-            coordinates intact so the scroll-reveal still slides them in. */}
+        {/* Hands — no clip on mobile (no frame), clipped to inner gold border on desktop */}
         <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ clipPath: `inset(${INNER_FRAME_INSET})` }}
+          className="absolute inset-0 pointer-events-none md:[clip-path:inset(calc(7%+10px)_calc(5%+10px)_calc(8%+10px)_calc(5%+10px))]"
         >
           {/* Oil painting left hand — hidden on mobile, too cramped */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
