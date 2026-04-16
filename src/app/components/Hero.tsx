@@ -47,14 +47,15 @@ export function Hero() {
 
   return (
     <section className="relative h-screen w-full overflow-hidden z-[1] bg-[#1a1412]">
-      {/* Painting wrapper — centered, fit-contain so the whole gilded frame is always visible */}
+      {/* Painting wrapper — mobile: fill section (cover). Desktop: fit-contain
+          centered so the whole gilded frame is visible. */}
       <div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+        className="absolute inset-0 bg-cover bg-center
+                   md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2
+                   md:w-[min(100vw,calc(100vh*2048/1143))] md:h-[min(100vh,calc(100vw*1143/2048))]
+                   md:bg-[length:100%_100%]"
         style={{
-          width: `min(100vw, calc(100vh * ${PAINTING_ASPECT}))`,
-          height: `min(100vh, calc(100vw / ${PAINTING_ASPECT}))`,
           backgroundImage: "url(/hand-bg.png)",
-          backgroundSize: "100% 100%",
           backgroundRepeat: "no-repeat",
         }}
       >

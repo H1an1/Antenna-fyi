@@ -16,15 +16,15 @@ const INNER_FRAME_INSET =
 export function EventsHero() {
   return (
     <section className="relative h-screen w-full overflow-hidden z-[1] bg-[#1a1412]">
-      {/* Painting wrapper — same fit-contain logic as the home Hero so the
-          gilded frame lines up identically. */}
+      {/* Painting wrapper — mobile: fill section (cover). Desktop: fit-contain
+          centered so the whole gilded frame is visible. */}
       <div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+        className="absolute inset-0 bg-cover bg-center
+                   md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2
+                   md:w-[min(100vw,calc(100vh*2048/1143))] md:h-[min(100vh,calc(100vw*1143/2048))]
+                   md:bg-[length:100%_100%]"
         style={{
-          width: `min(100vw, calc(100vh * ${PAINTING_ASPECT}))`,
-          height: `min(100vh, calc(100vw / ${PAINTING_ASPECT}))`,
           backgroundImage: "url(/hand-bg.png)",
-          backgroundSize: "100% 100%",
           backgroundRepeat: "no-repeat",
         }}
       >
@@ -54,9 +54,9 @@ export function EventsHero() {
           style={{ inset: 0, clipPath: `inset(${INNER_FRAME_INSET})` }}
         />
 
-        {/* Title — anchored in the left ruins area */}
-        <div className="absolute top-[120px] md:top-[140px] left-[calc(7%+100px)] z-10 pointer-events-none text-left">
-          <div className="flex items-baseline whitespace-nowrap gap-6">
+        {/* Title — centered on mobile (like home Hero), left-anchored on desktop */}
+        <div className="absolute top-[80px] md:top-[140px] left-0 right-0 md:left-[calc(7%+100px)] md:right-auto z-10 pointer-events-none text-center md:text-left px-4 md:px-0">
+          <div className="flex items-baseline justify-center md:justify-start whitespace-nowrap gap-3 md:gap-6">
             <ScrambledText
               className="antenna-scramble"
               radius={70}
@@ -68,7 +68,7 @@ export function EventsHero() {
             </ScrambledText>
             <ScrambledText
               className="antenna-scramble"
-              style={{ fontSize: "48px" }}
+              style={{ fontSize: "clamp(1.75rem, 4vw, 48px)" }}
               radius={70}
               duration={1.1}
               speed={0.55}
@@ -77,7 +77,7 @@ export function EventsHero() {
               Event
             </ScrambledText>
           </div>
-          <p className="mt-3 font-mono text-sm md:text-base text-[#e8dfcc] drop-shadow leading-relaxed text-right">
+          <p className="mt-3 font-mono text-sm md:text-base text-[#e8dfcc] drop-shadow leading-relaxed text-center md:text-right">
             AI-powered social discovery.
             <br />
             Your AI knows who to meet here.
