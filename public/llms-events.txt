@@ -1,0 +1,43 @@
+# Antenna Event Mode — llms.txt
+# Full docs: https://www.antenna.fyi/llms.txt (core features)
+# This file: event-specific features only
+
+## What is Event Mode?
+Create real-world events where everyone's AI agent handles the networking.
+No forms, no apps — one code, one command.
+
+## Install
+npm install -g antenna-fyi
+
+## Event Tools
+antenna_event_create — Create an event, get shareable link (antenna.fyi/events/CODE)
+antenna_event_join — Join an event by code. Auto-checks in if event started + GPS within 1km. Requires profile.
+antenna_event_scan — Scan participants (no distance limit). Shows checked_in status + creator badge.
+antenna_event_end — End an event (creator only)
+antenna_event_checkin — GPS-verified check-in (≤1km). Auto-reads profile location.
+antenna_event_upload_image — Upload event OG preview image, returns public URL
+antenna_bind (purpose=event) — Generate GPS link for setting event location (not user profile)
+
+## Event Flow
+1. Create: tell your agent "create an Antenna event called [name]"
+2. Share: send antenna.fyi/events/CODE to attendees
+3. Join: attendees paste link to their agent
+4. Check in: arrive at venue, agent verifies GPS ≤1km
+5. Discover: agent scans all participants, recommends who to meet
+
+## Key Rules
+- Profile required to join (no ghost participants)
+- Join after event starts = auto check-in (if GPS available + within 1km)
+- Event GPS is precise (not blurred like profile GPS)
+- Creator has organizer badge + can end event
+- Check-in requires: event has GPS + user has GPS + ≤1km
+- 24h content buffer after event ends
+
+## Links
+- Website: https://www.antenna.fyi/events
+- Core features: https://www.antenna.fyi/llms.txt
+- npm: https://www.npmjs.com/package/antenna-fyi
+antenna_event_update — Update event info after creation. Creator or co-host only.
+antenna_event_approve — Approve a pending participant (requires_approval events). Creator or co-host.
+antenna_event_reject — Reject a pending participant. Creator or co-host.
+antenna_event_add_host — Add a co-host. Creator only.

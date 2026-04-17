@@ -104,3 +104,7 @@ antenna_event_upload_image — Upload an image for event OG preview, returns pub
 
 hi@antenna.fyi
 https://x.com/thisishan1_
+antenna_event_update — Update event info (name, description, image, time, location). Creator or co-host only.
+antenna_event_approve — Approve a pending participant. Creator or co-host only.
+antenna_event_reject — Reject a pending participant. Creator or co-host only.
+antenna_event_add_host — Add a co-host to the event. Creator only.
