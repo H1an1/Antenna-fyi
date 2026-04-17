@@ -50,7 +50,7 @@ export function EventsHero() {
                      md:[clip-path:inset(calc(7%+10px)_calc(5%+10px)_calc(8%+10px)_calc(5%+10px))]"
         />
 
-        {/* Title — scramble animation is isolated here so it can't shift the subtitle */}
+        {/* Title + subtitle — subtitle sits under title block with home-Hero gap (mt-3) */}
         <div className="absolute top-[80px] md:top-[140px] left-0 right-0 md:left-[calc(7%+100px)] md:right-auto z-10 pointer-events-none text-center md:text-left px-4 md:px-0">
           <div className="flex items-baseline justify-center md:justify-start whitespace-nowrap gap-3 md:gap-6">
             <ScrambledText
@@ -73,11 +73,7 @@ export function EventsHero() {
               Event
             </ScrambledText>
           </div>
-        </div>
-
-        {/* Subtitle — positioned independently so title scramble can't shift it */}
-        <div className="absolute top-[150px] md:top-[230px] left-0 right-0 md:left-[calc(7%+100px)] md:right-auto z-10 pointer-events-none text-center md:text-right px-4 md:px-0">
-          <p className="font-mono text-sm md:text-base text-[#e8dfcc] drop-shadow leading-relaxed">
+          <p className="mt-3 font-mono text-sm md:text-base text-[#e8dfcc] drop-shadow leading-relaxed text-center md:text-right">
             AI-powered social discovery.
             <br />
             Your AI knows who to meet here.
