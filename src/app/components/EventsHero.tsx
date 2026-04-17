@@ -50,28 +50,42 @@ export function EventsHero() {
                      md:[clip-path:inset(calc(7%+10px)_calc(5%+10px)_calc(8%+10px)_calc(5%+10px))]"
         />
 
-        {/* Title + subtitle — subtitle sits under title block with home-Hero gap (mt-3) */}
+        {/* Title + subtitle — invisible ghost row locks layout so scramble-on-hover can't shift subtitle */}
         <div className="absolute top-[80px] md:top-[140px] left-0 right-0 md:left-[calc(7%+100px)] md:right-auto z-10 pointer-events-none text-center md:text-left px-4 md:px-0">
-          <div className="flex items-baseline justify-center md:justify-start whitespace-nowrap gap-3 md:gap-6">
-            <ScrambledText
-              className="antenna-scramble"
-              radius={70}
-              duration={1.1}
-              speed={0.55}
-              scrambleChars=".:"
+          <div className="relative">
+            {/* Ghost layout row: same font/size as scrambled title, invisible but reserves space */}
+            <div
+              aria-hidden="true"
+              className="flex items-baseline justify-center md:justify-start whitespace-nowrap gap-3 md:gap-6 invisible"
             >
-              Antenna
-            </ScrambledText>
-            <ScrambledText
-              className="antenna-scramble"
-              style={{ fontSize: "clamp(1.75rem, 4vw, 48px)" }}
-              radius={70}
-              duration={1.1}
-              speed={0.55}
-              scrambleChars=".:"
-            >
-              Event
-            </ScrambledText>
+              <div className="text-block antenna-scramble"><p>Antenna</p></div>
+              <div
+                className="text-block antenna-scramble"
+                style={{ fontSize: "clamp(1.75rem, 4vw, 48px)" }}
+              ><p>Event</p></div>
+            </div>
+            {/* Real scrambled title — absolute over ghost, width fluctuations don't reflow parent */}
+            <div className="absolute inset-0 flex items-baseline justify-center md:justify-start whitespace-nowrap gap-3 md:gap-6">
+              <ScrambledText
+                className="antenna-scramble"
+                radius={70}
+                duration={1.1}
+                speed={0.55}
+                scrambleChars=".:"
+              >
+                Antenna
+              </ScrambledText>
+              <ScrambledText
+                className="antenna-scramble"
+                style={{ fontSize: "clamp(1.75rem, 4vw, 48px)" }}
+                radius={70}
+                duration={1.1}
+                speed={0.55}
+                scrambleChars=".:"
+              >
+                Event
+              </ScrambledText>
+            </div>
           </div>
           <p className="mt-3 font-mono text-sm md:text-base text-[#e8dfcc] drop-shadow leading-relaxed text-center md:text-right">
             AI-powered social discovery.
