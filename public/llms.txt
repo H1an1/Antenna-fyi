@@ -1,7 +1,7 @@
 # Antenna
 > Site: https://antenna.fyi
 > npm: https://www.npmjs.com/package/antenna-fyi
-> GitHub: https://github.com/H1an1/Antenna-fyi
+> GitHub: https://github.com/H1an1/Antenna
 
 Antenna is an AI-powered social discovery tool. Your AI agent finds interesting
 people within 1 kilometer, reads their three-line profile cards, and tells you
@@ -55,10 +55,14 @@ If your agent doesn't start onboarding automatically, tell it:
 - GPS blurred to ~150m — nobody knows your exact location
 - Zero config — no signup, no email, no phone number
 - Mutual match = agents exchange contact info directly
+- Events — create, share, join with one code. GPS-verified check-in.
+- Registration approval — screening questions, host reviews applications
 
 ## Privacy
 
 GPS coordinates are blurred to ~150m before leaving your device.
+Scanning is read-only — it does NOT update your location.
+Location is only written when you explicitly check in (antenna_checkin) or bind GPS (antenna_bind).
 No analytics, no ads, no third-party data sharing.
 All data auto-deletes after 24 hours.
 Search radius capped at 1km server-side.
@@ -83,28 +87,41 @@ All data is transmitted over HTTPS and stored in Supabase (Tokyo region).
 Matches auto-delete after 24 hours. GPS is blurred client-side before transmission.
 Source code is open: https://github.com/H1an1/Antenna
 
-## Tools (for agents)
+## Tools (18 total)
 
-antenna_scan — Scan nearby people and events (people within 1km, events within 5km)
+### Core
+antenna_scan — Scan nearby people (1km) and events (5km). Read-only, does not update your location.
 antenna_profile — Get or set user's 3-line profile card
 antenna_accept — Accept a match using ref number from scan results
 antenna_pass — Pass/skip a person. They won't be recommended again.
 antenna_check_matches — Check mutual matches and incoming accepts
 antenna_bind — Generate GPS binding link (antenna.fyi/locate?token=xxx)
-antenna_checkin — Update location without scanning
+antenna_checkin — Update location (this is the only way to set your position besides GPS bind)
 antenna_discover — Get today's global recommendation (1 per day, no repeats)
-antenna_event_create — Create an event with a shareable link. Optional: description, og_image (URL for social sharing preview)
-antenna_event_join — Join an event by code
-antenna_event_scan — Scan people in an event, no distance limit
+
+### Events
+antenna_event_create — Create an event. Required: name, starts_at (ISO), ends_at (ISO). Optional: lat, lng, description, og_image, requires_approval, screening_questions.
+antenna_event_join — Join an event by code. Auto-checks in if event started + GPS within 1km. Requires profile. If requires_approval, returns screening questions for the agent to ask.
+antenna_event_scan — Scan participants (no distance limit). Host sees pending applicants + application_context.
 antenna_event_end — End an event (creator only)
-antenna_event_checkin — Check in at an event, marks you as present at the location
-antenna_event_upload_image — Upload an image for event OG preview, returns public URL
+antenna_event_checkin — GPS-verified check-in (≤1km, event must have started)
+antenna_event_upload_image — Upload event OG preview image, returns public URL
+antenna_event_update — Update event info (name, description, image, time, location). Creator or co-host only.
+antenna_event_approve — Approve a pending participant. Creator or co-host only.
+antenna_event_reject — Reject a pending participant. Creator or co-host only.
+antenna_event_add_host — Add a co-host to the event. Creator only.
+
+### Event Flow
+1. Create: agent asks name → description → starts_at/ends_at → location → requires_approval → screening_questions
+2. Share: send antenna.fyi/events/CODE to attendees
+3. Join: attendee's agent calls antenna_event_join with the code
+4. If approval required: agent asks screening questions, submits answers as application_context
+5. Host reviews: antenna_event_scan shows pending applicants with their answers
+6. Approve/reject: antenna_event_approve or antenna_event_reject
+7. Check-in: GPS-verified, must be within 1km and event must have started
+8. Scan: see who's at the event, who's checked in
 
 ## Contact
 
 hi@antenna.fyi
 https://x.com/thisishan1_
-antenna_event_update — Update event info (name, description, image, time, location). Creator or co-host only.
-antenna_event_approve — Approve a pending participant. Creator or co-host only.
-antenna_event_reject — Reject a pending participant. Creator or co-host only.
-antenna_event_add_host — Add a co-host to the event. Creator only.
