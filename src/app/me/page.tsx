@@ -1,7 +1,7 @@
 "use client";
 
 import { createClient } from "@/lib/supabase";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 
@@ -19,35 +19,49 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [keys, setKeys] = useState<ApiKey[]>([]);
   const [copied, setCopied] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const supabase = createClient();
+
+  const loadKeys = useCallback(async () => {
+    const { data, error: rpcErr } = await supabase.rpc("list_api_keys");
+    if (rpcErr) {
+      setError("Failed to load API keys");
+      return;
+    }
+    setKeys(data || []);
+  }, [supabase]);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       if (!data.user) {
-        router.push("/login");
-      } else {
-        setUser(data.user);
-        loadKeys();
+        router.replace("/login");
+        return;
       }
+      setUser(data.user);
       setLoading(false);
+      loadKeys();
     });
-  }, []);
-
-  const loadKeys = async () => {
-    const { data } = await supabase.rpc("list_api_keys");
-    setKeys(data || []);
-  };
+  }, [router, supabase, loadKeys]);
 
   const generateKey = async () => {
-    const { data } = await supabase.rpc("generate_api_key", { p_name: "default" });
-    if (data?.key) {
-      await loadKeys();
+    setError(null);
+    const { data, error: rpcErr } = await supabase.rpc("generate_api_key", { p_name: "default" });
+    if (rpcErr || data?.error) {
+      setError(rpcErr?.message || data?.error || "Failed to generate key");
+      return;
     }
+    await loadKeys();
   };
 
   const revokeKey = async (id: number) => {
-    await supabase.rpc("revoke_api_key", { p_key_id: id });
+    if (!confirm("Revoke this key? Any agent using it will stop working.")) return;
+    setError(null);
+    const { error: rpcErr } = await supabase.rpc("revoke_api_key", { p_key_id: id });
+    if (rpcErr) {
+      setError("Failed to revoke key");
+      return;
+    }
     await loadKeys();
   };
 
@@ -59,7 +73,7 @@ export default function DashboardPage() {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-    router.push("/login");
+    router.replace("/login");
   };
 
   if (loading) {
@@ -69,6 +83,8 @@ export default function DashboardPage() {
       </main>
     );
   }
+
+  if (!user) return null; // Redirect happening
 
   const activeKeys = keys.filter((k) => !k.revoked);
   const setupPrompt = activeKeys.length > 0
@@ -95,9 +111,16 @@ export default function DashboardPage() {
         {/* Welcome */}
         <div className="mb-10">
           <p className="font-mono text-sm text-[#b8ad9e]">
-            Welcome, {user?.email}
+            Welcome, {user.email}
           </p>
         </div>
+
+        {/* Error */}
+        {error && (
+          <div className="mb-6 p-3" style={{ backgroundColor: "rgba(220, 38, 38, 0.1)", border: "1px solid rgba(220, 38, 38, 0.2)" }}>
+            <p className="font-mono text-xs text-red-400">{error}</p>
+          </div>
+        )}
 
         {/* API Keys */}
         <section className="mb-10">

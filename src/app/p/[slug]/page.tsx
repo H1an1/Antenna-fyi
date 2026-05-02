@@ -1,14 +1,20 @@
 import { createClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 
 const SUPABASE_URL = "https://bcudjloikmpcqwcptuyd.supabase.co";
 const SUPABASE_ANON_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJjdWRqbG9pa21wY3F3Y3B0dXlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0MTg1NDgsImV4cCI6MjA4OTk5NDU0OH0.FaoC3QfpfHP1npNGjRchJAoAp2PdZtQe_WhP-t-GN1o";
 
 async function getProfile(slug: string) {
-  const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  const { data } = await sb.rpc("get_profile_by_slug", { p_slug: slug });
-  return data;
+  try {
+    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const { data, error } = await sb.rpc("get_profile_by_slug", { p_slug: slug });
+    if (error) return null;
+    return data;
+  } catch {
+    return null;
+  }
 }
 
 export default async function ProfilePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -59,7 +65,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ slug: 
           <p className="font-mono text-xs text-[#b8ad9e]/60 mb-3">
             Want to connect? Get Antenna for your AI agent.
           </p>
-          <a
+          <Link
             href="/"
             className="font-mono text-xs px-4 py-2 inline-block transition-colors"
             style={{
@@ -69,7 +75,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ slug: 
             }}
           >
             Get Antenna →
-          </a>
+          </Link>
         </div>
       </div>
     </main>
