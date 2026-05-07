@@ -44,7 +44,19 @@
         background: #050605;
       }
 
+      .dashboard-wrap::before {
+        content: "";
+        position: absolute;
+        inset: -40px;
+        background-image: url("assets/dashboard-live.png");
+        background-position: center top;
+        background-size: cover;
+        filter: blur(28px) brightness(0.28) saturate(1.12);
+        opacity: 0.82;
+      }
+
       .dashboard-capture {
+        position: relative;
         display: block;
         width: auto;
         height: 100%;
