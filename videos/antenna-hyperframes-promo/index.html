@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Antenna HyperFrames Promo</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: #050605;
+      }
+
+      #antenna-promo {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        color: #a89888;
+        background:
+          radial-gradient(circle at 14% 8%, rgba(226, 196, 110, 0.08), transparent 420px),
+          linear-gradient(180deg, #050605 0%, #11100c 46%, #070806 100%);
+        font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+
+      .scene {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .dashboard-wrap {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #050605;
+      }
+
+      .dashboard-capture {
+        display: block;
+        width: auto;
+        height: 100%;
+        max-width: 100%;
+        object-fit: contain;
+        filter: saturate(1.06) contrast(1.04) brightness(0.92);
+      }
+
+      .dashboard-shade {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(circle at 50% 52%, transparent 0%, transparent 42%, rgba(0, 0, 0, 0.38) 80%),
+          linear-gradient(90deg, rgba(0, 0, 0, 0.24), transparent 26%, transparent 74%, rgba(0, 0, 0, 0.24));
+      }
+
+      .profile-focus {
+        position: absolute;
+        left: 620px;
+        top: 392px;
+        width: 420px;
+        height: 630px;
+        perspective: 1600px;
+        transform-style: preserve-3d;
+      }
+
+      .profile-flipper {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        transform-style: preserve-3d;
+      }
+
+      .profile-face {
+        grid-area: 1 / 1;
+        position: relative;
+        overflow: hidden;
+        box-sizing: border-box;
+        border: 1px solid rgba(215, 184, 102, 0.34);
+        background:
+          linear-gradient(180deg, rgba(232, 222, 204, 0.035), transparent 42%),
+          radial-gradient(circle at 20% 0%, rgba(215, 184, 102, 0.1), transparent 300px),
+          linear-gradient(180deg, rgba(14, 13, 10, 0.92), rgba(7, 7, 5, 0.86));
+        box-shadow:
+          inset 0 0 0 1px rgba(232, 222, 204, 0.025),
+          inset 0 0 34px rgba(215, 184, 102, 0.035),
+          0 24px 80px rgba(0, 0, 0, 0.34);
+        backface-visibility: hidden;
+      }
+
+      .profile-front {
+        padding: 34px 32px;
+      }
+
+      .profile-back {
+        padding: 0;
+      }
+
+      .profile-video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .profile-back-copy {
+        position: absolute;
+        inset-inline: 24px;
+        bottom: 24px;
+        z-index: 2;
+        padding-top: 20px;
+        border-top: 1px solid rgba(215, 184, 102, 0.22);
+        color: #fef1e1;
+        font-size: 18px;
+        line-height: 1.55;
+        background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.42));
+      }
+
+      .kicker {
+        display: block;
+        color: #e2c46e;
+        font-size: 16px;
+        line-height: 1.2;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .profile-title {
+        margin: 58px 0 24px;
+        color: #fef1e1;
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 64px;
+        font-weight: 500;
+        line-height: 0.95;
+        text-shadow: 1px 1px 2px rgba(83, 72, 45, 0.7);
+      }
+
+      .profile-lines {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        border-top: 1px solid rgba(215, 184, 102, 0.18);
+        border-bottom: 1px solid rgba(215, 184, 102, 0.18);
+        padding: 22px 0;
+      }
+
+      .profile-lines p {
+        margin: 0;
+        color: #d8cab8;
+        font-size: 22px;
+        line-height: 1.42;
+      }
+
+      .card-button {
+        position: absolute;
+        top: 32px;
+        right: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 54px;
+        height: 54px;
+        border: 1px solid rgba(215, 184, 102, 0.28);
+        color: #a89888;
+        background: rgba(0, 0, 0, 0.18);
+      }
+
+      .card-button::before,
+      .card-button::after {
+        content: "";
+        position: absolute;
+        border: 2px solid #a89888;
+        border-left-color: transparent;
+        border-bottom-color: transparent;
+        width: 20px;
+        height: 20px;
+      }
+
+      .card-button::before {
+        border-radius: 50%;
+      }
+
+      .card-button::after {
+        width: 7px;
+        height: 7px;
+        border-width: 0 2px 2px 0;
+        margin-left: 18px;
+      }
+
+      .cursor {
+        position: absolute;
+        left: 950px;
+        top: 446px;
+        width: 32px;
+        height: 32px;
+        opacity: 0;
+        z-index: 5;
+      }
+
+      .cursor::before {
+        content: "";
+        position: absolute;
+        left: 4px;
+        top: 0;
+        width: 20px;
+        height: 20px;
+        border-right: 4px solid #fef1e1;
+        border-bottom: 4px solid #fef1e1;
+        box-shadow: 0 0 18px rgba(254, 241, 225, 0.4);
+      }
+
+      .video-field {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        visibility: hidden;
+        opacity: 0;
+      }
+
+      .video-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 170px);
+        grid-auto-rows: 255px;
+        gap: 18px;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .video-tile {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(215, 184, 102, 0.28);
+        background: #050605;
+        box-shadow: 0 26px 80px rgba(0, 0, 0, 0.42);
+      }
+
+      .video-tile.lead {
+        grid-column: span 2;
+        grid-row: span 2;
+      }
+
+      .video-tile video {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.9;
+      }
+
+      .video-label {
+        position: absolute;
+        left: 10px;
+        bottom: 10px;
+        padding: 4px 7px;
+        color: #e2c46e;
+        background: rgba(0, 0, 0, 0.58);
+        font-size: 14px;
+        letter-spacing: 0.12em;
+      }
+
+      .final-lockup {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 34px;
+        visibility: hidden;
+        opacity: 0;
+      }
+
+      .final-wordmark {
+        display: block;
+        width: 580px;
+        max-width: 70%;
+        filter: drop-shadow(0 0 14px rgba(215, 184, 102, 0.18));
+      }
+
+      .tagline {
+        margin: 0;
+        color: #d8cab8;
+        font-size: 24px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="antenna-promo"
+      data-composition-id="antenna-promo"
+      data-start="0"
+      data-duration="18"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div class="scene">
+        <div class="dashboard-wrap">
+          <img
+            id="dashboard-capture"
+            class="dashboard-capture clip"
+            src="assets/dashboard-live.png"
+            alt=""
+            data-start="0"
+            data-duration="14.5"
+            data-track-index="1"
+          />
+          <div class="dashboard-shade" aria-hidden="true"></div>
+        </div>
+
+        <div class="profile-focus">
+          <div class="profile-flipper">
+            <div class="profile-face profile-front">
+              <span class="kicker">Identity://Public</span>
+              <div class="card-button" aria-hidden="true"></div>
+              <h1 class="profile-title">Antenna</h1>
+              <div class="profile-lines">
+                <p>Maps the room through your agent network.</p>
+                <p>Turns profiles, events, and context into live signal.</p>
+                <p>Finds the people worth meeting before the moment passes.</p>
+              </div>
+            </div>
+
+            <div class="profile-face profile-back">
+              <video
+                id="card-current-video"
+                class="profile-video"
+                src="assets/profile-current.mp4"
+                data-start="6.2"
+                data-duration="2.3"
+                data-track-index="10"
+                muted
+                playsinline
+              ></video>
+              <div class="profile-back-copy">
+                Antenna turns the room into signal.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cursor" aria-hidden="true"></div>
+
+        <div class="video-field">
+          <div class="video-grid">
+            <div class="video-tile lead">
+              <video id="tile-current" src="assets/profile-current.mp4" data-start="8.4" data-duration="9.6" data-track-index="11" muted playsinline></video>
+              <span class="video-label">CURRENT</span>
+            </div>
+            <div class="video-tile">
+              <video id="tile-01" src="assets/profile-01-hermes.mp4" data-start="8.4" data-duration="9.6" data-track-index="12" muted playsinline></video>
+              <span class="video-label">01</span>
+            </div>
+            <div class="video-tile">
+              <video id="tile-02" src="assets/profile-02-athena.mp4" data-start="8.4" data-duration="9.6" data-track-index="13" muted playsinline></video>
+              <span class="video-label">02</span>
+            </div>
+            <div class="video-tile">
+              <video id="tile-03" src="assets/profile-03-prometheus.mp4" data-start="8.4" data-duration="9.6" data-track-index="14" muted playsinline></video>
+              <span class="video-label">03</span>
+            </div>
+            <div class="video-tile">
+              <video id="tile-04" src="assets/profile-04-apollo.mp4" data-start="8.4" data-duration="9.6" data-track-index="15" muted playsinline></video>
+              <span class="video-label">04</span>
+            </div>
+            <div class="video-tile">
+              <video id="tile-05" src="assets/profile-05-artemis.mp4" data-start="8.4" data-duration="9.6" data-track-index="16" muted playsinline></video>
+              <span class="video-label">05</span>
+            </div>
+            <div class="video-tile">
+              <video id="tile-06" src="assets/profile-06-aphrodite.mp4" data-start="8.4" data-duration="9.6" data-track-index="17" muted playsinline></video>
+              <span class="video-label">06</span>
+            </div>
+            <div class="video-tile">
+              <video id="tile-07" src="assets/profile-07-dionysus.mp4" data-start="8.4" data-duration="9.6" data-track-index="18" muted playsinline></video>
+              <span class="video-label">07</span>
+            </div>
+            <div class="video-tile">
+              <video id="tile-08" src="assets/profile-08-hades.mp4" data-start="8.4" data-duration="9.6" data-track-index="19" muted playsinline></video>
+              <span class="video-label">08</span>
+            </div>
+            <div class="video-tile">
+              <video id="tile-09" src="assets/profile-09-persephone.mp4" data-start="8.4" data-duration="9.6" data-track-index="20" muted playsinline></video>
+              <span class="video-label">09</span>
+            </div>
+            <div class="video-tile">
+              <video id="tile-10" src="assets/profile-10-odysseus.mp4" data-start="8.4" data-duration="9.6" data-track-index="21" muted playsinline></video>
+              <span class="video-label">10</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="final-lockup">
+          <img
+            id="final-wordmark"
+            class="final-wordmark clip"
+            src="assets/antenna.svg"
+            alt="Antenna"
+            data-start="14.5"
+            data-duration="3.5"
+            data-track-index="30"
+          />
+          <p class="tagline">Signal for the room.</p>
+        </div>
+      </div>
+
+      <script>
+        window.__timelines = window.__timelines || {};
+
+        const tl = gsap.timeline({ paused: true });
+
+        gsap.set(".profile-focus", { opacity: 0, transformPerspective: 1600 });
+        gsap.set(".profile-flipper", { rotationY: 0, transformPerspective: 1600 });
+        gsap.set(".profile-back", { rotationY: 180 });
+        gsap.set(".video-field", { visibility: "hidden", opacity: 0 });
+        gsap.set(".video-tile", { opacity: 0, y: 90, scale: 0.62 });
+        gsap.set(".final-lockup", { visibility: "hidden", opacity: 0, scale: 0.92 });
+
+        tl.fromTo(".dashboard-wrap", { scale: 1, y: 0 }, { scale: 1.08, y: -24, duration: 6.2, ease: "power1.inOut" }, 0);
+
+        tl.fromTo(".profile-focus", { opacity: 0, scale: 0.94, y: 18 }, { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: "power3.out" }, 2.2);
+        tl.fromTo(".profile-title", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 3.0);
+        tl.fromTo(".profile-lines p", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.38, stagger: 0.16, ease: "power3.out" }, 3.45);
+
+        tl.fromTo(".cursor", { opacity: 0, x: 180, y: 110 }, { opacity: 1, x: 0, y: 0, duration: 0.5, ease: "power2.out" }, 5.95);
+        tl.to(".cursor", { scale: 0.78, duration: 0.12, ease: "power2.in" }, 6.45);
+        tl.to(".cursor", { scale: 1, duration: 0.16, ease: "power2.out" }, 6.57);
+        tl.to(".profile-flipper", { rotationY: 180, duration: 0.72, ease: "power3.inOut" }, 6.62);
+        tl.to(".cursor", { opacity: 0, duration: 0.26, ease: "power2.out" }, 7.12);
+
+        tl.fromTo(".profile-back-copy", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.48, ease: "power3.out" }, 7.28);
+
+        tl.to(".profile-focus", { scale: 1.55, x: -130, y: -70, duration: 0.55, ease: "power2.inOut" }, 8.02);
+        tl.to(".profile-focus", { opacity: 0, duration: 0.22, ease: "power2.in" }, 8.26);
+        tl.set(".profile-focus", { visibility: "hidden" }, 8.5);
+
+        tl.set(".video-field", { visibility: "visible" }, 8.34);
+        tl.to(".video-field", { opacity: 1, duration: 0.2, ease: "none" }, 8.34);
+        tl.fromTo(".video-tile", { opacity: 0, y: 90, scale: 0.62 }, { opacity: 1, y: 0, scale: 1, duration: 0.78, stagger: 0.055, ease: "power3.out" }, 8.4);
+        tl.to(".video-tile video", { scale: 1.055, duration: 6.0, ease: "none" }, 8.5);
+        tl.fromTo(".video-grid", { y: 18 }, { y: -18, duration: 6.1, ease: "sine.inOut" }, 8.4);
+
+        tl.to(".dashboard-wrap", { opacity: 0.18, duration: 0.8, ease: "power2.out" }, 8.6);
+
+        tl.to(".video-grid", { scale: 0.48, y: 0, opacity: 0, duration: 0.92, ease: "power3.in" }, 14.5);
+        tl.set(".video-field", { visibility: "hidden", opacity: 0 }, 15.42);
+        tl.set(".final-lockup", { visibility: "visible" }, 14.9);
+        tl.fromTo(".final-lockup", { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.76, ease: "power3.out" }, 15.05);
+        tl.fromTo(".tagline", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.48, ease: "power3.out" }, 15.75);
+
+        window.__timelines["antenna-promo"] = tl;
+      </script>
+    </div>
+  </body>
+</html>
