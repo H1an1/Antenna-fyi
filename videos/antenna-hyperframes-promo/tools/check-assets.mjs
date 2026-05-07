@@ -8,7 +8,7 @@ const projectDir = path.resolve(__dirname, "..");
 const assetsDir = path.join(projectDir, "assets");
 
 const requiredFiles = [
-  "dashboard-live.png",
+  "dashboard-interaction.mp4",
   "antenna.svg",
   "profile-current.mp4",
   "profile-01-hermes.mp4",
@@ -40,4 +40,4 @@ if (videoCount !== 11) {
   throw new Error(`Expected 11 MP4 assets, found ${videoCount}`);
 }
 
-console.log("Asset check passed: dashboard capture, wordmark, and 11 videos are present.");
+console.log("Asset check passed: dashboard interaction video, wordmark, and 11 profile videos are present.");

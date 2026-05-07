@@ -2,9 +2,11 @@
 
 ## Source Of Truth
 
-The first three scenes use the actual rendered dashboard at `http://localhost:3001/me`.
+The first three scenes come from an isolated live dashboard route at `http://localhost:3001/promo/antenna-dashboard`, recorded into `assets/dashboard-interaction.mp4` after a real DOM click on the existing profile flip button.
 
 Do not redesign the dashboard. Do not replace it with the brainstorming companion sketch. The dashboard is the user's personal control console and stays visually separate from the archetype-video universe.
+
+Do not use a static dashboard screenshot as the video base.
 
 ## Palette
 
@@ -25,14 +27,14 @@ Do not redesign the dashboard. Do not replace it with the brainstorming companio
 
 - Scene 01 starts with restrained product-camera motion.
 - Scene 02 focuses the profile card without losing dashboard context.
-- Scene 03 uses the existing card flip as the transition into the cinematic layer.
-- Scene 04 uses staggered video-tile motion and depth.
+- Scene 03 uses the existing card flip button and current profile back video as the transition into the cinematic layer.
+- Scene 04 starts with the current profile video centered and topmost, then expands five videos left and five videos right into one horizontal row.
 - Scene 05 compresses the video field into the Antenna wordmark.
 
 ## What Not To Do
 
 - Do not use generic blue or purple tech gradients.
 - Do not introduce a new landing-page composition for the dashboard.
-- Do not use live iframes inside HyperFrames.
+- Do not use live iframes inside HyperFrames; they do not scrub deterministically.
 - Do not use static video tiles; each tile needs subtle motion.
 - Do not add narration unless the user asks for it.

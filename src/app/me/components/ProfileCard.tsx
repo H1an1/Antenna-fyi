@@ -28,14 +28,6 @@ interface ProfileCardProps {
   isActive: boolean;
 }
 
-function SignalStrip({ className = "" }: { className?: string }) {
-  return (
-    <div className={`signal-rule w-16 ${className}`} aria-hidden="true">
-      <span className="sr-only">signal divider</span>
-    </div>
-  );
-}
-
 export function ProfileCard({
   profileDraft,
   archetypeMatch,
@@ -69,6 +61,7 @@ export function ProfileCard({
             <div className="flex shrink-0 items-center justify-end gap-1.5">
               <button
                 onClick={() => onFlip(true)}
+                data-profile-flip-button="back"
                 className="profile-card-action-button inline-flex items-center justify-center gap-2 border border-[#d7b866]/24 bg-black/10 px-3 py-2 font-mono text-[11px] text-[#A89888] transition-colors hover:border-[#d7b866]/48 hover:text-[#e2c46e]"
                 aria-label={t.flipBack}
               >
@@ -158,6 +151,7 @@ export function ProfileCard({
               </p>
               <button
                 onClick={() => onFlip(false)}
+                data-profile-flip-button="front"
                 className="inline-flex items-center gap-2 border border-[#d7b866]/24 bg-black/20 px-3 py-2 font-mono text-[11px] text-[#A89888] transition-colors hover:border-[#d7b866]/48 hover:text-[#e2c46e]"
               >
                 <RefreshCw size={14} />

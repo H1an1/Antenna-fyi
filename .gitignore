@@ -25,6 +25,7 @@
 *.pem
 .superpowers/
 videos/antenna-hyperframes-promo/.thumbnails/
+videos/antenna-hyperframes-promo/tmp/
 
 # debug
 npm-debug.log*

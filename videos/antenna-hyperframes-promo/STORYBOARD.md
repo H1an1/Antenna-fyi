@@ -2,32 +2,32 @@
 
 ## Scene 01: Real Dashboard Entrance, 0.0-3.0s
 
-Use `assets/dashboard-live.png`, captured from the authenticated live page at `http://localhost:3001/me`.
+Use `assets/dashboard-interaction.mp4`, recorded from the live promo dashboard route at `http://localhost:3001/promo/antenna-dashboard`.
 
 Camera: slow push on the real dashboard. Keep the dashboard recognizable.
 
 ## Scene 02: Profile Card Focus, 3.0-6.2s
 
-Overlay a video-only profile card patch on top of the captured dashboard card.
+The promo dashboard route uses the real profile card component with Antenna profile data. No static screenshot or fake overlay is used.
 
 Profile content:
 
 - Name: `Antenna`
-- Line 1: `Maps the room through your agent network.`
-- Line 2: `Turns profiles, events, and context into live signal.`
+- Line 1: `Agent-native signal for rooms, events, and chance encounters.`
+- Line 2: `Turns profiles, context, and location into live matching intent.`
 - Line 3: `Finds the people worth meeting before the moment passes.`
 
 Camera: move focus toward the profile-card region.
 
 ## Scene 03: Cursor Flip, 6.2-8.4s
 
-Move a cursor to the existing flip control, click, and flip the card patch.
+Move a cursor to the existing flip control. The recorded dashboard video was created by clicking the real DOM button, so the product card performs its actual flip.
 
 Back video: `assets/profile-current.mp4`.
 
 ## Scene 04: 11-Video Expansion, 8.4-14.5s
 
-The current profile-back video becomes the lead tile. Ten archetype videos join it.
+The current profile-back video appears first at the center and stays topmost. Five archetype videos expand left and five expand right until all 11 videos form one horizontal row.
 
 Video sources:
 
@@ -43,7 +43,7 @@ Video sources:
 - `assets/profile-09-persephone.mp4`
 - `assets/profile-10-odysseus.mp4`
 
-Motion: staggered entrance, subtle depth drift, and a slight ongoing scale on each video child.
+Motion: simultaneous left/right expansion, subtle depth drift, and a slight ongoing scale on each video child.
 
 ## Scene 05: Wordmark Merge, 14.5-18.0s
 
