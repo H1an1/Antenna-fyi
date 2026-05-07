@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [userName, setUserName] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -27,10 +28,24 @@ export default function LoginPage() {
     setLoading(true);
 
     if (isSignUp) {
+      const cleanName = userName.trim();
+      if (!cleanName) {
+        setError("Choose a user name for your profile.");
+        setLoading(false);
+        return;
+      }
+
       const { error } = await supabase.auth.signUp({
         email,
         password,
-        options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          data: {
+            display_name: cleanName,
+            full_name: cleanName,
+            user_name: cleanName,
+          },
+        },
       });
       if (error) {
         setError(error.message);
@@ -62,42 +77,60 @@ export default function LoginPage() {
         className="max-w-sm w-full p-8"
         style={{
           backgroundColor: "rgba(42, 34, 24, 0.85)",
-          border: "1px solid rgba(184, 173, 158, 0.15)",
+          border: "1px solid rgba(184, 173, 158, 0.22)",
         }}
       >
-        <h1 className="font-serif text-2xl text-[#e8e0d4] mb-2 text-center">
+        <h1 className="font-serif text-2xl text-[#f2eadf] mb-2 text-center">
           Antenna
         </h1>
-        <p className="font-mono text-xs text-[#b8ad9e] text-center mb-8">
+        <p className="font-mono text-xs text-[#d2c5b6] text-center mb-8">
           {isSignUp ? "Create an account" : "Sign in to get your API key"}
         </p>
 
         {/* Email + Password */}
         <form onSubmit={handleEmailAuth} className="space-y-3 mb-5">
+          {isSignUp && (
+            <div>
+              <label className="font-mono text-[11px] text-[#d2c5b6] mb-1 block">User name</label>
+              <input
+                type="text"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                className="w-full font-mono text-sm px-4 py-2.5 bg-transparent outline-none"
+                style={{
+                  border: "1px solid rgba(184, 173, 158, 0.3)",
+                  color: "#f2eadf",
+                }}
+                required={isSignUp}
+                minLength={2}
+                placeholder="Your profile display name"
+              />
+            </div>
+          )}
           <div>
-            <label className="font-mono text-[11px] text-[#b8ad9e] mb-1 block">Email</label>
+            <label className="font-mono text-[11px] text-[#d2c5b6] mb-1 block">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full font-mono text-sm px-4 py-2.5 bg-transparent outline-none"
               style={{
-                border: "1px solid rgba(184, 173, 158, 0.25)",
-                color: "#e8e0d4",
+                border: "1px solid rgba(184, 173, 158, 0.3)",
+                color: "#f2eadf",
               }}
               required
             />
           </div>
           <div>
-            <label className="font-mono text-[11px] text-[#b8ad9e] mb-1 block">Password</label>
+            <label className="font-mono text-[11px] text-[#d2c5b6] mb-1 block">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full font-mono text-sm px-4 py-2.5 bg-transparent outline-none"
               style={{
-                border: "1px solid rgba(184, 173, 158, 0.25)",
-                color: "#e8e0d4",
+                border: "1px solid rgba(184, 173, 158, 0.3)",
+                color: "#f2eadf",
               }}
               required
               minLength={6}
@@ -131,7 +164,7 @@ export default function LoginPage() {
           className="w-full font-mono text-sm px-4 py-2.5 mb-5 transition-colors flex items-center justify-center gap-3"
           style={{
             border: "1px solid rgba(184, 173, 158, 0.25)",
-            color: "#e8e0d4",
+            color: "#f2eadf",
             backgroundColor: "rgba(42, 34, 24, 0.5)",
           }}
         >
@@ -145,10 +178,10 @@ export default function LoginPage() {
         </button>
 
         {/* Toggle sign in / sign up */}
-        <p className="font-mono text-xs text-center text-[#b8ad9e]/60">
+        <p className="font-mono text-xs text-center text-[#d2c5b6]">
           {isSignUp ? (
             <>Already have an account?{" "}
-              <button onClick={() => { setIsSignUp(false); setError(null); }} className="text-[#c4a862] underline">Sign in</button>
+              <button onClick={() => { setIsSignUp(false); setError(null); setUserName(""); }} className="text-[#c4a862] underline">Sign in</button>
             </>
           ) : (
             <>No account?{" "}
