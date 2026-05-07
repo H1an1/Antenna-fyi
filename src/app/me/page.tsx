@@ -480,7 +480,7 @@ export default function DashboardPage() {
   const [tagInput, setTagInput] = useState("");
   const [apiModalOpen, setApiModalOpen] = useState(false);
   const [profileEditorOpen, setProfileEditorOpen] = useState(false);
-  const [profileCardFlipped, setProfileCardFlipped] = useState(true);
+  const [profileCardFlipped, setProfileCardFlipped] = useState(false);
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
   const [language, setLanguage] = useState<Language>(() => {
     if (typeof window === "undefined") return "en";
