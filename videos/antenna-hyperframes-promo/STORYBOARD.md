@@ -45,7 +45,7 @@ Video sources:
 - `assets/profile-09-persephone.mp4`
 - `assets/profile-10-odysseus.mp4`
 
-Motion: simultaneous left/right expansion, angled card rotation, subtle overlap, depth drift, and a slight ongoing scale on each video child.
+Motion: simultaneous left/right expansion, angled card rotation, visible overlap, depth drift, and a slight ongoing scale on each video child. The cards show only video, with no numeric or current labels.
 
 ## Scene 05: Wordmark Merge, 14.5-18.0s
 
