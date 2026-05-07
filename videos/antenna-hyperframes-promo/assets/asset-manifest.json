@@ -1,0 +1,76 @@
+{
+  "assets": [
+    {
+      "role": "wordmark",
+      "source": "public/brand/antenna.svg",
+      "file": "assets/antenna.svg",
+      "bytes": 6256
+    },
+    {
+      "role": "current-profile-back",
+      "source": "public/profile-assets/ascii-profile-back.mp4",
+      "file": "assets/profile-current.mp4",
+      "bytes": 3236746
+    },
+    {
+      "role": "archetype-01-hermes",
+      "source": "public/profile-archetypes/profile-back/01-Hermes-赫尔墨斯.mp4",
+      "file": "assets/profile-01-hermes.mp4",
+      "bytes": 2274953
+    },
+    {
+      "role": "archetype-02-athena",
+      "source": "public/profile-archetypes/profile-back/02-Athena-雅典娜.mp4",
+      "file": "assets/profile-02-athena.mp4",
+      "bytes": 2065446
+    },
+    {
+      "role": "archetype-03-prometheus",
+      "source": "public/profile-archetypes/profile-back/03-Prometheus-普罗米修斯.mp4",
+      "file": "assets/profile-03-prometheus.mp4",
+      "bytes": 2569054
+    },
+    {
+      "role": "archetype-04-apollo",
+      "source": "public/profile-archetypes/profile-back/04-Apollo-阿波罗.mp4",
+      "file": "assets/profile-04-apollo.mp4",
+      "bytes": 3064980
+    },
+    {
+      "role": "archetype-05-artemis",
+      "source": "public/profile-archetypes/profile-back/05-Artemis-阿尔忒弥斯.mp4",
+      "file": "assets/profile-05-artemis.mp4",
+      "bytes": 1940061
+    },
+    {
+      "role": "archetype-06-aphrodite",
+      "source": "public/profile-archetypes/profile-back/06-Aphrodite-阿佛洛狄忒.mp4",
+      "file": "assets/profile-06-aphrodite.mp4",
+      "bytes": 2632825
+    },
+    {
+      "role": "archetype-07-dionysus",
+      "source": "public/profile-archetypes/profile-back/07-Dionysus-狄俄尼索斯.mp4",
+      "file": "assets/profile-07-dionysus.mp4",
+      "bytes": 2669616
+    },
+    {
+      "role": "archetype-08-hades",
+      "source": "public/profile-archetypes/profile-back/08-Hades-哈迪斯.mp4",
+      "file": "assets/profile-08-hades.mp4",
+      "bytes": 2164631
+    },
+    {
+      "role": "archetype-09-persephone",
+      "source": "public/profile-archetypes/profile-back/09-Persephone-珀耳塞福涅.mp4",
+      "file": "assets/profile-09-persephone.mp4",
+      "bytes": 2854341
+    },
+    {
+      "role": "archetype-10-odysseus",
+      "source": "public/profile-archetypes/profile-back/10-Odysseus-奥德修斯.mp4",
+      "file": "assets/profile-10-odysseus.mp4",
+      "bytes": 2434782
+    }
+  ]
+}
