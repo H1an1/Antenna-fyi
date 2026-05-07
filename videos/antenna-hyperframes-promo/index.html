@@ -65,42 +65,6 @@
           linear-gradient(90deg, rgba(0, 0, 0, 0.3), transparent 28%, transparent 76%, rgba(0, 0, 0, 0.28));
       }
 
-      .cursor {
-        position: absolute;
-        left: 1282px;
-        top: 432px;
-        z-index: 6;
-        width: 34px;
-        height: 34px;
-        opacity: 0;
-        transform-origin: 8px 8px;
-        filter: drop-shadow(0 0 12px rgba(254, 241, 225, 0.3));
-      }
-
-      .cursor::before {
-        content: "";
-        position: absolute;
-        left: 3px;
-        top: 0;
-        width: 21px;
-        height: 21px;
-        border-right: 4px solid #fef1e1;
-        border-bottom: 4px solid #fef1e1;
-        transform: rotate(-18deg) skew(8deg, 8deg);
-      }
-
-      .cursor::after {
-        content: "";
-        position: absolute;
-        left: 19px;
-        top: 21px;
-        width: 10px;
-        height: 18px;
-        border-radius: 5px;
-        background: #fef1e1;
-        transform: rotate(-18deg);
-      }
-
       .video-field {
         z-index: 8;
         display: flex;
@@ -216,8 +180,6 @@
           <div class="dashboard-vignette" aria-hidden="true"></div>
         </div>
 
-        <div class="cursor" aria-hidden="true"></div>
-
         <div class="video-field">
           <div class="video-row">
             <div class="video-tile" data-x="-650" data-y="76" data-rot="-26" data-depth="1">
@@ -280,7 +242,6 @@
         const cardZ = (_index, tile) => Number(tile.dataset.depth || 0);
 
         gsap.set(".dashboard-wrap", { transformOrigin: "56% 48%" });
-        gsap.set(".cursor", { opacity: 0 });
         gsap.set(".video-field", { opacity: 0 });
         gsap.set(".video-tile", { opacity: 0, x: 0, y: -48, zIndex: cardZ, scale: 0.72, rotation: 0, rotateY: 0 });
         gsap.set(".video-tile.lead", { opacity: 0, y: -60, zIndex: 30, scale: 1.06, rotation: 0 });
@@ -288,11 +249,6 @@
 
         tl.fromTo(".dashboard-wrap", { scale: 1, x: 0, y: 0 }, { scale: 1.035, x: -24, y: -12, duration: 4.05, ease: "power1.inOut" }, 0);
         tl.to(".dashboard-wrap", { scale: 1.07, x: -58, y: -26, duration: 2.4, ease: "sine.inOut" }, 4.05);
-
-        tl.fromTo(".cursor", { opacity: 0, x: 150, y: 96 }, { opacity: 1, x: 0, y: 0, duration: 0.5, ease: "power2.out" }, 4.16);
-        tl.to(".cursor", { scale: 0.78, duration: 0.12, ease: "power2.in" }, 4.72);
-        tl.to(".cursor", { scale: 1, duration: 0.16, ease: "power2.out" }, 4.84);
-        tl.to(".cursor", { opacity: 0, duration: 0.26, ease: "power2.out" }, 5.12);
 
         tl.to(".dashboard-vignette", { opacity: 0.58, duration: 0.8, ease: "power2.out" }, 6.72);
         tl.to(".dashboard-wrap", { opacity: 0.16, scale: 1.105, duration: 0.82, ease: "power2.out" }, 8.15);

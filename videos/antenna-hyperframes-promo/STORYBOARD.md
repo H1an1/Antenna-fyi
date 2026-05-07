@@ -19,9 +19,9 @@ Profile content:
 
 Camera: move focus toward the profile-card region.
 
-## Scene 03: Cursor Flip, 6.2-8.4s
+## Scene 03: Profile Flip, 6.2-8.4s
 
-Move a cursor to the existing flip control. The recorded dashboard video was created by clicking the real DOM button, so the product card performs its actual flip.
+The recorded dashboard video was created by clicking the real DOM button, so the product card performs its actual flip. No synthetic pointer overlay is added.
 
 Back archetype: `Hermes`.
 
