@@ -1,0 +1,75 @@
+# Antenna Events
+> Site: https://antenna.fyi
+> npm: https://www.npmjs.com/package/antenna-fyi
+> GitHub: https://github.com/H1an1/Antenna-fyi
+
+Antenna Events lets you create and manage location-based events through your
+AI agent. Participants join via a shareable link, get auto-checked-in when
+they arrive, and can discover each other through their profile cards.
+
+## Event Tools
+
+### antenna_event_create
+Create an event. Returns a shareable link (antenna.fyi/events/CODE).
+- name: event name (required)
+- starts_at, ends_at: ISO time strings (required)
+- lat, lng: event location (optional, needed for GPS check-in)
+- description: event description (optional)
+- og_image: OG image URL for social sharing (optional)
+- requires_approval: boolean (default false)
+- screening_questions: string array of questions for applicants
+
+### antenna_event_join
+Join an event by code. Auto-checks in if event has started and you're within 1km.
+- code: from the event URL (antenna.fyi/events/CODE)
+- lat, lng: optional GPS (for auto-checkin)
+- Requires a profile — users without one are told to create one first.
+
+### antenna_event_scan
+Scan people in an event. No distance limit — returns all participants.
+- code: event code
+
+### antenna_event_end
+End an event. Only the creator can end it.
+- code: event code
+
+### antenna_event_checkin
+Check in at an event — marks you as present.
+- code: event code
+- lat, lng: optional GPS coordinates
+- Event must have started. Must be within 1km. Check-in is automatic on join.
+
+### antenna_event_upload_image
+Upload an image for event OG preview. Returns a public URL.
+- image_base64: base64-encoded image data
+- event_code: event code
+
+### antenna_event_update
+Update event info. Only creator or co-host.
+- code: event code
+- Any combination of: name, description, og_image, lat, lng, starts_at, ends_at,
+  requires_approval, screening_questions
+
+### antenna_event_approve / antenna_event_reject
+Approve or reject a pending participant. Only creator or co-host.
+- code: event code
+- ref: participant ref number
+
+### antenna_event_add_host
+Add a co-host. Only creator can add.
+- code: event code
+- ref: participant ref number
+
+### antenna_event_message
+Send a message to event participants. Only creator or co-host.
+- code: event code
+- message: the message text
+- ref: optional — specific participant, or broadcast to all
+
+## Key Behaviors
+
+- Events require a profile to join (profile gate)
+- Auto-checkin on join if event started + GPS within 1km
+- Approval workflow: requires_approval + screening_questions
+- GPS for events is precise (not blurred like profile GPS)
+- Check-in verifies distance ≤1km from event location

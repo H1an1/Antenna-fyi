@@ -3,40 +3,30 @@
 import Image from "next/image";
 import Link from "next/link";
 import { EngravedPanel } from "@/app/components/EngravedPanel";
-import { createClient } from "@/lib/supabase";
+import { useSupabase } from "@/lib/useSupabase";
 import {
-  PROFILE_CONTEXT_MAX_LENGTH,
-  PROFILE_LINE_MAX_LENGTH,
   PROFILE_METADATA_KEY,
   createDefaultProfileDraft,
   createProfileSlug,
   limitProfileContext,
   limitProfileLine,
   mergeProfileDraft,
-  normalizeProfileSlug,
   normalizeLinks,
   parseProfileContext,
   sanitizeTags,
   serializeProfileContext,
   type ProfileDraft,
 } from "@/lib/profile";
-import {
-  Bell,
-  Check,
-  Copy,
-  ExternalLink,
-  KeyRound,
-  MapPin,
-  Plus,
-  RefreshCw,
-  Save,
-  UserRound,
-  WandSparkles,
-  X,
-} from "lucide-react";
+import { matchArchetype } from "@/lib/archetype";
+import { ExternalLink, KeyRound, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
+
+import { ProfileCard } from "./components/ProfileCard";
+import { ProfileEditor } from "./components/ProfileEditor";
+import { ApiKeyModal } from "./components/ApiKeyModal";
+import { TodaySection } from "./components/TodaySection";
 
 interface ApiKey {
   id: number;
@@ -65,9 +55,7 @@ type Language = "en" | "zh";
 const mutedText = "text-[#ded2c1]";
 const languageStorageKey = "antenna.dashboard.language";
 const antennaLogoSrc = "/brand/antenna.svg";
-const profileBackVideoSrc = "/profile-assets/ascii-profile-back.mp4";
 const mythicFigureSrc = "/profile-assets/ascii-angel-dashboard-crop-tone-transparent.png";
-const profileOrnamentSrc = "/profile-assets/wing-signal-ornament.png";
 
 const dashboardCopy = {
   en: {
@@ -190,14 +178,7 @@ const dashboardCopy = {
     editProfile: "Edit",
     flipBack: "Back",
     flipFront: "Front",
-    mythRole: "Hermes",
-    mythName: "Hermes",
     mythArchetypeLabel: "Assigned archetype",
-    mythReasonOne:
-      "A builder-researcher drawn to ambitious people and sharp, warm conversations, this profile echoes Hermes: a messenger who turns curiosity into real-world introductions.",
-    mythReasonTwo: "",
-    illustrationTitle: "Hermes carries the signal.",
-    illustrationBody: "Temporary visual slot for the Greek mythology role that will later be matched from profile content.",
     matchesHeader: "Matches",
     eventsHeader: "Events",
     noPendingMatches: "No pending matches",
@@ -324,14 +305,7 @@ const dashboardCopy = {
     editProfile: "编辑",
     flipBack: "背面",
     flipFront: "正面",
-    mythRole: "赫尔墨斯",
-    mythName: "赫尔墨斯",
     mythArchetypeLabel: "分配的神话原型",
-    mythReasonOne:
-      "这张 profile 兼具建造与研究的气质，关注有野心的人，也偏好清晰温暖的对话，因此呼应赫尔墨斯：把好奇心转化为真实世界介绍的信使。",
-    mythReasonTwo: "",
-    illustrationTitle: "赫尔墨斯正在传递信号。",
-    illustrationBody: "这里先作为希腊神话角色的视觉位，之后会根据 profile 内容自动匹配角色。",
     matchesHeader: "匹配",
     eventsHeader: "活动",
     noPendingMatches: "没有待处理匹配",
@@ -365,94 +339,6 @@ async function reverseGeocode(lat: number, lng: number, language: Language): Pro
   }
 }
 
-function FieldLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <label className="mb-1.5 block font-mono text-[10px] uppercase tracking-[0.14em] text-[#d8cab8]">
-      {children}
-    </label>
-  );
-}
-
-function TextInput({
-  label,
-  value,
-  onChange,
-  placeholder,
-  maxLength,
-  helper,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  maxLength?: number;
-  helper?: string;
-}) {
-  const showCount = typeof maxLength === "number" && maxLength > 10;
-
-  return (
-    <div>
-      <div className="mb-1.5 flex items-center justify-between gap-3">
-        <label className="block font-mono text-[10px] uppercase tracking-[0.14em] text-[#d8cab8]">
-          {label}
-        </label>
-        {showCount && (
-          <span className="shrink-0 font-mono text-[10px] text-[#d8cab8]/62">
-            {value.length}/{maxLength}
-          </span>
-        )}
-      </div>
-      <input
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        placeholder={placeholder}
-        maxLength={maxLength}
-        className="w-full border border-[#d7b866]/24 bg-[#070807]/70 px-3 py-2.5 font-mono text-sm text-[#A89888] outline-none transition-colors placeholder:text-[#d8cab8]/48 focus:border-[#e2c46e]/70"
-      />
-      {helper && <p className="mt-1.5 font-mono text-[10px] leading-relaxed text-[#d8cab8]/72">{helper}</p>}
-    </div>
-  );
-}
-
-function TextArea({
-  label,
-  value,
-  onChange,
-  placeholder,
-  rows = 3,
-  maxLength,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  rows?: number;
-  maxLength?: number;
-}) {
-  return (
-    <div>
-      <div className="mb-1.5 flex items-center justify-between gap-3">
-        <label className="block font-mono text-[10px] uppercase tracking-[0.14em] text-[#d8cab8]">
-          {label}
-        </label>
-        {maxLength && (
-          <span className="shrink-0 font-mono text-[10px] text-[#d8cab8]/62">
-            {value.length}/{maxLength}
-          </span>
-        )}
-      </div>
-      <textarea
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        placeholder={placeholder}
-        rows={rows}
-        maxLength={maxLength}
-        className="w-full resize-none border border-[#d7b866]/24 bg-[#070807]/70 px-3 py-2.5 font-mono text-sm leading-relaxed text-[#A89888] outline-none transition-colors placeholder:text-[#d8cab8]/48 focus:border-[#e2c46e]/70"
-      />
-    </div>
-  );
-}
-
 function SignalStrip({ className = "" }: { className?: string }) {
   return (
     <div className={`signal-rule w-16 ${className}`} aria-hidden="true">
@@ -467,12 +353,11 @@ function isDuplicateSlugError(error: { code?: string; message?: string; details?
 }
 
 export default function DashboardPage() {
-  const [supabase] = useState(() => createClient());
+  const supabase = useSupabase();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [keys, setKeys] = useState<ApiKey[]>([]);
   const [profileDraft, setProfileDraft] = useState<ProfileDraft | null>(null);
-  const [copied, setCopied] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [profileNotice, setProfileNotice] = useState<string | null>(null);
   const [saveState, setSaveState] = useState<SaveState>("idle");
@@ -496,9 +381,13 @@ export default function DashboardPage() {
 
   const setupPrompt = useMemo(() => {
     if (!primaryKey || !profileDraft) return null;
-
     return t.setupPrompt(profileDraft.displayName, primaryKey.key);
   }, [primaryKey, profileDraft, t]);
+
+  const archetypeMatch = useMemo(() => {
+    if (!profileDraft) return { primary: "Hermes" as const, secondary: null, reason: "" };
+    return matchArchetype(profileDraft);
+  }, [profileDraft]);
 
   const changeLanguage = (nextLanguage: Language) => {
     setLanguage(nextLanguage);
@@ -609,13 +498,6 @@ export default function DashboardPage() {
     });
   };
 
-  const copyToClipboard = async (text: string, id: string) => {
-    if (!navigator.clipboard) return;
-    await navigator.clipboard.writeText(text);
-    setCopied(id);
-    setTimeout(() => setCopied(null), 1800);
-  };
-
   const generateKey = async () => {
     setError(null);
     const { data, error: rpcErr } = await supabase.rpc("generate_api_key", { p_name: "default" });
@@ -627,7 +509,6 @@ export default function DashboardPage() {
   };
 
   const revokeKey = async (id: number) => {
-    if (!confirm(t.revokeConfirm)) return;
     setError(null);
     const { error: rpcErr } = await supabase.rpc("revoke_api_key", { p_key_id: id });
     if (rpcErr) {
@@ -682,23 +563,7 @@ export default function DashboardPage() {
       return;
     }
 
-    const { data: updateData, error: authErr } = await supabase.auth.updateUser({
-      data: {
-        display_name: cleaned.displayName,
-        full_name: cleaned.displayName,
-        user_name: cleaned.displayName,
-        [PROFILE_METADATA_KEY]: cleaned,
-      },
-    });
-
-    if (authErr) {
-      setError(authErr.message || t.failedSaveProfile);
-      setSaveState("idle");
-      return;
-    }
-
-    if (updateData.user) setUser(updateData.user);
-
+    // Fix save race condition: write to profiles table FIRST, then update auth metadata on success.
     const profilePayload = {
       device_id: cleaned.deviceId,
       user_id: user.id,
@@ -746,6 +611,26 @@ export default function DashboardPage() {
       return;
     }
 
+    // Only on success of profiles write, update auth metadata.
+    const { data: updateData, error: authErr } = await supabase.auth.updateUser({
+      data: {
+        display_name: cleaned.displayName,
+        full_name: cleaned.displayName,
+        user_name: cleaned.displayName,
+        [PROFILE_METADATA_KEY]: cleaned,
+      },
+    });
+
+    if (authErr) {
+      // Profile row saved but auth metadata failed — partial success.
+      setProfileDraft(cleaned);
+      setProfileNotice(t.profileSyncPartial);
+      setSaveState("partial");
+      return;
+    }
+
+    if (updateData.user) setUser(updateData.user);
+
     setProfileDraft(cleaned);
     setSaveState("saved");
     setTimeout(() => setSaveState("idle"), 1800);
@@ -754,13 +639,6 @@ export default function DashboardPage() {
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     router.replace("/login");
-  };
-
-  const addTag = () => {
-    if (!profileDraft) return;
-    const nextTags = sanitizeTags([...profileDraft.interestTags, tagInput]);
-    updateDraft({ interestTags: nextTags });
-    setTagInput("");
   };
 
   const updateGps = () => {
@@ -774,9 +652,10 @@ export default function DashboardPage() {
     setGpsState("requesting");
     navigator.geolocation.getCurrentPosition(
       async (position) => {
+        // Fix GPS privacy: use rounded coordinates (3 decimal places) for BOTH geocode AND DB write.
         const fLat = Math.round(position.coords.latitude * 1000) / 1000;
         const fLng = Math.round(position.coords.longitude * 1000) / 1000;
-        const city = await reverseGeocode(position.coords.latitude, position.coords.longitude, language);
+        const city = await reverseGeocode(fLat, fLng, language);
         const nextDraft = mergeProfileDraft(profileDraft, {
           city: city || profileDraft.city,
           lastGps: `${fLat.toFixed(3)}, ${fLng.toFixed(3)} · ${new Date().toLocaleTimeString()}`,
@@ -828,21 +707,12 @@ export default function DashboardPage() {
 
   if (!user || !profileDraft) return null;
 
-  const saveProfileLabel =
-    saveState === "saving"
-      ? t.saving
-      : saveState === "saved"
-        ? t.saved
-        : saveState === "partial"
-          ? t.savedLocally
-          : t.saveProfile;
   const gpsActionLabel =
     gpsState === "requesting"
       ? t.requesting
       : gpsState === "saved"
         ? t.updated
         : t.updateGps;
-  const profileStatusLabel = profileDraft.isActive ? t.active : t.quiet;
   const profileStatusPill = profileDraft.isActive ? t.activeLower : t.quietLower;
   const dateLocale = language === "zh" ? "zh-CN" : "en-US";
   const isProfileComplete = Boolean(
@@ -937,603 +807,121 @@ export default function DashboardPage() {
         <div className="dashboard-workbench grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(720px,848px)]">
           <div className="hidden lg:block" aria-hidden="true" />
           <div className="mx-auto w-full max-w-[848px] space-y-6 lg:mx-0 lg:max-w-none">
-        <EngravedPanel as="section" className="p-5 backdrop-blur-md md:p-6">
-          {!primaryKey ? (
-            <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
-              <div>
-                <div className="flex items-center gap-3">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
-                    {t.agentConnection}
-                  </p>
-                  <SignalStrip />
-                </div>
-                <h1 className="mt-2 font-serif text-3xl leading-tight text-[#A89888] md:text-4xl">
-                  {t.firstTimeTitle}
-                </h1>
-                <p className="mt-2 max-w-2xl font-mono text-sm leading-relaxed text-[#d8cab8]">
-                  {t.firstTimeBody}
-                </p>
-              </div>
-              <button
-                onClick={generateKey}
-                className="inline-flex items-center justify-center gap-2 border border-[#d7b866]/48 bg-[#d7b866]/12 px-5 py-3 font-mono text-sm text-[#e2c46e] transition-colors hover:bg-[#d7b866]/18"
+            <TodaySection
+              hasKey={!!primaryKey}
+              isProfileComplete={isProfileComplete}
+              gpsState={gpsState}
+              gpsActionLabel={gpsActionLabel}
+              onGenerateKey={generateKey}
+              onCompleteProfile={() => setProfileEditorOpen(true)}
+              onUpdateGps={updateGps}
+              t={t}
+            />
+
+            <section>
+              <div
+                className={`profile-dashboard-grid ${
+                  profileEditorOpen ? "profile-dashboard-grid-editing" : ""
+                }`}
               >
-                <KeyRound size={16} />
-                {t.getYourKey}
-              </button>
-            </div>
-          ) : !isProfileComplete ? (
-            <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
-              <div>
-                <div className="flex items-center gap-3">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
-                    {t.identityTitle}
-                  </p>
-                  <SignalStrip />
-                </div>
-                <h1 className="mt-2 font-serif text-3xl leading-tight text-[#A89888] md:text-4xl">
-                  {t.profileIncompleteTitle}
-                </h1>
-                <p className="mt-2 max-w-2xl font-mono text-sm leading-relaxed text-[#d8cab8]">
-                  {t.profileIncompleteBody}
-                </p>
-              </div>
-              <button
-                onClick={() => setProfileEditorOpen(true)}
-                className="inline-flex items-center justify-center gap-2 border border-[#d7b866]/48 bg-[#d7b866]/12 px-5 py-3 font-mono text-sm text-[#e2c46e] transition-colors hover:bg-[#d7b866]/18"
-              >
-                <UserRound size={16} />
-                {t.completeProfile}
-              </button>
-            </div>
-          ) : (
-            <div>
-              <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-                <div>
-                  <div className="flex items-center gap-3">
-                    <p className="profile-card-kicker font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
-                      {t.todayTitle}
-                    </p>
-                    <SignalStrip />
-                  </div>
-                  <h1 className="mythic-soft-title mt-1 font-serif text-3xl leading-tight md:text-4xl">
-                    {t.todayReadyTitle}
-                  </h1>
-                </div>
-                <div className="flex flex-wrap items-center gap-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[#d8cab8]">
-                  <span>{t.agentStatus}</span>
-                  <span
-                    className={`inline-flex items-center gap-1 border px-2.5 py-1 text-[10px] ${
-                      primaryKey
-                        ? "border-emerald-300/35 bg-emerald-400/7 text-emerald-100"
-                        : "border-[#d7b866]/42 bg-[#d7b866]/8 text-[#e2c46e]"
-                    }`}
-                  >
-                    <span className={primaryKey ? "text-emerald-200" : "text-[#e2c46e]"}>●</span>
-                    {primaryKey ? t.layer0Connected : t.layer0NeedsSetup}
-                  </span>
-                </div>
-              </div>
-              <EngravedPanel quiet className="flex flex-col gap-4 p-4 sm:flex-row sm:items-start sm:justify-between">
-                <div className="flex items-start gap-3">
-                  <span className="mt-0.5 text-[#e2c46e]">
-                    <Bell size={16} />
-                  </span>
-                  <div>
-                    <p className="font-mono text-sm text-[#A89888]">{t.todayReadyTitle}</p>
-                    <p className="mt-1 font-mono text-xs leading-relaxed text-[#d8cab8]">
-                      {t.todayReadyBody}
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={updateGps}
-                  disabled={gpsState === "requesting"}
-                  className="inline-flex w-fit shrink-0 items-center gap-1.5 border border-[#d7b866]/24 px-2.5 py-1.5 font-mono text-[11px] text-[#A89888] transition-colors hover:border-[#d7b866]/50 hover:text-[#e2c46e] disabled:opacity-50"
-                >
-                  <RefreshCw size={14} className={gpsState === "requesting" ? "animate-spin" : ""} />
-                  {gpsActionLabel}
-                </button>
-              </EngravedPanel>
-            </div>
-          )}
-        </EngravedPanel>
+                <ProfileCard
+                  profileDraft={profileDraft}
+                  archetypeMatch={archetypeMatch}
+                  isFlipped={profileCardFlipped}
+                  onFlip={(flipped) => setProfileCardFlipped(flipped)}
+                  onEdit={() => {
+                    setProfileCardFlipped(false);
+                    setProfileEditorOpen(true);
+                  }}
+                  showEditButton={!profileEditorOpen}
+                  t={t}
+                  statusPill={profileStatusPill}
+                  isActive={profileDraft.isActive}
+                />
 
-        <section>
-          <div
-            className={`profile-dashboard-grid ${
-              profileEditorOpen ? "profile-dashboard-grid-editing" : ""
-            }`}
-          >
-            <div className="profile-card-scene self-start">
-              <div className={`profile-card-flipper ${profileCardFlipped ? "is-flipped" : ""}`}>
-                <EngravedPanel quiet className="profile-card-face profile-summary-card p-5">
-                  <div className="profile-card-ornament" aria-hidden="true">
-                    <Image
-                      src={profileOrnamentSrc}
-                      alt=""
-                      fill
-                      sizes="(max-width: 768px) 280px, 340px"
-                      className="object-contain"
-                    />
-                  </div>
-                  <div className="profile-card-chart-bg" aria-hidden="true" />
-                  <div className="profile-card-titlebar mb-4 flex items-center justify-between gap-2 border-b border-[#d7b866]/14 pb-2.5">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
-                      IDENTITY://PUBLIC
-                    </p>
-                    <div className="flex shrink-0 items-center justify-end gap-1.5">
-                      <button
-                        onClick={() => setProfileCardFlipped(true)}
-                        className="profile-card-action-button inline-flex items-center justify-center gap-2 border border-[#d7b866]/24 bg-black/10 px-3 py-2 font-mono text-[11px] text-[#A89888] transition-colors hover:border-[#d7b866]/48 hover:text-[#e2c46e]"
-                        aria-label={t.flipBack}
-                      >
-                        <RefreshCw size={14} className="shrink-0" />
-                        <span className="profile-card-action-label">{t.flipBack}</span>
-                      </button>
-                      {!profileEditorOpen && (
-                        <button
-                          onClick={() => {
-                            setProfileCardFlipped(false);
-                            setProfileEditorOpen(true);
-                          }}
-                          className="profile-card-action-button inline-flex items-center justify-center gap-2 border border-[#d7b866]/24 bg-black/10 px-3 py-2 font-mono text-[11px] text-[#A89888] transition-colors hover:border-[#d7b866]/48 hover:text-[#e2c46e]"
-                          aria-label={t.editProfile}
-                        >
-                          <WandSparkles size={14} className="shrink-0" />
-                          <span className="profile-card-action-label">{t.editProfile}</span>
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                  <div className="profile-card-identity mb-4 flex items-end justify-between gap-4">
-                    <div>
-                      <div className="profile-card-avatar text-4xl leading-none">{profileDraft.emoji || "✦"}</div>
-                      <h2 className="profile-card-name mythic-soft-title mt-3 font-serif text-3xl leading-tight">
-                        {profileDraft.displayName || t.defaultUser}
-                      </h2>
-                    </div>
-                    <span
-                      className={`profile-card-status mb-1 shrink-0 border bg-black/18 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] ${
-                        profileDraft.isActive
-                          ? "border-emerald-300/35 text-emerald-100"
-                          : "border-red-300/35 text-red-100"
-                      }`}
-                    >
-                      {profileStatusPill}
-                    </span>
-                  </div>
-
-                  <div className="profile-card-lines space-y-2.5 border-y border-[#d7b866]/16 py-3">
-                    {[profileDraft.line1, profileDraft.line2, profileDraft.line3].map((line, index) => (
-                      <p
-                        key={index}
-                        className="profile-card-line font-mono text-[#A89888]"
-                      >
-                        {line || t.line(index + 1)}
-                      </p>
-                    ))}
-                  </div>
-
-                  <div className="profile-card-meta mt-4 space-y-3">
-                    {profileDraft.city && (
-                      <p className="profile-card-location flex min-w-0 items-center gap-2 font-mono text-xs text-[#d8cab8]">
-                        <MapPin size={14} className="shrink-0" />
-                        <span className="truncate">{profileDraft.city}</span>
-                      </p>
-                    )}
-                    <div className="profile-card-tags flex flex-wrap gap-2">
-                      {profileDraft.interestTags.slice(0, 3).map((tag) => (
-                        <span
-                          key={tag}
-                          className="profile-card-tag border border-[#d7b866]/20 bg-[#d7b866]/8 px-2.5 py-1 font-mono text-[10px] text-[#d8cab8]"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                      {profileDraft.interestTags.length > 3 && (
-                        <span className="profile-card-tag border border-[#d7b866]/14 bg-black/10 px-2.5 py-1 font-mono text-[10px] text-[#d8cab8]/72">
-                          +{profileDraft.interestTags.length - 3}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </EngravedPanel>
-
-                <EngravedPanel className="profile-card-face profile-card-back bg-black p-5">
-                  <video
-                    className="profile-card-video"
-                    src={profileBackVideoSrc}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
+                {profileEditorOpen ? (
+                  <ProfileEditor
+                    profileDraft={profileDraft}
+                    updateDraft={updateDraft}
+                    saveProfile={saveProfile}
+                    saveState={saveState}
+                    setSlugManuallyEdited={setSlugManuallyEdited}
+                    t={t}
+                    tagInput={tagInput}
+                    setTagInput={setTagInput}
                   />
-                  <div className="profile-card-back-gradient" aria-hidden="true" />
-                  <div className="relative z-10 flex h-full flex-col justify-between">
-                    <div className="flex items-center justify-between gap-3 border-b border-[#d7b866]/14 pb-3">
-                      <p className="dashboard-side-kicker font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
-                        MYTH://{t.mythRole}
-                      </p>
-                      <button
-                        onClick={() => setProfileCardFlipped(false)}
-                        className="inline-flex items-center gap-2 border border-[#d7b866]/24 bg-black/20 px-3 py-2 font-mono text-[11px] text-[#A89888] transition-colors hover:border-[#d7b866]/48 hover:text-[#e2c46e]"
-                      >
-                        <RefreshCw size={14} />
-                        {t.flipFront}
-                      </button>
-                    </div>
-                    <div className="space-y-4 pt-6">
-                      <div>
-                        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#e2c46e]">
-                          {t.mythArchetypeLabel}
-                        </p>
-                        <h3 className="mythic-soft-title mt-2 font-serif text-4xl leading-none">
-                          {t.mythName}
-                        </h3>
-                      </div>
-                      <div className="border-t border-[#d7b866]/18 pt-4">
-                        <p className="font-mono text-xs leading-relaxed text-[#FEF1E1]">
-                          {t.mythReasonOne}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </EngravedPanel>
-              </div>
-            </div>
-
-            {profileEditorOpen ? (
-              <div className="space-y-5">
-                <EngravedPanel quiet className="space-y-4 p-4">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#e2c46e]">
-                    {t.publicCard}
-                  </p>
-                  <div className="grid gap-4 md:grid-cols-[80px_1fr_1fr]">
-                    <TextInput
-                      label={t.emoji}
-                      value={profileDraft.emoji}
-                      onChange={(value) => updateDraft({ emoji: value.slice(0, 2) })}
-                      maxLength={2}
-                    />
-                    <TextInput
-                      label={t.displayName}
-                      value={profileDraft.displayName}
-                      onChange={(value) => updateDraft({ displayName: value })}
-                    />
-                    <TextInput
-                      label={t.publicSlug}
-                      value={profileDraft.profileSlug}
-                      onChange={(value) => {
-                        setSlugManuallyEdited(true);
-                        updateDraft({ profileSlug: normalizeProfileSlug(value) });
-                      }}
-                      helper={t.publicSlugHint}
-                    />
-                  </div>
-                  <div className="space-y-4 border-t border-[#d7b866]/12 pt-4">
-                    <TextInput
-                      label={t.line(1)}
-                      value={profileDraft.line1}
-                      onChange={(value) => updateDraft({ line1: limitProfileLine(value) })}
-                      maxLength={PROFILE_LINE_MAX_LENGTH}
-                    />
-                    <TextInput
-                      label={t.line(2)}
-                      value={profileDraft.line2}
-                      onChange={(value) => updateDraft({ line2: limitProfileLine(value) })}
-                      maxLength={PROFILE_LINE_MAX_LENGTH}
-                    />
-                    <TextInput
-                      label={t.line(3)}
-                      value={profileDraft.line3}
-                      onChange={(value) => updateDraft({ line3: limitProfileLine(value) })}
-                      maxLength={PROFILE_LINE_MAX_LENGTH}
-                    />
-                  </div>
-
-                  <div>
-                    <FieldLabel>{t.interestTags}</FieldLabel>
-                    <div className="mb-2 flex flex-wrap gap-2">
-                      {profileDraft.interestTags.map((tag) => (
-                        <button
-                          key={tag}
-                          onClick={() =>
-                            updateDraft({
-                              interestTags: profileDraft.interestTags.filter((item) => item !== tag),
-                            })
-                          }
-                          className="inline-flex items-center gap-1 border border-[#d7b866]/20 bg-[#d7b866]/8 px-2.5 py-1 font-mono text-[10px] text-[#d8cab8] transition-colors hover:border-red-300/45 hover:text-red-200"
-                        >
-                          {tag}
-                          <X size={12} />
+                ) : (
+                  <div className="dashboard-side-stack flex h-full min-h-0 flex-col gap-4">
+                    <EngravedPanel quiet className="dashboard-side-card flex-1 p-5">
+                      <div className="dashboard-side-header mb-4 flex items-start justify-between gap-3 border-b border-[#d7b866]/14 pb-3">
+                        <div className="flex items-center gap-3">
+                          <p className="dashboard-side-kicker font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
+                            {t.matchesHeader}
+                          </p>
+                          <SignalStrip />
+                        </div>
+                        <button className="font-mono text-xs text-[#d8cab8] transition-colors hover:text-[#e2c46e]">
+                          {t.viewAll}
                         </button>
-                      ))}
-                    </div>
-                    <div className="flex gap-2">
-                      <input
-                        value={tagInput}
-                        onChange={(event) => setTagInput(event.target.value)}
-                        onKeyDown={(event) => {
-                          if (event.key === "Enter" || event.key === ",") {
-                            event.preventDefault();
-                            addTag();
-                          }
-                        }}
-                        disabled={profileDraft.interestTags.length >= 8}
-                        placeholder={
-                          profileDraft.interestTags.length >= 8
-                            ? t.tagsMax
-                            : t.addTagPlaceholder
-                        }
-                        className="min-w-0 flex-1 border border-[#d7b866]/24 bg-[#070807]/70 px-3 py-2.5 font-mono text-sm text-[#A89888] outline-none placeholder:text-[#d8cab8]/48 focus:border-[#e2c46e]/70 disabled:opacity-50"
-                      />
-                      <button
-                        onClick={addTag}
-                        disabled={!tagInput.trim() || profileDraft.interestTags.length >= 8}
-                        className="inline-flex items-center justify-center border border-[#d7b866]/40 px-3 text-[#e2c46e] transition-colors hover:bg-[#d7b866]/12 disabled:opacity-40"
-                        aria-label={t.addInterestTag}
-                      >
-                        <Plus size={16} />
-                      </button>
-                    </div>
-                  </div>
-                </EngravedPanel>
-
-                <EngravedPanel quiet className="space-y-4 p-4">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#e2c46e]">
-                    {t.signalDetails}
-                  </p>
-                  <div className="grid gap-4 md:grid-cols-[1fr_180px]">
-                    <TextInput
-                      label={t.city}
-                      value={profileDraft.city}
-                      onChange={(value) => updateDraft({ city: value })}
-                      placeholder={t.cityPlaceholder}
-                    />
-                    <div>
-                      <FieldLabel>{t.status}</FieldLabel>
-                      <button
-                        onClick={() => updateDraft({ isActive: !profileDraft.isActive })}
-                        className={`h-[42px] w-full border px-3 font-mono text-xs transition-colors ${
-                          profileDraft.isActive
-                            ? "border-emerald-300/35 text-emerald-200 hover:bg-emerald-400/8"
-                            : "border-red-300/35 text-red-200 hover:bg-red-400/8"
-                        }`}
-                      >
-                        {profileStatusLabel}
-                      </button>
-                    </div>
-                  </div>
-                  <div className="grid gap-4 md:grid-cols-3">
-                    {[0, 1, 2].map((index) => (
-                      <TextInput
-                        key={index}
-                        label={t.link(index + 1)}
-                        value={profileDraft.links[index] || ""}
-                        onChange={(value) => {
-                          const links = [...profileDraft.links];
-                          links[index] = value;
-                          updateDraft({ links });
-                        }}
-                        placeholder="https://..."
-                      />
-                    ))}
-                  </div>
-                </EngravedPanel>
-
-                <EngravedPanel quiet className="space-y-4 p-4">
-                  <div>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#e2c46e]">
-                      {t.profileContext}
-                    </p>
-                    <p className="mt-1 font-mono text-[11px] leading-relaxed text-[#d8cab8]">
-                      {t.contextBody}
-                    </p>
-                  </div>
-                  <TextArea
-                    label={t.profileContext}
-                    value={profileDraft.context}
-                    onChange={(value) => updateDraft({ context: limitProfileContext(value) })}
-                    placeholder={t.contextPlaceholder}
-                    rows={6}
-                    maxLength={PROFILE_CONTEXT_MAX_LENGTH}
-                  />
-                  <label className="flex cursor-pointer items-start gap-3 border border-[#d7b866]/18 bg-black/10 p-3 transition-colors hover:border-[#d7b866]/34">
-                    <input
-                      type="checkbox"
-                      checked={profileDraft.showContextPublicly}
-                      onChange={(event) =>
-                        updateDraft({ showContextPublicly: event.target.checked })
-                      }
-                      className="mt-0.5 h-4 w-4 shrink-0 accent-[#d7b866]"
-                    />
-                    <span className="min-w-0">
-                      <span className="block font-mono text-xs text-[#A89888]">
-                        {t.showContextPublicly}
-                      </span>
-                      <span className="mt-1 block font-mono text-[11px] leading-relaxed text-[#d8cab8]">
-                        {profileDraft.showContextPublicly
-                          ? t.contextPublicHint
-                          : t.contextAgentOnlyHint}
-                      </span>
-                    </span>
-                  </label>
-                </EngravedPanel>
-
-                <div className="flex justify-end border-t border-[#d7b866]/16 pt-5">
-                  <button
-                    onClick={saveProfile}
-                    disabled={saveState === "saving"}
-                    className="inline-flex w-fit items-center gap-2 border border-[#d7b866]/44 bg-[#d7b866]/10 px-4 py-2.5 font-mono text-xs text-[#e2c46e] transition-colors hover:bg-[#d7b866]/16 disabled:opacity-50"
-                  >
-                    {saveState === "saved" ? <Check size={15} /> : <Save size={15} />}
-                    {saveProfileLabel}
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="dashboard-side-stack flex h-full min-h-0 flex-col gap-4">
-                <EngravedPanel quiet className="dashboard-side-card flex-1 p-5">
-                  <div className="dashboard-side-header mb-4 flex items-start justify-between gap-3 border-b border-[#d7b866]/14 pb-3">
-                    <div className="flex items-center gap-3">
-                      <p className="dashboard-side-kicker font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
-                        {t.matchesHeader}
-                      </p>
-                      <SignalStrip />
-                    </div>
-                    <button className="font-mono text-xs text-[#d8cab8] transition-colors hover:text-[#e2c46e]">
-                      {t.viewAll}
-                    </button>
-                  </div>
-                  <div className="dashboard-side-body pt-4">
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center justify-between gap-3">
-                        <p className="dashboard-side-empty-title mythic-soft-title font-serif text-xl leading-tight">
-                          {t.noPendingMatches}
-                        </p>
-                        <SignalStrip className="hidden sm:flex" />
                       </div>
-                      <p className="dashboard-side-empty-copy mt-2 font-mono text-[0.875rem] leading-[1.7] text-[#A89888]">
-                        {t.noPendingMatchesReason}
-                      </p>
-                    </div>
-                  </div>
-                </EngravedPanel>
-
-                <EngravedPanel quiet className="dashboard-side-card flex-1 p-5">
-                  <div className="dashboard-side-header mb-4 flex items-start justify-between gap-3 border-b border-[#d7b866]/14 pb-3">
-                    <div className="flex items-center gap-3">
-                      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
-                        {t.eventsHeader}
-                      </p>
-                      <SignalStrip />
-                    </div>
-                    <button className="font-mono text-xs text-[#d8cab8] transition-colors hover:text-[#e2c46e]">
-                      {t.viewAll}
-                    </button>
-                  </div>
-                  <div className="dashboard-side-body pt-4">
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center justify-between gap-3">
-                        <p className="dashboard-side-empty-title mythic-soft-title font-serif text-xl leading-tight">
-                          {t.noEventTasks}
-                        </p>
-                        <SignalStrip className="hidden sm:flex" />
+                      <div className="dashboard-side-body pt-4">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center justify-between gap-3">
+                            <p className="dashboard-side-empty-title mythic-soft-title font-serif text-xl leading-tight">
+                              {t.noPendingMatches}
+                            </p>
+                            <SignalStrip className="hidden sm:flex" />
+                          </div>
+                          <p className="dashboard-side-empty-copy mt-2 font-mono text-[0.875rem] leading-[1.7] text-[#A89888]">
+                            {t.noPendingMatchesReason}
+                          </p>
+                        </div>
                       </div>
-                      <p className="dashboard-side-empty-copy mt-2 font-mono text-[0.875rem] leading-[1.7] text-[#A89888]">
-                        {t.noEventTasksReason}
-                      </p>
-                    </div>
+                    </EngravedPanel>
+
+                    <EngravedPanel quiet className="dashboard-side-card flex-1 p-5">
+                      <div className="dashboard-side-header mb-4 flex items-start justify-between gap-3 border-b border-[#d7b866]/14 pb-3">
+                        <div className="flex items-center gap-3">
+                          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
+                            {t.eventsHeader}
+                          </p>
+                          <SignalStrip />
+                        </div>
+                        <button className="font-mono text-xs text-[#d8cab8] transition-colors hover:text-[#e2c46e]">
+                          {t.viewAll}
+                        </button>
+                      </div>
+                      <div className="dashboard-side-body pt-4">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center justify-between gap-3">
+                            <p className="dashboard-side-empty-title mythic-soft-title font-serif text-xl leading-tight">
+                              {t.noEventTasks}
+                            </p>
+                            <SignalStrip className="hidden sm:flex" />
+                          </div>
+                          <p className="dashboard-side-empty-copy mt-2 font-mono text-[0.875rem] leading-[1.7] text-[#A89888]">
+                            {t.noEventTasksReason}
+                          </p>
+                        </div>
+                      </div>
+                    </EngravedPanel>
                   </div>
-                </EngravedPanel>
+                )}
               </div>
-            )}
-          </div>
-        </section>
+            </section>
           </div>
         </div>
 
-        {apiModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/70 px-4 py-10 backdrop-blur-sm">
-            <EngravedPanel className="w-full max-w-2xl shadow-2xl">
-              <div className="flex items-start justify-between gap-4 border-b border-[#d7b866]/16 p-5">
-                <div>
-                  <div className="flex items-center gap-3">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
-                      {t.agentConnection}
-                    </p>
-                    <SignalStrip />
-                  </div>
-                  <h2 className="mt-1 font-serif text-2xl text-[#A89888]">{t.apiSettings}</h2>
-                </div>
-                <button
-                  onClick={() => setApiModalOpen(false)}
-                  className="text-[#d8cab8] transition-colors hover:text-[#A89888]"
-                  aria-label={t.closeApiSettings}
-                >
-                  <X size={20} />
-                </button>
-              </div>
-
-              <div className="space-y-5 p-5">
-                <EngravedPanel as="section" quiet className="p-4">
-                  <div className="mb-4 flex items-center justify-between gap-3">
-                    <h3 className="font-mono text-sm text-[#A89888]">{t.keys}</h3>
-                    <button
-                      onClick={generateKey}
-                      className="inline-flex items-center gap-2 border border-[#d7b866]/40 bg-[#d7b866]/10 px-3 py-2 font-mono text-xs text-[#e2c46e] transition-colors hover:bg-[#d7b866]/16"
-                    >
-                      <Plus size={14} />
-                      {t.generateKey}
-                    </button>
-                  </div>
-
-                  {activeKeys.length === 0 ? (
-                    <div className="border border-dashed border-[#d7b866]/24 bg-[#070807]/44 p-4">
-                      <p className="font-mono text-sm text-[#A89888]">{t.noActiveKeys}</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      {activeKeys.map((key) => (
-                        <div key={key.id} className="border border-[#d7b866]/18 bg-[#070807]/48 p-3">
-                          <div className="flex items-start justify-between gap-3">
-                            <div className="min-w-0">
-                              <p className="break-all font-mono text-sm text-[#A89888]">
-                                {key.key.slice(0, 10)}...{key.key.slice(-4)}
-                              </p>
-                              <p className="mt-1 font-mono text-[10px] text-[#d8cab8]">
-                                {key.name} · {t.created}{" "}
-                                {new Date(key.created_at).toLocaleDateString(dateLocale)}
-                              </p>
-                            </div>
-                            <button
-                              onClick={() => copyToClipboard(key.key, key.key)}
-                              className="text-[#d8cab8] transition-colors hover:text-[#e2c46e]"
-                              aria-label={t.copy}
-                            >
-                              {copied === key.key ? <Check size={16} /> : <Copy size={16} />}
-                            </button>
-                          </div>
-                          <button
-                            onClick={() => revokeKey(key.id)}
-                            className="mt-3 font-mono text-[11px] text-red-200 transition-colors hover:text-red-100"
-                          >
-                            {t.revoke}
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </EngravedPanel>
-
-                <EngravedPanel as="section" quiet className="p-4">
-                  <div className="mb-4 flex items-center justify-between gap-3">
-                    <h3 className="font-mono text-sm text-[#A89888]">{t.setupPromptTitle}</h3>
-                    {setupPrompt && (
-                      <button
-                        onClick={() => copyToClipboard(setupPrompt, "setup")}
-                        className="inline-flex items-center gap-2 border border-[#d7b866]/24 px-3 py-2 font-mono text-xs text-[#A89888] transition-colors hover:border-[#d7b866]/48 hover:text-[#e2c46e]"
-                      >
-                        {copied === "setup" ? <Check size={14} /> : <Copy size={14} />}
-                        {copied === "setup" ? t.copied : t.copy}
-                      </button>
-                    )}
-                  </div>
-                  {setupPrompt ? (
-                    <pre className="max-h-48 overflow-auto border border-[#d7b866]/18 bg-[#070807]/70 p-3 font-mono text-[11px] leading-relaxed text-[#d8cab8]">
-                      {setupPrompt}
-                    </pre>
-                  ) : (
-                    <p className="font-mono text-sm leading-relaxed text-[#d8cab8]">
-                      {t.generateKeyFirst}
-                    </p>
-                  )}
-                </EngravedPanel>
-              </div>
-            </EngravedPanel>
-          </div>
-        )}
+        <ApiKeyModal
+          open={apiModalOpen}
+          onClose={() => setApiModalOpen(false)}
+          activeKeys={activeKeys}
+          setupPrompt={setupPrompt}
+          generateKey={generateKey}
+          revokeKey={revokeKey}
+          dateLocale={dateLocale}
+          t={t}
+        />
       </div>
     </main>
   );
