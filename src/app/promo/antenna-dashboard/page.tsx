@@ -3,10 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ExternalLink, KeyRound } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { EngravedPanel } from "@/app/components/EngravedPanel";
-import { matchArchetype } from "@/lib/archetype";
+import type { ArchetypeMatch } from "@/lib/archetype";
 import type { ProfileDraft } from "@/lib/profile";
 
 import { ProfileCard } from "../../me/components/ProfileCard";
@@ -31,6 +31,12 @@ const profileDraft: ProfileDraft = {
   profileSlug: "antenna",
   deviceId: "promo:antenna",
   lastGps: null,
+};
+
+const promoArchetypeMatch: ArchetypeMatch = {
+  primary: "Hermes",
+  secondary: null,
+  reason: "A connector who turns curiosity into real-world introductions - Hermes carries the signal.",
 };
 
 const t = {
@@ -116,7 +122,6 @@ function installPromoControls() {
 
 export default function AntennaPromoDashboardPage() {
   const [profileCardFlipped, setProfileCardFlipped] = useState(false);
-  const archetypeMatch = useMemo(() => matchArchetype(profileDraft), []);
 
   useEffect(() => installPromoControls(), []);
 
@@ -192,7 +197,7 @@ export default function AntennaPromoDashboardPage() {
               <div className="profile-dashboard-grid">
                 <ProfileCard
                   profileDraft={profileDraft}
-                  archetypeMatch={archetypeMatch}
+                  archetypeMatch={promoArchetypeMatch}
                   isFlipped={profileCardFlipped}
                   onFlip={(flipped) => setProfileCardFlipped(flipped)}
                   onEdit={() => setProfileCardFlipped(false)}

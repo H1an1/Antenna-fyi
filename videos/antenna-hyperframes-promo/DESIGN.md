@@ -27,8 +27,8 @@ Do not use a static dashboard screenshot as the video base.
 
 - Scene 01 starts with restrained product-camera motion.
 - Scene 02 focuses the profile card without losing dashboard context.
-- Scene 03 uses the existing card flip button and current profile back video as the transition into the cinematic layer.
-- Scene 04 starts with the current profile video centered and topmost, then expands five videos left and five videos right into one horizontal row.
+- Scene 03 uses the existing card flip button and a Hermes profile back as the transition into the cinematic layer.
+- Scene 04 starts with the current profile video centered and topmost, then expands five videos left and five videos right as a larger overlapping fan of cards.
 - Scene 05 compresses the video field into the Antenna wordmark.
 
 ## What Not To Do

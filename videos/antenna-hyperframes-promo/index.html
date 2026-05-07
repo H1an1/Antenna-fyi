@@ -123,37 +123,38 @@
       .video-row {
         position: relative;
         z-index: 1;
-        width: 1780px;
-        height: 330px;
+        width: 1800px;
+        height: 650px;
         transform-style: preserve-3d;
       }
 
       .video-tile {
         position: absolute;
         left: 50%;
-        top: 50%;
-        width: 132px;
-        height: 198px;
-        margin-left: -66px;
-        margin-top: -99px;
+        top: 46%;
+        width: 202px;
+        height: 303px;
+        margin-left: -101px;
+        margin-top: -151.5px;
         overflow: hidden;
         border: 1px solid rgba(215, 184, 102, 0.28);
         background: #050605;
+        transform-origin: 50% 112%;
         box-shadow:
-          0 26px 70px rgba(0, 0, 0, 0.44),
+          0 28px 82px rgba(0, 0, 0, 0.46),
           inset 0 0 0 1px rgba(254, 241, 225, 0.025);
       }
 
       .video-tile.lead {
-        z-index: 20;
-        width: 168px;
-        height: 252px;
-        margin-left: -84px;
-        margin-top: -126px;
+        z-index: 30;
+        width: 292px;
+        height: 438px;
+        margin-left: -146px;
+        margin-top: -219px;
         border-color: rgba(226, 196, 110, 0.52);
         box-shadow:
-          0 34px 90px rgba(0, 0, 0, 0.54),
-          0 0 26px rgba(215, 184, 102, 0.13);
+          0 42px 120px rgba(0, 0, 0, 0.58),
+          0 0 34px rgba(215, 184, 102, 0.15);
       }
 
       .video-tile video {
@@ -168,10 +169,12 @@
         position: absolute;
         left: 9px;
         bottom: 9px;
-        padding: 4px 7px;
-        color: #fef1e1;
-        background: rgba(0, 0, 0, 0.84);
-        font-size: 12px;
+        padding: 5px 8px;
+        color: #ffffff;
+        background: #000000;
+        box-shadow: 0 0 0 2px #000000;
+        font-size: 13px;
+        font-weight: 800;
         letter-spacing: 0.12em;
       }
 
@@ -230,47 +233,47 @@
 
         <div class="video-field">
           <div class="video-row">
-            <div class="video-tile" data-slot="-5">
+            <div class="video-tile" data-x="-560" data-y="62" data-rot="-22" data-depth="1">
               <video id="tile-01" src="assets/profile-01-hermes.mp4" data-start="8.45" data-duration="9.55" data-track-index="12" muted playsinline></video>
               <span class="video-label">01</span>
             </div>
-            <div class="video-tile" data-slot="-4">
+            <div class="video-tile" data-x="-448" data-y="28" data-rot="-16" data-depth="2">
               <video id="tile-02" src="assets/profile-02-athena.mp4" data-start="8.45" data-duration="9.55" data-track-index="13" muted playsinline></video>
               <span class="video-label">02</span>
             </div>
-            <div class="video-tile" data-slot="-3">
+            <div class="video-tile" data-x="-336" data-y="4" data-rot="-10" data-depth="3">
               <video id="tile-03" src="assets/profile-03-prometheus.mp4" data-start="8.45" data-duration="9.55" data-track-index="14" muted playsinline></video>
               <span class="video-label">03</span>
             </div>
-            <div class="video-tile" data-slot="-2">
+            <div class="video-tile" data-x="-224" data-y="-12" data-rot="-6" data-depth="4">
               <video id="tile-04" src="assets/profile-04-apollo.mp4" data-start="8.45" data-duration="9.55" data-track-index="15" muted playsinline></video>
               <span class="video-label">04</span>
             </div>
-            <div class="video-tile" data-slot="-1">
+            <div class="video-tile" data-x="-112" data-y="-22" data-rot="-3" data-depth="5">
               <video id="tile-05" src="assets/profile-05-artemis.mp4" data-start="8.45" data-duration="9.55" data-track-index="16" muted playsinline></video>
               <span class="video-label">05</span>
             </div>
-            <div class="video-tile lead" data-slot="0">
+            <div class="video-tile lead" data-x="0" data-y="-48" data-rot="0" data-depth="11">
               <video id="tile-current" src="assets/profile-current.mp4" data-start="8.12" data-duration="9.88" data-track-index="11" muted playsinline></video>
               <span class="video-label">CURRENT</span>
             </div>
-            <div class="video-tile" data-slot="1">
+            <div class="video-tile" data-x="112" data-y="-22" data-rot="3" data-depth="5">
               <video id="tile-06" src="assets/profile-06-aphrodite.mp4" data-start="8.45" data-duration="9.55" data-track-index="17" muted playsinline></video>
               <span class="video-label">06</span>
             </div>
-            <div class="video-tile" data-slot="2">
+            <div class="video-tile" data-x="224" data-y="-12" data-rot="6" data-depth="4">
               <video id="tile-07" src="assets/profile-07-dionysus.mp4" data-start="8.45" data-duration="9.55" data-track-index="18" muted playsinline></video>
               <span class="video-label">07</span>
             </div>
-            <div class="video-tile" data-slot="3">
+            <div class="video-tile" data-x="336" data-y="4" data-rot="10" data-depth="3">
               <video id="tile-08" src="assets/profile-08-hades.mp4" data-start="8.45" data-duration="9.55" data-track-index="19" muted playsinline></video>
               <span class="video-label">08</span>
             </div>
-            <div class="video-tile" data-slot="4">
+            <div class="video-tile" data-x="448" data-y="28" data-rot="16" data-depth="2">
               <video id="tile-09" src="assets/profile-09-persephone.mp4" data-start="8.45" data-duration="9.55" data-track-index="20" muted playsinline></video>
               <span class="video-label">09</span>
             </div>
-            <div class="video-tile" data-slot="5">
+            <div class="video-tile" data-x="560" data-y="62" data-rot="22" data-depth="1">
               <video id="tile-10" src="assets/profile-10-odysseus.mp4" data-start="8.45" data-duration="9.55" data-track-index="21" muted playsinline></video>
               <span class="video-label">10</span>
             </div>
@@ -295,13 +298,16 @@
         window.__timelines = window.__timelines || {};
 
         const tl = gsap.timeline({ paused: true });
-        const slotX = (_index, tile) => Number(tile.dataset.slot || 0) * 154;
+        const cardX = (_index, tile) => Number(tile.dataset.x || 0);
+        const cardY = (_index, tile) => Number(tile.dataset.y || 0);
+        const cardRotation = (_index, tile) => Number(tile.dataset.rot || 0);
+        const cardZ = (_index, tile) => Number(tile.dataset.depth || 0);
 
         gsap.set(".dashboard-wrap", { transformOrigin: "56% 48%" });
         gsap.set(".cursor", { opacity: 0 });
         gsap.set(".video-field", { opacity: 0 });
-        gsap.set(".video-tile", { opacity: 0, x: 0, y: -48, scale: 0.72, rotateY: 0 });
-        gsap.set(".video-tile.lead", { opacity: 0, y: -56, scale: 1.08 });
+        gsap.set(".video-tile", { opacity: 0, x: 0, y: -48, zIndex: cardZ, scale: 0.72, rotation: 0, rotateY: 0 });
+        gsap.set(".video-tile.lead", { opacity: 0, y: -60, zIndex: 30, scale: 1.06, rotation: 0 });
         gsap.set(".final-lockup", { opacity: 0, scale: 0.92 });
 
         tl.fromTo(".dashboard-wrap", { scale: 1, x: 0, y: 0 }, { scale: 1.035, x: -24, y: -12, duration: 4.05, ease: "power1.inOut" }, 0);
@@ -316,16 +322,16 @@
         tl.to(".dashboard-wrap", { opacity: 0.16, scale: 1.105, duration: 0.82, ease: "power2.out" }, 8.15);
 
         tl.fromTo(".video-field", { opacity: 0 }, { opacity: 1, duration: 0.18, ease: "none" }, 8.12);
-        tl.fromTo(".video-tile.lead", { opacity: 0, scale: 1.18, y: -72 }, { opacity: 1, scale: 1.2, y: -48, duration: 0.34, ease: "power3.out" }, 8.12);
+        tl.fromTo(".video-tile.lead", { opacity: 0, scale: 1.14, y: -74 }, { opacity: 1, scale: 1.16, y: cardY, rotation: 0, duration: 0.34, ease: "power3.out" }, 8.12);
         tl.fromTo(
           ".video-tile:not(.lead)",
-          { opacity: 0, x: 0, y: -48, scale: 0.7, rotateY: 0 },
-          { opacity: 1, x: slotX, y: 0, scale: 1, duration: 0.74, stagger: { amount: 0.16, from: "center" }, ease: "power3.out" },
+          { opacity: 0, x: 0, y: -48, scale: 0.78, rotation: 0, rotateY: 0 },
+          { opacity: 1, x: cardX, y: cardY, scale: 1, rotation: cardRotation, duration: 0.78, stagger: { amount: 0.18, from: "center" }, ease: "power3.out" },
           8.5,
         );
-        tl.to(".video-tile.lead", { x: 0, y: -24, scale: 1.12, duration: 0.74, ease: "power3.out" }, 8.5);
+        tl.to(".video-tile.lead", { x: 0, y: -48, scale: 1.08, duration: 0.78, ease: "power3.out" }, 8.5);
         tl.to(".video-tile video", { scale: 1.055, duration: 5.8, ease: "none" }, 8.72);
-        tl.fromTo(".video-row", { y: 18 }, { y: -12, duration: 5.9, ease: "sine.inOut" }, 8.65);
+        tl.fromTo(".video-row", { y: 36 }, { y: -24, duration: 5.9, ease: "sine.inOut" }, 8.65);
 
         tl.to(".video-row", { scale: 0.5, y: 0, opacity: 0, duration: 0.92, ease: "power3.in" }, 14.55);
         tl.fromTo(".final-lockup", { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.76, ease: "power3.out" }, 15.02);

@@ -23,11 +23,13 @@ Camera: move focus toward the profile-card region.
 
 Move a cursor to the existing flip control. The recorded dashboard video was created by clicking the real DOM button, so the product card performs its actual flip.
 
+Back archetype: `Hermes`.
+
 Back video: `assets/profile-current.mp4`.
 
 ## Scene 04: 11-Video Expansion, 8.4-14.5s
 
-The current profile-back video appears first at the center and stays topmost. Five archetype videos expand left and five expand right until all 11 videos form one horizontal row.
+The current profile-back video appears first at the center and stays topmost. Five archetype videos expand left and five expand right until all 11 videos form a larger overlapping fan, like cards opening in one hand.
 
 Video sources:
 
@@ -43,7 +45,7 @@ Video sources:
 - `assets/profile-09-persephone.mp4`
 - `assets/profile-10-odysseus.mp4`
 
-Motion: simultaneous left/right expansion, subtle depth drift, and a slight ongoing scale on each video child.
+Motion: simultaneous left/right expansion, angled card rotation, subtle overlap, depth drift, and a slight ongoing scale on each video child.
 
 ## Scene 05: Wordmark Merge, 14.5-18.0s
 
