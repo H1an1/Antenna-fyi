@@ -136,10 +136,9 @@ export function Features() {
                 context, not checkboxes.
               </p>
               <p>
-                A gentle nudge. A reason. A window that closes in 24 hours.
-                Everything disappears after — no chat logs, no follow
-                requests, no trace. Just the memory of someone you chose
-                to meet.
+                A gentle nudge. A reason. Your profile stays — but visibility
+                decays over time. New events refresh the pool. Every encounter
+                is earned, not accumulated.
               </p>
             </div>
           </div>
@@ -166,7 +165,7 @@ export function Features() {
             {
               icon: <MapPinOff {...ICON_PROPS} />,
               title: "Private by Default",
-              desc: "Everything auto-deletes after 24 hours. No phone number, no photos collected. Location is never stored raw — not even we know exactly where you are.",
+              desc: "No phone number, no photos collected. Location is never stored raw. Your profile is yours — visible only to people who share real context with you.",
             },
             {
               icon: <Settings2 {...ICON_PROPS} />,
@@ -186,7 +185,7 @@ export function Features() {
             {
               icon: <Timer {...ICON_PROPS} />,
               title: "Event Mode",
-              desc: "Create events with a shareable link. Attendees join, check in, and discover each other — no distance limit inside an event.",
+              desc: "Create events with a shareable link. Same room = shared context = instant trust. Attendees stay visible to each other for 7 days, then the pool narrows to real connections.",
             },
           ].map((f) => (
             <div
