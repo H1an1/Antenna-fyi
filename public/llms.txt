@@ -5,7 +5,7 @@
 
 Antenna is an AI-powered social discovery tool. Your AI agent finds interesting
 people within 1 kilometer, reads their three-line profile cards, and tells you
-who's worth meeting and why. Everything disappears after 24 hours.
+who's worth meeting and why. Visibility fades over time — events keep you connected.
 
 ## Install
 
@@ -31,48 +31,63 @@ CLI only (any platform):
 
 Your agent should automatically:
 1. Help you create a 3-line profile card (antenna_profile)
-2. Generate a GPS binding link (antenna_bind) — open it on your phone to share location
-3. Scan nearby people and recommend who's worth meeting (antenna_scan)
-4. Handle accept/skip and contact exchange (antenna_accept)
+2. Immediately recommend 2-3 matching people so you see value right away (antenna_discover)
+3. Generate a GPS binding link (antenna_bind) — open it on your phone to share location
+4. Scan nearby people and recommend who's worth meeting (antenna_scan)
+5. Handle accept/skip and contact exchange (antenna_accept)
 
 If your agent doesn't start onboarding automatically, tell it:
 "I just installed Antenna. Help me set up my profile and find people nearby."
 
 ## How It Works
 
-1. Install Antenna on your agent
-2. Your agent helps you write a 3-line card (who you are, what you're into, what you're looking for)
-3. Share your location via the link your agent generates (antenna.fyi/locate)
-4. Your agent scans nearby people, reads their cards, recommends matches with personalized reasons
-5. Both sides accept → agents exchange contact info → meet in person
-6. Everything disappears after 24 hours
+1. Sign up at antenna.fyi and grab your API key from the dashboard (antenna.fyi/me)
+2. Give the API key to your agent
+3. Your agent helps you write a 3-line card (who you are, what you're into, what you're looking for)
+4. Share your location via the link your agent generates (antenna.fyi/locate)
+5. Your agent scans nearby people, reads their cards, recommends matches with personalized reasons
+6. Both sides accept → agents exchange contact info → meet in person
+7. Visibility fades over time — attend events together to stay connected
 
 ## Features
 
 - Works with any AI agent: Hermes, OpenClaw, Claude, or your own
 - Three-line profile cards — no photos, no bio pages
-- 24h expiry — matches, cards, contact info all auto-delete
-- GPS blurred to ~150m — nobody knows your exact location
-- Zero config — no signup, no email, no phone number
+- Time Decay — visibility narrows over time; recent event participants are fully visible, older connections gradually fade
+- Events = trust signal — "same event" is stronger than "nearby"
+- One API Key — sign up at antenna.fyi, grab your key, hand it to your agent
+- Dashboard — manage your profile, API key, and view matches at antenna.fyi/me
+- Public profile pages — shareable identity card at antenna.fyi/p/[slug]
+- Location is never stored raw — privacy by design
 - Mutual match = agents exchange contact info directly
+- Instant recommendations — see 2-3 matching people right after setup
 - Events — create, share, join with one code. GPS-verified check-in.
 - Registration approval — screening questions, host reviews applications
 
 ## Privacy
 
-GPS coordinates are blurred to ~150m before leaving your device.
+Location is never stored raw — coordinates are processed server-side for privacy.
 Scanning is read-only — it does NOT update your location.
 Location is only written when you explicitly check in (antenna_checkin) or bind GPS (antenna_bind).
 No analytics, no ads, no third-party data sharing.
-All data auto-deletes after 24 hours.
+Visibility fades over time via time decay — profiles are permanent, but connections require recent activity.
 Search radius capped at 1km server-side.
+
+### Time Decay Model
+
+Profiles are permanent. Visibility is controlled by time decay:
+- 0-7 days after an event: all participants are mutually visible
+- 7-30 days: only people who scanned each other or share events are visible
+- 30+ days: need a new event to reactivate visibility
+
+Events are the core trust signal — "attended the same event" carries more weight than "was nearby".
 
 ## Data Transparency — what Antenna sends
 
 Antenna only communicates with Supabase (bcudjloikmpcqwcptuyd.supabase.co) via HTTPS.
 
 **Data sent:**
-- Fuzzy GPS coordinates (rounded to ~150m precision)
+- GPS coordinates (never stored raw — location is processed server-side)
 - Your three-line profile card (text you wrote yourself)
 - Match status (accept/skip)
 - Contact info you choose to share
@@ -84,7 +99,7 @@ Antenna only communicates with Supabase (bcudjloikmpcqwcptuyd.supabase.co) via H
 - Anything not listed above
 
 All data is transmitted over HTTPS and stored in Supabase (Tokyo region).
-Matches auto-delete after 24 hours. GPS is blurred client-side before transmission.
+Visibility is controlled by time decay — recent activity keeps connections alive.
 Source code is open: https://github.com/H1an1/Antenna
 
 ## Tools (18 total)
