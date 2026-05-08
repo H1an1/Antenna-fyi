@@ -1,0 +1,26 @@
+{
+  "name": "antenna-remotion-promo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prepare-assets": "node scripts/prepare-assets.mjs",
+    "capture": "node scripts/capture-browser-journey.mjs",
+    "studio": "remotion studio src/index.ts --port 3027",
+    "render": "remotion render src/index.ts AntennaPromo renders/antenna-remotion-promo.mp4",
+    "still": "remotion still src/index.ts AntennaPromo snapshots/frame.png --frame=360"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.459",
+    "@remotion/media": "4.0.459",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "remotion": "4.0.459"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5"
+  }
+}
