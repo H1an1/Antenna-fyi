@@ -544,61 +544,55 @@ export default function DashboardPage() {
       deviceId: profileDraft.deviceId || `user:${user.id}`,
     });
 
-    const { data: slugOwner, error: slugLookupErr } = await supabase
-      .from("profiles")
-      .select("user_id, device_id")
-      .eq("profile_slug", cleaned.profileSlug)
-      .limit(1)
-      .maybeSingle<{ user_id: string | null; device_id: string | null }>();
+    // Slug uniqueness is handled by the RPC (first save) or DB constraint (updates).
 
-    if (slugLookupErr) {
-      setError(slugLookupErr.message || t.failedSaveProfile);
-      setSaveState("idle");
-      return;
-    }
-
-    if (
-      slugOwner &&
-      slugOwner.user_id !== user.id &&
-      (!slugOwner.device_id || slugOwner.device_id !== cleaned.deviceId)
-    ) {
-      setError(t.slugTaken);
-      setSaveState("idle");
-      return;
-    }
-
-    // Fix save race condition: write to profiles table FIRST, then update auth metadata on success.
-    const profilePayload = {
-      device_id: cleaned.deviceId,
-      user_id: user.id,
-      profile_slug: cleaned.profileSlug,
-      display_name: cleaned.displayName,
-      emoji: cleaned.emoji,
-      line1: cleaned.line1,
-      line2: cleaned.line2,
-      line3: cleaned.line3,
-      matching_context: serializeProfileContext(cleaned),
-      visible: true,
-    };
-
-    const { data: existingProfile, error: lookupErr } = await supabase
+    // Use save_user_profile RPC (SECURITY DEFINER) for initial create/bind,
+    // then RLS-based direct updates once user_id is set.
+    const { data: existingProfile } = await supabase
       .from("profiles")
       .select("device_id")
       .eq("user_id", user.id)
       .limit(1)
       .maybeSingle<{ device_id: string | null }>();
 
-    let profileErr = lookupErr;
-    if (!profileErr) {
-      if (existingProfile) {
-        const { error: updateErr } = await supabase
-          .from("profiles")
-          .update(profilePayload)
-          .eq("user_id", user.id);
-        profileErr = updateErr;
-      } else {
-        const { error: insertErr } = await supabase.from("profiles").insert(profilePayload);
-        profileErr = insertErr;
+    let profileErr: { message: string; code?: string } | null = null;
+
+    if (existingProfile) {
+      // Row already bound to this user — direct RLS update
+      const { error: updateErr } = await supabase
+        .from("profiles")
+        .update({
+          display_name: cleaned.displayName,
+          emoji: cleaned.emoji,
+          line1: cleaned.line1,
+          line2: cleaned.line2,
+          line3: cleaned.line3,
+          profile_slug: cleaned.profileSlug,
+          matching_context: serializeProfileContext(cleaned),
+          visible: true,
+        })
+        .eq("user_id", user.id);
+      profileErr = updateErr;
+    } else {
+      // First save — use RPC to create/bind row (bypasses RLS)
+      const { data: rpcResult, error: rpcErr } = await supabase.rpc("save_user_profile", {
+        p_display_name: cleaned.displayName,
+        p_emoji: cleaned.emoji,
+        p_line1: cleaned.line1,
+        p_line2: cleaned.line2,
+        p_line3: cleaned.line3,
+        p_profile_slug: cleaned.profileSlug,
+        p_matching_context: serializeProfileContext(cleaned),
+        p_visible: true,
+      });
+      if (rpcErr) {
+        profileErr = rpcErr;
+      } else if (rpcResult?.error === "slug_taken") {
+        setError(t.slugTaken);
+        setSaveState("idle");
+        return;
+      } else if (rpcResult?.error) {
+        profileErr = { message: rpcResult.error };
       }
     }
 
