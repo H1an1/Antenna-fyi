@@ -6,7 +6,7 @@ import { GlitchBackground } from "./components/GlitchBackground";
 
 export default function Home() {
   return (
-    <main className="relative overflow-x-hidden">
+    <main className="relative overflow-x-clip">
       {/* For curl / non-JS crawlers */}
       <noscript>
         <article>

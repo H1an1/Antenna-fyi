@@ -51,9 +51,9 @@ export default function RootLayout({
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={`${cormorant.variable} ${jetbrains.variable} overflow-x-hidden`}
+      className={`${cormorant.variable} ${jetbrains.variable}`}
     >
-      <body className="bg-[#1a1412] text-[#e8e0d4] antialiased overflow-x-hidden">
+      <body className="bg-[#1a1412] text-[#e8e0d4] antialiased">
         {children}
       </body>
     </html>
