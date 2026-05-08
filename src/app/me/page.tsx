@@ -371,6 +371,7 @@ export default function DashboardPage() {
   const [profileEditorOpen, setProfileEditorOpen] = useState(false);
   const [profileCardFlipped, setProfileCardFlipped] = useState(false);
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
+  const [pendingMatches, setPendingMatches] = useState<Record<string, unknown>[]>([]);
   const [language, setLanguage] = useState<Language>(() => {
     if (typeof window === "undefined") return "en";
     const storedLanguage = window.localStorage.getItem(languageStorageKey);
@@ -488,6 +489,40 @@ export default function DashboardPage() {
     };
   }, [loadKeys, loadProfile, router, supabase]);
 
+  // --- Realtime matches subscription ---
+  useEffect(() => {
+    if (!profileDraft?.deviceId) return;
+    const deviceId = profileDraft.deviceId;
+
+    const channel = supabase
+      .channel('matches-realtime')
+      .on(
+        'postgres_changes' as never,
+        { event: '*', schema: 'public', table: 'matches' },
+        (payload: { new?: Record<string, unknown>; old?: Record<string, unknown>; eventType?: string }) => {
+          const row = payload.new || payload.old;
+          if (!row) return;
+          if (row.device_id_a !== deviceId && row.device_id_b !== deviceId) return;
+
+          setPendingMatches((prev) => {
+            const id = row.id as string | number;
+            const existing = prev.findIndex((m) => m.id === id);
+            if (existing >= 0) {
+              const next = [...prev];
+              next[existing] = row;
+              return next;
+            }
+            return [...prev, row];
+          });
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase, profileDraft?.deviceId]);
+
   const updateDraft = (patch: Partial<ProfileDraft>) => {
     setProfileDraft((current) => {
       if (!current) return current;
@@ -501,6 +536,20 @@ export default function DashboardPage() {
       return next;
     });
   };
+
+  const checkSlugAvailability = useCallback(
+    async (slug: string): Promise<boolean> => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("user_id, device_id")
+        .eq("profile_slug", slug)
+        .limit(1)
+        .maybeSingle();
+
+      return !data || data.user_id === user?.id;
+    },
+    [supabase, user?.id],
+  );
 
   const generateKey = async () => {
     setError(null);
@@ -850,6 +899,7 @@ export default function DashboardPage() {
                     saveProfile={saveProfile}
                     saveState={saveState}
                     setSlugManuallyEdited={setSlugManuallyEdited}
+                    checkSlugAvailability={checkSlugAvailability}
                     t={t}
                     tagInput={tagInput}
                     setTagInput={setTagInput}

@@ -14,9 +14,11 @@ import {
   sanitizeTags,
   type ProfileDraft,
 } from "@/lib/profile";
-import { Check, Plus, Save, X } from "lucide-react";
+import { AlertCircle, Check, Plus, Save, X } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type SaveState = "idle" | "saving" | "saved" | "partial";
+type SlugStatus = "idle" | "checking" | "available" | "taken";
 
 interface ProfileEditorProps {
   profileDraft: ProfileDraft;
@@ -24,6 +26,7 @@ interface ProfileEditorProps {
   saveProfile: () => void;
   saveState: SaveState;
   setSlugManuallyEdited: (v: boolean) => void;
+  checkSlugAvailability: (slug: string) => Promise<boolean>;
   t: {
     publicCard: string;
     displayName: string;
@@ -49,6 +52,7 @@ interface ProfileEditorProps {
     savedLocally: string;
     active: string;
     quiet: string;
+    slugTaken: string;
   };
   tagInput: string;
   setTagInput: (v: string) => void;
@@ -150,10 +154,35 @@ export function ProfileEditor({
   saveProfile,
   saveState,
   setSlugManuallyEdited,
+  checkSlugAvailability,
   t,
   tagInput,
   setTagInput,
 }: ProfileEditorProps) {
+  const [slugStatus, setSlugStatus] = useState<SlugStatus>("idle");
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Reset slugStatus when profileSlug changes
+  useEffect(() => {
+    setSlugStatus("idle");
+  }, [profileDraft.profileSlug]);
+
+  const handleSlugBlur = useCallback(() => {
+    const slug = profileDraft.profileSlug.trim();
+    if (!slug) return;
+
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    debounceRef.current = setTimeout(async () => {
+      setSlugStatus("checking");
+      try {
+        const available = await checkSlugAvailability(slug);
+        setSlugStatus(available ? "available" : "taken");
+      } catch {
+        setSlugStatus("idle");
+      }
+    }, 500);
+  }, [profileDraft.profileSlug, checkSlugAvailability]);
   const saveProfileLabel =
     saveState === "saving"
       ? t.saving
@@ -183,15 +212,41 @@ export function ProfileEditor({
             value={profileDraft.displayName}
             onChange={(value) => updateDraft({ displayName: value })}
           />
-          <TextInput
-            label={t.publicSlug}
-            value={profileDraft.profileSlug}
-            onChange={(value) => {
-              setSlugManuallyEdited(true);
-              updateDraft({ profileSlug: normalizeProfileSlug(value) });
-            }}
-            helper={t.publicSlugHint}
-          />
+          <div>
+            <div className="mb-1.5 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <label className="block font-mono text-[10px] uppercase tracking-[0.14em] text-[#d8cab8]">
+                  {t.publicSlug}
+                </label>
+                {slugStatus === "checking" && (
+                  <span className="font-mono text-[10px] text-[#d8cab8]/60">…</span>
+                )}
+                {slugStatus === "available" && (
+                  <Check size={12} className="text-emerald-300" />
+                )}
+                {slugStatus === "taken" && (
+                  <span className="inline-flex items-center gap-1">
+                    <AlertCircle size={12} className="text-red-300" />
+                    <span className="font-mono text-[10px] text-red-300">{t.slugTaken}</span>
+                  </span>
+                )}
+              </div>
+            </div>
+            <input
+              value={profileDraft.profileSlug}
+              onChange={(event) => {
+                setSlugManuallyEdited(true);
+                updateDraft({ profileSlug: normalizeProfileSlug(event.target.value) });
+              }}
+              onBlur={handleSlugBlur}
+              className={`w-full border bg-[#070807]/70 px-3 py-2.5 font-mono text-sm text-[#A89888] outline-none transition-colors placeholder:text-[#d8cab8]/48 focus:border-[#e2c46e]/70 ${
+                slugStatus === "taken"
+                  ? "border-red-400/60"
+                  : "border-[#d7b866]/24"
+              }`}
+            />
+            <p className="mt-1.5 font-mono text-[10px] leading-relaxed text-[#d8cab8]/72">{t.publicSlugHint}</p>
+          </div>
         </div>
         <div className="space-y-4 border-t border-[#d7b866]/12 pt-4">
           <TextArea
