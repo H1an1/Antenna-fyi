@@ -2,7 +2,7 @@
 
 import { DynamicAsciiHand } from "./DynamicAsciiHand";
 import { ScrollReveal } from "./ScrollReveal";
-import { Cpu, AlignLeft, Timer, MapPinOff, Settings2, Handshake } from "lucide-react";
+import { Cpu, AlignLeft, Timer, MapPinOff, Settings2, Handshake, Sparkles } from "lucide-react";
 
 const ICON_PROPS = { size: 22, color: "#c4a862", strokeWidth: 1.5 } as const;
 
@@ -125,12 +125,12 @@ export function Features() {
             </h2>
             <div className="space-y-6 font-mono text-[12px] md:text-[14px] text-[#b8ad9e] leading-relaxed">
               <p>
-                You don't set up a profile. You don't upload photos.
-                You just keep talking to your AI the way you already do.
+                Sign up, grab an API key, and give it to your agent.
+                That&apos;s the entire onboarding.
               </p>
               <p>
                 Antenna runs quietly alongside your agent. When someone
-                interesting comes within 1 kilometer, your AI figures out
+                interesting is nearby, your AI figures out
                 why you two might click — shared obsessions, complementary
                 skills, the kind of overlap that only emerges from real
                 context, not checkboxes.
@@ -161,17 +161,22 @@ export function Features() {
             {
               icon: <AlignLeft {...ICON_PROPS} />,
               title: "Three Lines",
-              desc: "No photo. No bio page. Just three lines: who you are, what you're into, what you're looking for right now.",
+              desc: "No photo. No bio page. Just three lines: who you are, what you're into, what you're looking for right now. Your agent fills in the rest.",
             },
             {
               icon: <MapPinOff {...ICON_PROPS} />,
               title: "Private by Default",
-              desc: "GPS blurred to ~150m. Everything auto-deletes after 24 hours. No email, no phone, no photos collected. Not even we know where you are.",
+              desc: "Everything auto-deletes after 24 hours. No phone number, no photos collected. Location is never stored raw — not even we know exactly where you are.",
             },
             {
               icon: <Settings2 {...ICON_PROPS} />,
-              title: "Zero Config",
-              desc: "No signup. No app. One command and your agent handles the rest.",
+              title: "One API Key",
+              desc: "Sign up, grab your key, hand it to your agent. That's the entire setup — your AI handles the rest.",
+            },
+            {
+              icon: <Sparkles {...ICON_PROPS} />,
+              title: "Deep Context",
+              desc: "Your agent doesn't match on keywords. It reads the full picture — what you're building, what you need, what you're curious about — and explains every match in one sentence.",
             },
             {
               icon: <Handshake {...ICON_PROPS} />,
@@ -181,7 +186,7 @@ export function Features() {
             {
               icon: <Timer {...ICON_PROPS} />,
               title: "Event Mode",
-              desc: "Create events with a shareable link. Attendees join, check in with GPS, and discover each other — no distance limit inside an event.",
+              desc: "Create events with a shareable link. Attendees join, check in, and discover each other — no distance limit inside an event.",
             },
           ].map((f) => (
             <div
