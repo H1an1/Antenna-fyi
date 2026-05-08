@@ -618,6 +618,7 @@ html, body {
   margin-inline: auto;
   aspect-ratio: 2 / 3;
   perspective: 1600px;
+  transform-style: preserve-3d;
 }
 
 .profile-card-flipper {
@@ -626,6 +627,7 @@ html, body {
   height: 100%;
   transform-style: preserve-3d;
   transition: transform 720ms cubic-bezier(0.2, 0.82, 0.2, 1);
+  will-change: transform;
 }
 
 .profile-card-flipper.is-flipped {
@@ -638,6 +640,8 @@ html, body {
   height: 100%;
   overflow: hidden;
   pointer-events: auto;
+  transform: rotateY(0deg) translateZ(0.1px);
+  transform-style: preserve-3d;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
@@ -662,15 +666,20 @@ html, body {
 }
 
 .dashboard-side-stack {
+  height: auto;
   min-height: 0;
 }
 
 .dashboard-side-card {
   container-type: inline-size;
   display: flex;
-  min-height: 0;
+  min-height: clamp(14rem, 58vw, 19rem);
   flex-direction: column;
   overflow: hidden;
+}
+
+.profile-dashboard-grid:not(.profile-dashboard-grid-editing) .dashboard-side-card {
+  flex: 0 0 auto;
 }
 
 .dashboard-side-header {
@@ -801,11 +810,13 @@ html, body {
 
 .profile-card-flipper:not(.is-flipped) .profile-card-back,
 .profile-card-flipper.is-flipped .profile-card-face:not(.profile-card-back) {
+  visibility: hidden;
+  opacity: 0;
   pointer-events: none;
 }
 
 .profile-card-back {
-  transform: rotateY(180deg);
+  transform: rotateY(180deg) translateZ(0.1px);
 }
 
 .profile-card-back::before,
@@ -1006,6 +1017,15 @@ html, body {
   .profile-dashboard-grid:not(.profile-dashboard-grid-editing) .profile-card-scene {
     max-width: 320px;
     margin-inline: 0;
+  }
+
+  .profile-dashboard-grid:not(.profile-dashboard-grid-editing) .dashboard-side-stack {
+    height: 100%;
+  }
+
+  .profile-dashboard-grid:not(.profile-dashboard-grid-editing) .dashboard-side-card {
+    flex: 1 1 0;
+    min-height: 0;
   }
 }
 
