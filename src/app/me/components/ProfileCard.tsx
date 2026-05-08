@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import { EngravedPanel } from "@/app/components/EngravedPanel";
+import { SocialLinkIcon } from "@/app/components/SocialLinkIcon";
 import { MapPin, RefreshCw, WandSparkles } from "lucide-react";
-import type { ProfileDraft } from "@/lib/profile";
+import { normalizeLinks, type ProfileDraft } from "@/lib/profile";
 import type { ArchetypeMatch } from "@/lib/archetype";
+import { formatProfileUrl, getSocialLinkKind, socialLinkLabels } from "@/lib/social-links";
 
 const profileBackVideoSrc = "/profile-assets/ascii-profile-back.mp4";
 const profileOrnamentSrc = "/profile-assets/wing-signal-ornament.png";
@@ -39,97 +41,144 @@ export function ProfileCard({
   statusPill,
   isActive,
 }: ProfileCardProps) {
+  const visibleLinks = normalizeLinks(profileDraft.links);
+
   return (
     <div className="profile-card-scene self-start">
       <div className={`profile-card-flipper ${isFlipped ? "is-flipped" : ""}`}>
         {/* Front */}
         <EngravedPanel quiet className="profile-card-face profile-summary-card p-5">
-          <div className="profile-card-ornament" aria-hidden="true">
-            <Image
-              src={profileOrnamentSrc}
-              alt=""
-              fill
-              sizes="(max-width: 768px) 280px, 340px"
-              className="object-contain"
-            />
-          </div>
           <div className="profile-card-chart-bg" aria-hidden="true" />
-          <div className="profile-card-titlebar mb-4 flex items-center justify-between gap-2 border-b border-[#d7b866]/14 pb-2.5">
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
-              IDENTITY://PUBLIC
-            </p>
-            <div className="flex shrink-0 items-center justify-end gap-1.5">
-              <button
-                onClick={() => onFlip(true)}
-                data-profile-flip-button="back"
-                className="profile-card-action-button inline-flex items-center justify-center gap-2 border border-[#d7b866]/24 bg-black/10 px-3 py-2 font-mono text-[11px] text-[#A89888] transition-colors hover:border-[#d7b866]/48 hover:text-[#e2c46e]"
-                aria-label={t.flipBack}
-              >
-                <RefreshCw size={14} className="shrink-0" />
-                <span className="profile-card-action-label">{t.flipBack}</span>
-              </button>
-              {showEditButton && (
+          <div className="profile-card-front-content">
+            <div className="profile-card-ornament" aria-hidden="true">
+              <Image
+                src={profileOrnamentSrc}
+                alt=""
+                fill
+                sizes="(max-width: 768px) 260px, 306px"
+                className="object-contain"
+              />
+            </div>
+            <div className="profile-card-titlebar flex items-center justify-between gap-2 border-b border-[#d7b866]/14">
+              <p className="profile-card-kicker font-mono uppercase text-[#e2c46e]">
+                IDENTITY://PUBLIC
+              </p>
+              <div className="flex shrink-0 items-center justify-end gap-2">
                 <button
-                  onClick={onEdit}
+                  onClick={() => onFlip(true)}
+                  data-profile-flip-button="back"
                   className="profile-card-action-button inline-flex items-center justify-center gap-2 border border-[#d7b866]/24 bg-black/10 px-3 py-2 font-mono text-[11px] text-[#A89888] transition-colors hover:border-[#d7b866]/48 hover:text-[#e2c46e]"
-                  aria-label={t.editProfile}
+                  aria-label={t.flipBack}
                 >
-                  <WandSparkles size={14} className="shrink-0" />
-                  <span className="profile-card-action-label">{t.editProfile}</span>
+                  <RefreshCw size={14} className="shrink-0" />
+                  <span className="profile-card-action-label">{t.flipBack}</span>
                 </button>
-              )}
-            </div>
-          </div>
-          <div className="profile-card-identity mb-4 flex items-end justify-between gap-4">
-            <div>
-              <div className="profile-card-avatar text-4xl leading-none">
-                {profileDraft.emoji || "✦"}
+                {showEditButton && (
+                  <button
+                    onClick={onEdit}
+                    className="profile-card-action-button inline-flex items-center justify-center gap-2 border border-[#d7b866]/24 bg-black/10 px-3 py-2 font-mono text-[11px] text-[#A89888] transition-colors hover:border-[#d7b866]/48 hover:text-[#e2c46e]"
+                    aria-label={t.editProfile}
+                  >
+                    <WandSparkles size={14} className="shrink-0" />
+                    <span className="profile-card-action-label">{t.editProfile}</span>
+                  </button>
+                )}
               </div>
-              <h2 className="profile-card-name mythic-soft-title mt-3 font-serif text-3xl leading-tight">
-                {profileDraft.displayName || t.defaultUser}
-              </h2>
             </div>
-            <span
-              className={`profile-card-status mb-1 shrink-0 border bg-black/18 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] ${
-                isActive
-                  ? "border-emerald-300/35 text-emerald-100"
-                  : "border-red-300/35 text-red-100"
-              }`}
-            >
-              {statusPill}
-            </span>
-          </div>
 
-          <div className="profile-card-lines space-y-2.5 border-y border-[#d7b866]/16 py-3">
-            {[profileDraft.line1, profileDraft.line2, profileDraft.line3].map((line, index) => (
-              <p key={index} className="profile-card-line font-mono text-[#A89888]">
-                {line || t.line(index + 1)}
-              </p>
-            ))}
-          </div>
+            <div className="profile-card-identity flex items-end justify-between gap-4">
+              <div className="min-w-0">
+                <h2 className="profile-card-name mythic-soft-title font-serif">
+                  {profileDraft.displayName || t.defaultUser}
+                </h2>
+              </div>
+              <span
+                className={`profile-card-status shrink-0 border bg-black/18 font-mono uppercase ${
+                  isActive
+                    ? "border-emerald-300/35 text-emerald-100"
+                    : "border-red-300/35 text-red-100"
+                }`}
+              >
+                {statusPill}
+              </span>
+            </div>
 
-          <div className="profile-card-meta mt-4 space-y-3">
-            {profileDraft.city && (
-              <p className="profile-card-location flex min-w-0 items-center gap-2 font-mono text-xs text-[#d8cab8]">
-                <MapPin size={14} className="shrink-0" />
-                <span className="truncate">{profileDraft.city}</span>
+            <div className="profile-card-description-wrap">
+              <p className="profile-card-description font-mono text-[#A89888]">
+                {profileDraft.line1 || t.line(1)}
               </p>
-            )}
-            <div className="profile-card-tags flex flex-wrap gap-2">
-              {profileDraft.interestTags.slice(0, 3).map((tag) => (
-                <span
-                  key={tag}
-                  className="profile-card-tag border border-[#d7b866]/20 bg-[#d7b866]/8 px-2.5 py-1 font-mono text-[10px] text-[#d8cab8]"
-                >
-                  {tag}
-                </span>
-              ))}
-              {profileDraft.interestTags.length > 3 && (
-                <span className="profile-card-tag border border-[#d7b866]/14 bg-black/10 px-2.5 py-1 font-mono text-[10px] text-[#d8cab8]/72">
-                  +{profileDraft.interestTags.length - 3}
-                </span>
+
+              {profileDraft.interestTags.length > 0 && (
+                <div className="profile-card-tags flex flex-wrap">
+                  {profileDraft.interestTags.slice(0, 3).map((tag) => (
+                    <span
+                      key={tag}
+                      className="profile-card-tag border border-[#d7b866]/20 bg-[#d7b866]/8 font-mono text-[#d8cab8]"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                  {profileDraft.interestTags.length > 3 && (
+                    <span className="profile-card-tag border border-[#d7b866]/14 bg-black/10 font-mono text-[#d8cab8]/72">
+                      +{profileDraft.interestTags.length - 3}
+                    </span>
+                  )}
+                </div>
               )}
             </div>
+
+            <div className="profile-card-rule" aria-hidden="true" />
+
+            <div className="profile-card-details">
+              <div className="profile-card-detail">
+                <p className="profile-card-detail-label font-mono uppercase text-[#e2c46e]">
+                  {t.line(2)}
+                </p>
+                <p className="profile-card-detail-copy font-mono text-[#A89888]">
+                  {profileDraft.line2 || t.line(2)}
+                </p>
+              </div>
+              <div className="profile-card-detail">
+                <p className="profile-card-detail-label font-mono uppercase text-[#e2c46e]">
+                  {t.line(3)}
+                </p>
+                <p className="profile-card-detail-copy font-mono text-[#A89888]">
+                  {profileDraft.line3 || t.line(3)}
+                </p>
+              </div>
+            </div>
+
+            {(profileDraft.city || visibleLinks.length > 0) && (
+              <div className="profile-card-footer mt-auto flex items-center justify-between gap-3 border-t border-[#d7b866]/16">
+                {profileDraft.city ? (
+                  <p className="profile-card-location flex min-w-0 items-center font-mono text-[#A89888]">
+                    <MapPin size={14} className="shrink-0" />
+                    <span className="truncate">{profileDraft.city}</span>
+                  </p>
+                ) : (
+                  <span aria-hidden="true" />
+                )}
+                {visibleLinks.length > 0 && (
+                  <div className="profile-card-links flex shrink-0 items-center">
+                    {visibleLinks.map((link) => {
+                      const kind = getSocialLinkKind(link);
+                      return (
+                        <a
+                          key={link}
+                          href={formatProfileUrl(link)}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label={socialLinkLabels[kind]}
+                          className="transition-opacity hover:opacity-80"
+                        >
+                          <SocialLinkIcon link={link} size={24} />
+                        </a>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </EngravedPanel>
 

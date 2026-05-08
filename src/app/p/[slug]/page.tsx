@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 import { Activity, ExternalLink, Link as LinkIcon, MapPin } from "lucide-react";
+import { SocialLinkIcon } from "@/app/components/SocialLinkIcon";
 import { parseProfileContext } from "@/lib/profile";
+import { formatProfileUrl, getSocialLinkKind, socialLinkLabels } from "@/lib/social-links";
 import type { Metadata } from "next";
 
 const SUPABASE_URL = "https://bcudjloikmpcqwcptuyd.supabase.co";
@@ -40,11 +42,6 @@ async function getProfile(slug: string): Promise<PublicProfile | null> {
   } catch {
     return null;
   }
-}
-
-function formatUrl(link: string) {
-  if (link.startsWith("http://") || link.startsWith("https://")) return link;
-  return `https://${link}`;
 }
 
 export async function generateMetadata({
@@ -122,8 +119,6 @@ export default async function ProfilePage({ params }: { params: Promise<{ slug: 
   const tags = context.interestTags || [];
   const links = context.links || [];
   const isActive = context.isActive !== false;
-  const showContextPublicly = context.showContextPublicly === true;
-  const profileLines = [profile.line1, profile.line2, profile.line3].filter(Boolean);
 
   return (
     <main className="antenna-console-shell relative min-h-screen overflow-hidden px-4 py-5 text-[#A89888] md:px-8 md:py-7">
@@ -168,45 +163,86 @@ export default async function ProfilePage({ params }: { params: Promise<{ slug: 
 
             <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <div className="text-5xl leading-none">{profile.emoji || "✦"}</div>
-                <h1 className="mt-4 font-serif text-4xl leading-tight text-[#A89888] md:text-5xl">
+                <h1 className="font-serif text-4xl leading-tight text-[#FEF1E1] md:text-5xl">
                   {profile.display_name || "Anonymous"}
                 </h1>
               </div>
               <SignalStrip className="hidden sm:block" />
             </div>
 
-            <div className="space-y-3 border-y border-[#d7b866]/16 py-4">
-              {profileLines.map((line, index) => (
-                <p
-                  key={index}
-                  className={`font-mono text-sm leading-relaxed ${
-                    index === 0 ? "text-[#A89888]" : "text-[#d8cab8]"
-                  }`}
-                >
-                  {line}
+            <div className="border-y border-[#d7b866]/16 py-4">
+              {profile.line1 && (
+                <p className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-[#A89888]">
+                  {profile.line1}
                 </p>
-              ))}
+              )}
+
+              {tags.length > 0 && (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="border border-[#d7b866]/20 bg-[#d7b866]/8 px-3 py-1 font-mono text-xs text-[#d8cab8]"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
 
-            {((showContextPublicly && context.context) || tags.length > 0) && (
-              <div className="mt-5 space-y-5">
-                {showContextPublicly && context.context && (
-                  <p className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-[#A89888]">
-                    {context.context}
-                  </p>
+            {(profile.line2 || profile.line3) && (
+              <div className="mt-5 grid gap-5 md:grid-cols-2">
+                {profile.line2 && (
+                  <div>
+                    <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
+                      LOOKING FOR
+                    </p>
+                    <p className="font-mono text-sm leading-relaxed text-[#A89888]">
+                      {profile.line2}
+                    </p>
+                  </div>
                 )}
+                {profile.line3 && (
+                  <div>
+                    <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
+                      OUR CONVERSATION
+                    </p>
+                    <p className="font-mono text-sm leading-relaxed text-[#A89888]">
+                      {profile.line3}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
 
-                {tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="border border-[#d7b866]/20 bg-[#d7b866]/8 px-2.5 py-1 font-mono text-[10px] text-[#d8cab8]"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+            {(context.city || links.length > 0) && (
+              <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-[#d7b866]/16 pt-4">
+                {context.city ? (
+                  <p className="flex min-w-0 items-center gap-2 font-mono text-xs text-[#A89888]">
+                    <MapPin size={14} className="shrink-0" />
+                    <span className="truncate">{context.city}</span>
+                  </p>
+                ) : (
+                  <span aria-hidden="true" />
+                )}
+                {links.length > 0 && (
+                  <div className="flex items-center gap-3">
+                    {links.map((link) => {
+                      const kind = getSocialLinkKind(link);
+                      return (
+                        <a
+                          key={link}
+                          href={formatProfileUrl(link)}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label={socialLinkLabels[kind]}
+                          className="transition-opacity hover:opacity-80"
+                        >
+                          <SocialLinkIcon link={link} size={24} />
+                        </a>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -242,31 +278,6 @@ export default async function ProfilePage({ params }: { params: Promise<{ slug: 
                 )}
               </div>
             </section>
-
-            {links.length > 0 && (
-              <section className={`${panelClass} p-5`}>
-                <div className="mb-4 flex items-center justify-between gap-3 border-b border-[#d7b866]/14 pb-3">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#e2c46e]">
-                    LINKS
-                  </p>
-                  <SignalStrip className="w-12" />
-                </div>
-                <div className="space-y-2">
-                  {links.map((link) => (
-                    <a
-                      key={link}
-                      href={formatUrl(link)}
-                      target="_blank"
-                      rel="noreferrer"
-                      className={`${insetPanelClass} flex items-center justify-between gap-3 px-3 py-2 font-mono text-xs text-[#d8cab8] transition-colors hover:border-[#d7b866]/40 hover:text-[#e2c46e]`}
-                    >
-                      <span className="min-w-0 truncate">{link}</span>
-                      <ExternalLink size={13} />
-                    </a>
-                  ))}
-                </div>
-              </section>
-            )}
 
             <section className={`${panelClass} p-5`}>
               <div className="mb-3 flex items-center gap-2 text-[#d8cab8]">

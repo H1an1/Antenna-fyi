@@ -338,6 +338,36 @@ html, body {
   mask-image: linear-gradient(90deg, #000 0%, #000 68%, rgba(0, 0, 0, 0.78) 78%, transparent 100%);
 }
 
+.dashboard-canvas {
+  --dashboard-gap: 1.5rem;
+  --dashboard-overlap-min: 240px;
+  --dashboard-panel-width: clamp(720px, 61.5vw, 848px);
+  --dashboard-figure-width: clamp(768px, 48vw, 980px);
+  --dashboard-left-column: clamp(
+    0px,
+    calc(100vw - var(--dashboard-panel-width) - var(--dashboard-gap) - 4rem),
+    calc(var(--dashboard-figure-width) - var(--dashboard-overlap-min) - var(--dashboard-gap))
+  );
+
+  position: relative;
+  z-index: 10;
+  width: min(100%, calc(var(--dashboard-left-column) + var(--dashboard-gap) + var(--dashboard-panel-width)));
+  margin-inline: auto;
+}
+
+.dashboard-canvas > :where(:not(.dashboard-figure-mobile)) {
+  position: relative;
+  z-index: 1;
+}
+
+.dashboard-panel-column {
+  width: 100%;
+}
+
+.dashboard-workbench-spacer {
+  display: none;
+}
+
 .dashboard-workbench {
   position: relative;
   align-items: start;
@@ -354,6 +384,28 @@ html, body {
   .dashboard-figure-mobile {
     background-position: clamp(-220px, calc(100vw - 1383px), -80px) -45px;
     background-size: clamp(760px, 64vw, 880px) auto;
+  }
+}
+
+@media (min-width: 64rem) {
+  .dashboard-canvas .dashboard-figure-mobile {
+    position: absolute;
+    inset: auto;
+    top: -4.75rem;
+    left: 0;
+    width: var(--dashboard-figure-width);
+    height: min(1180px, calc(100% + 13rem));
+    background-position: left top;
+    background-size: var(--dashboard-figure-width) auto;
+  }
+
+  .dashboard-canvas .dashboard-workbench {
+    grid-template-columns: minmax(0, var(--dashboard-left-column)) minmax(0, var(--dashboard-panel-width));
+    gap: var(--dashboard-gap);
+  }
+
+  .dashboard-workbench-spacer {
+    display: block;
   }
 }
 
@@ -599,6 +651,16 @@ html, body {
   container-type: inline-size;
 }
 
+.profile-card-front-content {
+  --profile-gap: clamp(0.5rem, 2.86cqw, 0.75rem);
+
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
+  gap: var(--profile-gap);
+}
+
 .dashboard-side-stack {
   min-height: 0;
 }
@@ -623,20 +685,104 @@ html, body {
 .profile-card-kicker,
 .dashboard-side-kicker,
 .profile-card-status {
-  font-size: 0.75rem;
+  font-size: 0.625rem;
 }
 
 .profile-card-status {
-  padding: 0.32rem 0.72rem;
+  display: inline-flex;
+  height: clamp(1.35rem, 5.72cqw, 1.5rem);
+  align-items: center;
+  padding: 0 clamp(0.55rem, 2.86cqw, 0.75rem);
+  line-height: 1;
+  letter-spacing: 0.12em;
 }
 
 .profile-card-tags {
-  gap: 0.6rem;
+  gap: clamp(0.38rem, 1.9cqw, 0.5rem);
+  margin-top: var(--profile-gap);
 }
 
 .profile-card-tag {
-  padding: 0.25rem 0.6rem;
-  font-size: 0.625rem;
+  padding: clamp(0.18rem, 0.95cqw, 0.25rem) clamp(0.5rem, 2.86cqw, 0.75rem);
+  font-size: clamp(0.625rem, 2.86cqw, 0.75rem);
+  line-height: 1.35;
+}
+
+.profile-card-titlebar {
+  min-height: clamp(2.4rem, 9.52cqw, 2.75rem);
+  padding-bottom: clamp(0.55rem, 2.86cqw, 0.75rem);
+}
+
+.profile-card-kicker {
+  line-height: 1.5;
+  letter-spacing: 0.18em;
+}
+
+.profile-card-action-button {
+  height: clamp(1.9rem, 7.62cqw, 2rem);
+  padding: 0 clamp(0.55rem, 2.86cqw, 0.75rem);
+  font-size: clamp(0.625rem, 2.62cqw, 0.6875rem);
+  line-height: 1.5;
+}
+
+.profile-card-name {
+  font-size: clamp(1.55rem, 7.14cqw, 1.875rem);
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.profile-card-description,
+.profile-card-detail-copy {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: clamp(0.74rem, 3.34cqw, 0.875rem);
+  line-height: 1.42;
+  -webkit-box-orient: vertical;
+}
+
+.profile-card-description {
+  -webkit-line-clamp: 6;
+}
+
+.profile-card-rule {
+  height: 1px;
+  flex: 0 0 auto;
+  background: rgba(215, 184, 102, 0.16);
+}
+
+.profile-card-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--profile-gap);
+}
+
+.profile-card-detail-label {
+  margin-bottom: clamp(0.35rem, 1.9cqw, 0.5rem);
+  font-size: clamp(0.54rem, 2.38cqw, 0.625rem);
+  line-height: 1.5;
+  letter-spacing: 0.18em;
+}
+
+.profile-card-detail-copy {
+  -webkit-line-clamp: 2;
+}
+
+.profile-card-footer {
+  min-height: clamp(1.5rem, 6.2cqw, 1.8rem);
+  padding-top: var(--profile-gap);
+}
+
+.profile-card-location {
+  gap: clamp(0.25rem, 0.95cqw, 0.375rem);
+  font-size: clamp(0.64rem, 2.86cqw, 0.75rem);
+  line-height: 1.35;
+}
+
+.profile-card-links {
+  max-width: 50%;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: clamp(0.45rem, 3.8cqw, 1rem);
 }
 
 .dashboard-side-empty-title {
@@ -694,8 +840,8 @@ html, body {
 .profile-card-ornament {
   position: relative;
   z-index: 1;
-  width: min(100%, 30rem);
-  height: 6rem;
+  width: min(90%, 27rem);
+  height: clamp(4.8rem, 20.58cqw, 5.4rem);
   margin: -1.45rem auto -0.35rem;
   opacity: 1;
   pointer-events: none;
@@ -744,45 +890,26 @@ html, body {
   display: none;
 }
 
-.profile-card-line {
-  display: -webkit-box;
-  overflow: hidden;
-  font-size: clamp(0.78rem, 3.7cqw, 0.875rem);
-  line-height: 1.58;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-}
-
 @container (max-width: 400px) {
   .profile-card-titlebar {
-    margin-bottom: 0.875rem;
     padding-bottom: 0.625rem;
   }
 
   .profile-card-identity {
-    margin-bottom: 0.875rem;
-  }
-
-  .profile-card-avatar {
-    font-size: 2rem;
+    gap: 0.875rem;
   }
 
   .profile-card-name {
-    margin-top: 0.625rem;
-    font-size: 1.78rem;
+    font-size: clamp(1.52rem, 7.14cqw, 1.78rem);
   }
 
   .profile-card-status {
-    padding: 0.26rem 0.62rem;
-    font-size: 0.6875rem;
+    font-size: 0.625rem;
   }
 
-  .profile-card-lines {
-    padding-block: 0.625rem;
-  }
-
-  .profile-card-line {
-    line-height: 1.52;
+  .profile-card-description,
+  .profile-card-detail-copy {
+    line-height: 1.42;
   }
 
   .profile-card-meta {
@@ -795,12 +922,11 @@ html, body {
 
   .profile-card-tag {
     padding: 0.22rem 0.55rem;
-    font-size: 0.625rem;
   }
 
   .profile-card-kicker,
   .dashboard-side-kicker {
-    font-size: 0.6875rem;
+    font-size: 0.625rem;
   }
 
   .profile-card-tags {
@@ -823,14 +949,15 @@ html, body {
 
 @container (max-width: 360px) {
   .profile-card-ornament {
-    width: 108%;
-    height: 4.85rem;
+    width: 96%;
+    height: 4.65rem;
     margin-top: -1.25rem;
     margin-bottom: -0.25rem;
     transform: translateX(-0.25rem);
   }
 
-  .profile-card-line {
+  .profile-card-description,
+  .profile-card-detail-copy {
     font-size: 0.765rem;
     line-height: 1.45;
   }
@@ -857,6 +984,7 @@ html, body {
 
   .profile-card-tag {
     padding: 0.2rem 0.52rem;
+    font-size: 0.625rem;
   }
 
   .dashboard-side-empty-title {

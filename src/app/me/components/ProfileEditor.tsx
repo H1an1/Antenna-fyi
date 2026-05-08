@@ -2,10 +2,14 @@
 
 import { EngravedPanel } from "@/app/components/EngravedPanel";
 import {
+  PROFILE_CONVERSATION_MAX_LENGTH,
   PROFILE_CONTEXT_MAX_LENGTH,
-  PROFILE_LINE_MAX_LENGTH,
+  PROFILE_DESCRIPTION_MAX_LENGTH,
+  PROFILE_LOOKING_FOR_MAX_LENGTH,
+  limitProfileConversation,
   limitProfileContext,
-  limitProfileLine,
+  limitProfileDescription,
+  limitProfileLookingFor,
   normalizeProfileSlug,
   sanitizeTags,
   type ProfileDraft,
@@ -22,7 +26,6 @@ interface ProfileEditorProps {
   setSlugManuallyEdited: (v: boolean) => void;
   t: {
     publicCard: string;
-    emoji: string;
     displayName: string;
     publicSlug: string;
     publicSlugHint: string;
@@ -39,8 +42,6 @@ interface ProfileEditorProps {
     profileContext: string;
     contextBody: string;
     contextPlaceholder: string;
-    showContextPublicly: string;
-    contextPublicHint: string;
     contextAgentOnlyHint: string;
     saveProfile: string;
     saving: string;
@@ -176,13 +177,7 @@ export function ProfileEditor({
         <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#e2c46e]">
           {t.publicCard}
         </p>
-        <div className="grid gap-4 md:grid-cols-[80px_1fr_1fr]">
-          <TextInput
-            label={t.emoji}
-            value={profileDraft.emoji}
-            onChange={(value) => updateDraft({ emoji: value.slice(0, 2) })}
-            maxLength={2}
-          />
+        <div className="grid gap-4 md:grid-cols-2">
           <TextInput
             label={t.displayName}
             value={profileDraft.displayName}
@@ -199,23 +194,12 @@ export function ProfileEditor({
           />
         </div>
         <div className="space-y-4 border-t border-[#d7b866]/12 pt-4">
-          <TextInput
+          <TextArea
             label={t.line(1)}
             value={profileDraft.line1}
-            onChange={(value) => updateDraft({ line1: limitProfileLine(value) })}
-            maxLength={PROFILE_LINE_MAX_LENGTH}
-          />
-          <TextInput
-            label={t.line(2)}
-            value={profileDraft.line2}
-            onChange={(value) => updateDraft({ line2: limitProfileLine(value) })}
-            maxLength={PROFILE_LINE_MAX_LENGTH}
-          />
-          <TextInput
-            label={t.line(3)}
-            value={profileDraft.line3}
-            onChange={(value) => updateDraft({ line3: limitProfileLine(value) })}
-            maxLength={PROFILE_LINE_MAX_LENGTH}
+            onChange={(value) => updateDraft({ line1: limitProfileDescription(value) })}
+            rows={4}
+            maxLength={PROFILE_DESCRIPTION_MAX_LENGTH}
           />
         </div>
 
@@ -262,6 +246,23 @@ export function ProfileEditor({
               <Plus size={16} />
             </button>
           </div>
+        </div>
+
+        <div className="grid gap-4 border-t border-[#d7b866]/12 pt-4 md:grid-cols-2">
+          <TextArea
+            label={t.line(2)}
+            value={profileDraft.line2}
+            onChange={(value) => updateDraft({ line2: limitProfileLookingFor(value) })}
+            rows={3}
+            maxLength={PROFILE_LOOKING_FOR_MAX_LENGTH}
+          />
+          <TextArea
+            label={t.line(3)}
+            value={profileDraft.line3}
+            onChange={(value) => updateDraft({ line3: limitProfileConversation(value) })}
+            rows={3}
+            maxLength={PROFILE_CONVERSATION_MAX_LENGTH}
+          />
         </div>
       </EngravedPanel>
 
@@ -324,22 +325,9 @@ export function ProfileEditor({
           rows={6}
           maxLength={PROFILE_CONTEXT_MAX_LENGTH}
         />
-        <label className="flex cursor-pointer items-start gap-3 border border-[#d7b866]/18 bg-black/10 p-3 transition-colors hover:border-[#d7b866]/34">
-          <input
-            type="checkbox"
-            checked={profileDraft.showContextPublicly}
-            onChange={(event) => updateDraft({ showContextPublicly: event.target.checked })}
-            className="mt-0.5 h-4 w-4 shrink-0 accent-[#d7b866]"
-          />
-          <span className="min-w-0">
-            <span className="block font-mono text-xs text-[#A89888]">
-              {t.showContextPublicly}
-            </span>
-            <span className="mt-1 block font-mono text-[11px] leading-relaxed text-[#d8cab8]">
-              {profileDraft.showContextPublicly ? t.contextPublicHint : t.contextAgentOnlyHint}
-            </span>
-          </span>
-        </label>
+        <p className="border border-[#d7b866]/18 bg-black/10 p-3 font-mono text-[11px] leading-relaxed text-[#d8cab8]">
+          {t.contextAgentOnlyHint}
+        </p>
       </EngravedPanel>
 
       <div className="flex justify-end border-t border-[#d7b866]/16 pt-5">

@@ -18,12 +18,13 @@ const mythicFigureSrc = "/profile-assets/ascii-angel-dashboard-crop-tone-transpa
 const profileDraft: ProfileDraft = {
   emoji: "✦",
   displayName: "Antenna",
-  line1: "Agent-native signal for rooms, events, and chance encounters.",
-  line2: "Turns profiles, context, and location into live matching intent.",
-  line3: "Finds the people worth meeting before the moment passes.",
+  line1:
+    "Agent-native signal for rooms, events, and chance encounters. Antenna helps agents understand who should meet before the moment passes.",
+  line2: "Builders, researchers, operators, and people working on ambitious things.",
+  line3: "Sharp, warm, concrete conversations that become real-world introductions.",
   context:
     "Antenna gives every person an agent-readable identity card, then lets agents scan nearby profiles, event context, and user intent to surface high-signal introductions.",
-  showContextPublicly: true,
+  showContextPublicly: false,
   interestTags: ["AI agents", "events", "networking", "context", "signal"],
   city: "Live rooms",
   isActive: true,
@@ -66,9 +67,9 @@ const t = {
   mythArchetypeLabel: "Assigned archetype",
   line: (index: number) =>
     [
-      "Line 1: who are you?",
-      "Line 2: what are you working on?",
-      "Line 3: what people or directions interest you?",
+      "Personal description",
+      "Looking for",
+      "Our conversation",
     ][index - 1] || `Line ${index}`,
   matchesHeader: "Matches",
   eventsHeader: "Events",
@@ -132,12 +133,12 @@ export default function AntennaPromoDashboardPage() {
       className="antenna-console-shell antenna-promo-dashboard relative min-h-screen overflow-hidden px-4 py-6 text-[#A89888] md:px-8 md:py-9"
     >
       <div className="console-streaks" aria-hidden="true" />
-      <div
-        className="dashboard-figure-mobile"
-        style={{ backgroundImage: `url(${mythicFigureSrc})` }}
-        aria-hidden="true"
-      />
-      <div className="relative z-10 mx-auto max-w-[1680px]">
+      <div className="dashboard-canvas">
+        <div
+          className="dashboard-figure-mobile"
+          style={{ backgroundImage: `url(${mythicFigureSrc})` }}
+          aria-hidden="true"
+        />
         <header className="mb-6">
           <div className="flex flex-col gap-5 px-1 py-2 lg:flex-row lg:items-center lg:justify-between">
             <div className="min-w-0">
@@ -180,9 +181,9 @@ export default function AntennaPromoDashboardPage() {
           </div>
         </header>
 
-        <div className="dashboard-workbench grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(720px,848px)]">
-          <div className="hidden lg:block" aria-hidden="true" />
-          <div className="mx-auto w-full max-w-[848px] space-y-6 lg:mx-0 lg:max-w-none">
+        <div className="dashboard-workbench grid gap-6">
+          <div className="dashboard-workbench-spacer" aria-hidden="true" />
+          <div className="dashboard-panel-column mx-auto w-full max-w-[848px] space-y-6 lg:mx-0 lg:max-w-none">
             <TodaySection
               hasKey
               isProfileComplete

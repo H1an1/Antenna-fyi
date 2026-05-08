@@ -3,7 +3,10 @@ import { pinyin } from "pinyin-pro";
 export const PROFILE_METADATA_KEY = "antenna_profile";
 export const PROFILE_CONTEXT_VERSION = 1;
 export const PROFILE_CONTEXT_MAX_LENGTH = 1000;
-export const PROFILE_LINE_MAX_LENGTH = 70;
+export const PROFILE_DESCRIPTION_MAX_LENGTH = 220;
+export const PROFILE_LOOKING_FOR_MAX_LENGTH = 140;
+export const PROFILE_CONVERSATION_MAX_LENGTH = 160;
+export const PROFILE_LINE_MAX_LENGTH = PROFILE_DESCRIPTION_MAX_LENGTH;
 
 export type ProfileDraft = {
   emoji: string;
@@ -59,6 +62,18 @@ export function limitProfileLine(value: string) {
   return value.slice(0, PROFILE_LINE_MAX_LENGTH);
 }
 
+export function limitProfileDescription(value: string) {
+  return value.slice(0, PROFILE_DESCRIPTION_MAX_LENGTH);
+}
+
+export function limitProfileLookingFor(value: string) {
+  return value.slice(0, PROFILE_LOOKING_FOR_MAX_LENGTH);
+}
+
+export function limitProfileConversation(value: string) {
+  return value.slice(0, PROFILE_CONVERSATION_MAX_LENGTH);
+}
+
 export function createProfileSlug(name: string, fallback: string) {
   const slug = normalizeProfileSlug(name);
 
@@ -89,9 +104,10 @@ export function createDefaultProfileDraft(name: string, email: string, userId: s
   return {
     emoji: "✦",
     displayName,
-    line1: "Builder, researcher, or curious operator.",
-    line2: "Interested in people working on ambitious things.",
-    line3: "Best conversations: sharp, warm, concrete.",
+    line1:
+      "Builder, researcher, or curious operator. Interested in people working on ambitious things.",
+    line2: "People with serious curiosity, useful taste, and something they are actively building.",
+    line3: "Sharp, warm, concrete conversations that can turn context into real-world introductions.",
     context: "",
     showContextPublicly: false,
     interestTags: ["AI agents", "events", "startups", "design", "research"],
@@ -108,7 +124,7 @@ export function draftToProfileContext(draft: ProfileDraft): ProfileContext {
   return {
     version: PROFILE_CONTEXT_VERSION,
     context: draft.context,
-    showContextPublicly: draft.showContextPublicly,
+    showContextPublicly: false,
     interestTags: sanitizeTags(draft.interestTags),
     city: draft.city,
     isActive: draft.isActive,
@@ -166,9 +182,9 @@ export function mergeProfileDraft(base: ProfileDraft, patch: Partial<ProfileDraf
     next.context = legacyContext;
   }
   next.context = limitProfileContext(next.context || "");
-  next.line1 = limitProfileLine(next.line1 || "");
-  next.line2 = limitProfileLine(next.line2 || "");
-  next.line3 = limitProfileLine(next.line3 || "");
+  next.line1 = limitProfileDescription(next.line1 || "");
+  next.line2 = limitProfileLookingFor(next.line2 || "");
+  next.line3 = limitProfileConversation(next.line3 || "");
 
   delete next.about;
   delete next.currentFocus;
@@ -177,7 +193,7 @@ export function mergeProfileDraft(base: ProfileDraft, patch: Partial<ProfileDraf
 
   return {
     ...next,
-    showContextPublicly: next.showContextPublicly === true,
+    showContextPublicly: false,
     interestTags: sanitizeTags(patch.interestTags || base.interestTags),
     links: normalizeLinks(patch.links || base.links).concat(["", "", ""]).slice(0, 3),
     profileSlug:

@@ -8,8 +8,10 @@ import {
   PROFILE_METADATA_KEY,
   createDefaultProfileDraft,
   createProfileSlug,
+  limitProfileConversation,
   limitProfileContext,
-  limitProfileLine,
+  limitProfileDescription,
+  limitProfileLookingFor,
   mergeProfileDraft,
   normalizeLinks,
   parseProfileContext,
@@ -18,7 +20,7 @@ import {
   type ProfileDraft,
 } from "@/lib/profile";
 import { matchArchetype } from "@/lib/archetype";
-import { ExternalLink, KeyRound, X } from "lucide-react";
+import { ExternalLink, KeyRound } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
@@ -96,9 +98,9 @@ const dashboardCopy = {
     publicSlugHint: "Auto-filled from display name. It stays editable and must be unique.",
     line: (index: number) =>
       [
-        "Line 1: who are you?",
-        "Line 2: what are you working on?",
-        "Line 3: what people or directions interest you?",
+        "Personal description",
+        "Looking for",
+        "Our conversation",
       ][index - 1] || `Line ${index}`,
     interestTags: "Interest tags",
     addTagPlaceholder: "Add a tag, then press Enter",
@@ -107,12 +109,14 @@ const dashboardCopy = {
     profileBasics: "Basics",
     publicCard: "Public card",
     profileContext: "More information",
-    contextBody: "Best written by your AI. Ask it to summarize the context that helps people understand and match with you.",
+    contextBody:
+      "Best written by your AI. This gives your agent richer private context for matching.",
     contextPlaceholder:
-      "Let your AI write this, or add it manually: background, current work, who you want to meet, useful conversation hooks, and anything your AI should remember.",
+      "Let your AI write this, or add it manually: background, current work, useful context, private matching notes, and anything your AI should remember.",
     showContextPublicly: "Show this on my public profile",
     contextPublicHint: "People can read this on your public profile. Your agent will also use it for matching.",
-    contextAgentOnlyHint: "Only your agent can use this for matching. It will not appear on your public profile.",
+    contextAgentOnlyHint:
+      "This is agent-only context. It helps your agent match you better and will not be shown to humans.",
     contextPending: "More information pending",
     agentCanWriteContext: "Best written by your AI. You can also add it manually.",
     signalDetails: "Signal details",
@@ -225,9 +229,9 @@ const dashboardCopy = {
     publicSlugHint: "会根据显示名称自动生成拼音，也可以手动修改；保存时需要唯一。",
     line: (index: number) =>
       [
-        "第一行：你是谁？",
-        "第二行：你在做什么？",
-        "第三行：你对什么人或方向感兴趣？",
+        "个人描述",
+        "想认识的人",
+        "想要的交流方式",
       ][index - 1] || `第 ${index} 行`,
     interestTags: "兴趣标签",
     addTagPlaceholder: "输入标签后按 Enter",
@@ -236,11 +240,11 @@ const dashboardCopy = {
     profileBasics: "基础信息",
     publicCard: "公开名片",
     profileContext: "更多信息",
-    contextBody: "这部分最好让你的 AI 来写。让它总结别人理解你、匹配你时最有用的上下文。",
-    contextPlaceholder: "让 AI 写，或手动补充：背景、当前项目、想认识的人、适合聊的话题、希望 AI 记住什么。",
+    contextBody: "这部分最好让你的 AI 来写，用来给 agent 更完整的私密匹配上下文。",
+    contextPlaceholder: "让 AI 写，或手动补充：背景、当前项目、隐含偏好、匹配线索、希望 AI 记住什么。",
     showContextPublicly: "在公开主页展示这段更多信息",
     contextPublicHint: "其他人可以在你的公开主页看到这段内容，agent 也会用于匹配。",
-    contextAgentOnlyHint: "这段内容只用于 agent 匹配，不会出现在公开主页。",
+    contextAgentOnlyHint: "这段内容只用于 agent 匹配，帮助它更准确地理解你，不会展示给人类。",
     contextPending: "更多信息待填写",
     agentCanWriteContext: "这部分最好让 AI 帮你写；你也可以手动补充。",
     signalDetails: "信号细节",
@@ -528,11 +532,11 @@ export default function DashboardPage() {
     const cleaned = mergeProfileDraft(profileDraft, {
       emoji: profileDraft.emoji.trim() || "✦",
       displayName: profileDraft.displayName.trim() || t.defaultUser,
-      line1: limitProfileLine(profileDraft.line1.trim()),
-      line2: limitProfileLine(profileDraft.line2.trim()),
-      line3: limitProfileLine(profileDraft.line3.trim()),
+      line1: limitProfileDescription(profileDraft.line1.trim()),
+      line2: limitProfileLookingFor(profileDraft.line2.trim()),
+      line3: limitProfileConversation(profileDraft.line3.trim()),
       context: limitProfileContext(profileDraft.context.trim()),
-      showContextPublicly: profileDraft.showContextPublicly,
+      showContextPublicly: false,
       city: profileDraft.city.trim(),
       interestTags: sanitizeTags(profileDraft.interestTags),
       links: normalizeLinks(profileDraft.links).concat(["", "", ""]).slice(0, 3),
@@ -725,12 +729,12 @@ export default function DashboardPage() {
   return (
     <main className="antenna-console-shell relative min-h-screen overflow-hidden px-4 py-6 text-[#A89888] md:px-8 md:py-9">
       <div className="console-streaks" aria-hidden="true" />
-      <div
-        className="dashboard-figure-mobile"
-        style={{ backgroundImage: `url(${mythicFigureSrc})` }}
-        aria-hidden="true"
-      />
-      <div className="relative z-10 mx-auto max-w-[1680px]">
+      <div className="dashboard-canvas">
+        <div
+          className="dashboard-figure-mobile"
+          style={{ backgroundImage: `url(${mythicFigureSrc})` }}
+          aria-hidden="true"
+        />
         <header className="mb-6">
           <div className="flex flex-col gap-5 px-1 py-2 lg:flex-row lg:items-center lg:justify-between">
             <div className="min-w-0">
@@ -804,9 +808,9 @@ export default function DashboardPage() {
           </div>
         )}
 
-        <div className="dashboard-workbench grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(720px,848px)]">
-          <div className="hidden lg:block" aria-hidden="true" />
-          <div className="mx-auto w-full max-w-[848px] space-y-6 lg:mx-0 lg:max-w-none">
+        <div className="dashboard-workbench grid gap-6">
+          <div className="dashboard-workbench-spacer" aria-hidden="true" />
+          <div className="dashboard-panel-column mx-auto w-full max-w-[848px] space-y-6 lg:mx-0 lg:max-w-none">
             <TodaySection
               hasKey={!!primaryKey}
               isProfileComplete={isProfileComplete}
