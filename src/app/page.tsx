@@ -19,7 +19,9 @@ export default function Home() {
 
       <GlitchBackground />
       <Hero />
-      <Features />
+      <section id="product-intro">
+        <Features />
+      </section>
       <FAQ />
       <Footer />
     </main>
