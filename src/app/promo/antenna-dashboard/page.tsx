@@ -49,6 +49,7 @@ const t = {
   todayReadyBody: "Matches, event tasks, and agent recommendations will appear here as rows.",
   agentStatus: "AGENT STATUS",
   layer0Connected: "Agent connected",
+  layer0NeedsSetup: "Agent not connected",
   agentConnection: "Agent connection",
   firstTimeTitle: "Connect your agent first.",
   firstTimeBody: "Antenna only becomes useful after your agent has an API key.",
