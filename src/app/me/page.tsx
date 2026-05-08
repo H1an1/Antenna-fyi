@@ -548,12 +548,18 @@ export default function DashboardPage() {
 
     // Use save_user_profile RPC (SECURITY DEFINER) for initial create/bind,
     // then RLS-based direct updates once user_id is set.
-    const { data: existingProfile } = await supabase
+    const { data: existingProfile, error: lookupErr } = await supabase
       .from("profiles")
       .select("device_id")
       .eq("user_id", user.id)
       .limit(1)
       .maybeSingle<{ device_id: string | null }>();
+
+    if (lookupErr) {
+      setError(lookupErr.message || t.failedSaveProfile);
+      setSaveState("idle");
+      return;
+    }
 
     let profileErr: { message: string; code?: string } | null = null;
 
