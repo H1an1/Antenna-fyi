@@ -19,7 +19,20 @@ interface PublicProfileData {
   archetypeOverride?: { name: string; reason: string } | null;
 }
 
-export function PublicProfileCard({ profile }: { profile: PublicProfileData }) {
+interface PublicProfileT {
+  flipBack: string;
+  flipFront: string;
+  editProfile: string;
+  defaultUser: string;
+  mythArchetypeLabel: string;
+  line: (index: number) => string;
+  backPlaceholderTitle?: string;
+  backPlaceholderBody?: string;
+  emptyStateTitle?: string;
+  emptyStateBody?: string;
+}
+
+export function PublicProfileCard({ profile, t }: { profile: PublicProfileData; t: PublicProfileT }) {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const profileDraft: ProfileDraft = {
@@ -53,17 +66,7 @@ export function PublicProfileCard({ profile }: { profile: PublicProfileData }) {
       onFlip={setIsFlipped}
       onEdit={() => {}}
       showEditButton={false}
-      t={{
-        flipBack: "Back",
-        flipFront: "Front",
-        editProfile: "Edit",
-        defaultUser: "Antenna user",
-        mythArchetypeLabel: "Assigned archetype",
-        line: (index: number) =>
-          ["Personal description", "Looking for", "Our conversation"][index - 1] || `Line ${index}`,
-        backPlaceholderTitle: "Your archetype awaits.",
-        backPlaceholderBody: "Complete your profile and the system will assign your mythic archetype.",
-      }}
+      t={t}
       statusPill={profile.isActive ? "active" : "quiet"}
       isActive={profile.isActive}
     />
