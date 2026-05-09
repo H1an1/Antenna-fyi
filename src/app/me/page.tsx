@@ -877,7 +877,7 @@ export default function DashboardPage() {
               isProfileComplete={isProfileComplete}
               gpsState={gpsState}
               gpsActionLabel={gpsActionLabel}
-              onGenerateKey={generateKey}
+              onGenerateKey={() => setApiModalOpen(true)}
               onCompleteProfile={() => setProfileEditorOpen(true)}
               onUpdateGps={updateGps}
               t={t}
