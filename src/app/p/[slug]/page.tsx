@@ -117,6 +117,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ slug: 
     city: context.city || "",
     isActive: context.isActive !== false,
     links: context.links || [],
+    archetypeOverride: context.archetypeOverride || null,
   };
 
   return (

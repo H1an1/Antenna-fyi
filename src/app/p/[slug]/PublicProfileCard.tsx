@@ -16,6 +16,7 @@ interface PublicProfileData {
   city: string;
   isActive: boolean;
   links: string[];
+  archetypeOverride?: { name: string; reason: string } | null;
 }
 
 export function PublicProfileCard({ profile }: { profile: PublicProfileData }) {
@@ -36,6 +37,7 @@ export function PublicProfileCard({ profile }: { profile: PublicProfileData }) {
     profileSlug: "",
     deviceId: "",
     lastGps: null,
+    archetypeOverride: profile.archetypeOverride || null,
   };
 
   const archetypeMatch = useMemo(

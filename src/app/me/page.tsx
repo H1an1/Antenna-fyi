@@ -465,6 +465,7 @@ export default function DashboardPage() {
           isActive: typeof context.isActive === "boolean" ? context.isActive : draft.isActive,
           links: context.links?.length ? context.links : draft.links,
           lastGps: context.lastGps || draft.lastGps,
+          archetypeOverride: context.archetypeOverride || draft.archetypeOverride,
         });
       }
 

@@ -53,6 +53,11 @@ export function ProfileCard({
     profileDraft.line1 === DEFAULT_LINE1 ||
     profileDraft.displayName === t.defaultUser;
 
+  // Use archetype override from profile context if set, otherwise use computed match
+  const displayArchetype = profileDraft.archetypeOverride
+    ? { primary: profileDraft.archetypeOverride.name, reason: profileDraft.archetypeOverride.reason }
+    : { primary: archetypeMatch.primary, reason: archetypeMatch.reason };
+
   return (
     <div className="profile-card-scene self-start">
       <div className={`profile-card-flipper ${isFlipped ? "is-flipped" : ""}`}>
@@ -212,7 +217,7 @@ export function ProfileCard({
           <div className="relative z-10 flex h-full flex-col justify-between">
             <div className="flex items-center justify-between gap-3 border-b border-[#d7b866]/14 pb-3">
               <p className="dashboard-side-kicker font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
-                {isProfileDefault ? "MYTH://PENDING" : `MYTH://${archetypeMatch.primary}`}
+                {isProfileDefault ? "MYTH://PENDING" : `MYTH://${displayArchetype.primary}`}
               </p>
               <button
                 onClick={() => onFlip(false)}
@@ -239,12 +244,12 @@ export function ProfileCard({
                     {t.mythArchetypeLabel}
                   </p>
                   <h3 className="mythic-soft-title mt-2 font-serif text-4xl leading-none">
-                    {archetypeMatch.primary}
+                    {displayArchetype.primary}
                   </h3>
                 </div>
                 <div className="border-t border-[#d7b866]/18 pt-4">
                   <p className="font-mono text-xs leading-relaxed text-[#FEF1E1]">
-                    {archetypeMatch.reason}
+                    {displayArchetype.reason}
                   </p>
                 </div>
               </div>

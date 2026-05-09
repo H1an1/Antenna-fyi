@@ -23,6 +23,7 @@ export type ProfileDraft = {
   profileSlug: string;
   deviceId: string;
   lastGps: string | null;
+  archetypeOverride?: { name: string; reason: string } | null;
 };
 
 export type ProfileContext = {
@@ -34,6 +35,7 @@ export type ProfileContext = {
   isActive: boolean;
   links: string[];
   lastGps: string | null;
+  archetypeOverride?: { name: string; reason: string } | null;
 };
 
 function getSlugSource(value: string) {
@@ -117,6 +119,7 @@ export function createDefaultProfileDraft(name: string, email: string, userId: s
     profileSlug: createProfileSlug(displayName, userId),
     deviceId: `user:${userId}`,
     lastGps: null,
+    archetypeOverride: null,
   };
 }
 
@@ -130,6 +133,7 @@ export function draftToProfileContext(draft: ProfileDraft): ProfileContext {
     isActive: draft.isActive,
     links: normalizeLinks(draft.links),
     lastGps: draft.lastGps,
+    archetypeOverride: draft.archetypeOverride || null,
   };
 }
 
@@ -159,6 +163,7 @@ export function parseProfileContext(value: unknown): Partial<ProfileContext> {
       isActive: typeof parsed.isActive === "boolean" ? parsed.isActive : true,
       links: Array.isArray(parsed.links) ? normalizeLinks(parsed.links) : [],
       lastGps: parsed.lastGps || null,
+      archetypeOverride: parsed.archetypeOverride || null,
     };
   } catch {
     return {
