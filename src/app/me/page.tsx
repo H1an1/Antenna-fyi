@@ -183,6 +183,8 @@ const dashboardCopy = {
     flipBack: "Back",
     flipFront: "Front",
     mythArchetypeLabel: "Assigned archetype",
+    backPlaceholderTitle: "Your archetype awaits.",
+    backPlaceholderBody: "Complete your profile and the system will assign your mythic archetype.",
     matchesHeader: "Matches",
     eventsHeader: "Events",
     noPendingMatches: "No pending matches",
@@ -310,6 +312,8 @@ const dashboardCopy = {
     flipBack: "背面",
     flipFront: "正面",
     mythArchetypeLabel: "分配的神话原型",
+    backPlaceholderTitle: "你的原型正在等待。",
+    backPlaceholderBody: "填完个人信息后，系统会根据你的 profile 分配专属形象。",
     matchesHeader: "匹配",
     eventsHeader: "活动",
     noPendingMatches: "没有待处理匹配",
@@ -686,6 +690,7 @@ export default function DashboardPage() {
 
     setProfileDraft(cleaned);
     setSaveState("saved");
+    setProfileEditorOpen(false);
     setTimeout(() => setSaveState("idle"), 1800);
   };
 

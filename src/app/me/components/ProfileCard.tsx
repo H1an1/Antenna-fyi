@@ -11,6 +11,9 @@ import { formatProfileUrl, getSocialLinkKind, socialLinkLabels } from "@/lib/soc
 const profileBackVideoSrc = "/profile-assets/ascii-profile-back.mp4";
 const profileOrnamentSrc = "/profile-assets/wing-signal-ornament.png";
 
+const DEFAULT_LINE1 =
+  "Builder, researcher, or curious operator. Interested in people working on ambitious things.";
+
 interface ProfileCardProps {
   profileDraft: ProfileDraft;
   archetypeMatch: ArchetypeMatch;
@@ -25,6 +28,8 @@ interface ProfileCardProps {
     defaultUser: string;
     mythArchetypeLabel: string;
     line: (index: number) => string;
+    backPlaceholderTitle?: string;
+    backPlaceholderBody?: string;
   };
   statusPill: string;
   isActive: boolean;
@@ -42,6 +47,11 @@ export function ProfileCard({
   isActive,
 }: ProfileCardProps) {
   const visibleLinks = normalizeLinks(profileDraft.links);
+
+  const isProfileDefault =
+    !profileDraft.line1 ||
+    profileDraft.line1 === DEFAULT_LINE1 ||
+    profileDraft.displayName === t.defaultUser;
 
   return (
     <div className="profile-card-scene self-start">
@@ -184,19 +194,25 @@ export function ProfileCard({
 
         {/* Back */}
         <EngravedPanel className="profile-card-face profile-card-back bg-black p-5">
-          <video
-            className="profile-card-video"
-            src={profileBackVideoSrc}
-            autoPlay
-            loop
-            muted
-            playsInline
-          />
-          <div className="profile-card-back-gradient" aria-hidden="true" />
+          {isProfileDefault ? (
+            <div className="profile-card-back-gradient" aria-hidden="true" />
+          ) : (
+            <>
+              <video
+                className="profile-card-video"
+                src={profileBackVideoSrc}
+                autoPlay
+                loop
+                muted
+                playsInline
+              />
+              <div className="profile-card-back-gradient" aria-hidden="true" />
+            </>
+          )}
           <div className="relative z-10 flex h-full flex-col justify-between">
             <div className="flex items-center justify-between gap-3 border-b border-[#d7b866]/14 pb-3">
               <p className="dashboard-side-kicker font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
-                MYTH://{archetypeMatch.primary}
+                {isProfileDefault ? "MYTH://PENDING" : `MYTH://${archetypeMatch.primary}`}
               </p>
               <button
                 onClick={() => onFlip(false)}
@@ -207,21 +223,32 @@ export function ProfileCard({
                 {t.flipFront}
               </button>
             </div>
-            <div className="space-y-4 pt-6">
-              <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#e2c46e]">
-                  {t.mythArchetypeLabel}
+            {isProfileDefault ? (
+              <div className="flex flex-1 flex-col items-center justify-center space-y-4 py-8 text-center">
+                <p className="mythic-soft-title font-serif text-2xl leading-tight">
+                  {t.backPlaceholderTitle || "Your archetype awaits."}
                 </p>
-                <h3 className="mythic-soft-title mt-2 font-serif text-4xl leading-none">
-                  {archetypeMatch.primary}
-                </h3>
-              </div>
-              <div className="border-t border-[#d7b866]/18 pt-4">
-                <p className="font-mono text-xs leading-relaxed text-[#FEF1E1]">
-                  {archetypeMatch.reason}
+                <p className="max-w-[28ch] font-mono text-xs leading-relaxed text-[#A89888]">
+                  {t.backPlaceholderBody || "Complete your profile and the system will assign your mythic archetype."}
                 </p>
               </div>
-            </div>
+            ) : (
+              <div className="space-y-4 pt-6">
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#e2c46e]">
+                    {t.mythArchetypeLabel}
+                  </p>
+                  <h3 className="mythic-soft-title mt-2 font-serif text-4xl leading-none">
+                    {archetypeMatch.primary}
+                  </h3>
+                </div>
+                <div className="border-t border-[#d7b866]/18 pt-4">
+                  <p className="font-mono text-xs leading-relaxed text-[#FEF1E1]">
+                    {archetypeMatch.reason}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </EngravedPanel>
       </div>
