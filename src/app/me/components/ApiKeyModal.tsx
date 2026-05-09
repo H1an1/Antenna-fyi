@@ -43,6 +43,7 @@ interface ApiKeyModalProps {
     revokeConfirm: string;
     setupPromptTitle: string;
     generateKeyFirst: string;
+    setupHint?: string;
   };
 }
 
@@ -156,9 +157,16 @@ export function ApiKeyModal({
               )}
             </div>
             {setupPrompt ? (
-              <pre className="max-h-48 overflow-auto border border-[#d7b866]/18 bg-[#070807]/70 p-3 font-mono text-[11px] leading-relaxed text-[#d8cab8]">
-                {setupPrompt}
-              </pre>
+              <>
+                <pre className="max-h-48 overflow-auto border border-[#d7b866]/18 bg-[#070807]/70 p-3 font-mono text-[11px] leading-relaxed text-[#d8cab8]">
+                  {setupPrompt}
+                </pre>
+                {t.setupHint && (
+                  <p className="mt-3 font-mono text-[11px] leading-relaxed text-[#d8cab8]/72">
+                    {t.setupHint}
+                  </p>
+                )}
+              </>
             ) : (
               <p className="font-mono text-sm leading-relaxed text-[#d8cab8]">
                 {t.generateKeyFirst}
