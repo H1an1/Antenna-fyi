@@ -30,6 +30,9 @@ interface ProfileCardProps {
     line: (index: number) => string;
     backPlaceholderTitle?: string;
     backPlaceholderBody?: string;
+    emptyStateTitle?: string;
+    emptyStateBody?: string;
+    emptyStateCta?: string;
   };
   statusPill: string;
   isActive: boolean;
@@ -118,7 +121,27 @@ export function ProfileCard({
               </span>
             </div>
 
-            <div className="profile-card-description-wrap">
+            {isProfileDefault ? (
+              <div className="flex flex-1 flex-col items-center justify-center space-y-4 py-8 text-center">
+                <p className="mythic-soft-title font-serif text-xl leading-tight">
+                  {t.emptyStateTitle || "This is your identity card."}
+                </p>
+                <p className="max-w-[30ch] font-mono text-xs leading-relaxed text-[#A89888]">
+                  {t.emptyStateBody || "Tell us who you are, what you're looking for, and how you want to connect."}
+                </p>
+                {showEditButton && (
+                  <button
+                    onClick={onEdit}
+                    className="mt-2 inline-flex items-center gap-2 border border-[#d7b866]/44 bg-[#d7b866]/10 px-4 py-2.5 font-mono text-xs text-[#e2c46e] transition-colors hover:bg-[#d7b866]/16"
+                  >
+                    <WandSparkles size={14} />
+                    {t.emptyStateCta || "Set up your card"}
+                  </button>
+                )}
+              </div>
+            ) : (
+              <>
+                <div className="profile-card-description-wrap">
               <p className="profile-card-description font-mono text-[#A89888]">
                 {profileDraft.line1 || t.line(1)}
               </p>
@@ -193,6 +216,8 @@ export function ProfileCard({
                   </div>
                 )}
               </div>
+            )}
+              </>
             )}
           </div>
         </EngravedPanel>
