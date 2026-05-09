@@ -153,7 +153,7 @@ const dashboardCopy = {
     gpsPartial: "GPS saved to this account, but the live location write did not complete.",
     locationDenied: "Location permission was not granted.",
     setupPrompt: (name: string, key: string) =>
-      `npm install -g antenna-fyi`,
+      `npm install -g antenna-fyi && antenna config --key ${key}`,
     layer0Connected: "Agent connected",
     layer0NeedsSetup: "Agent not connected",
     todayTitle: "Today",
@@ -278,7 +278,7 @@ const dashboardCopy = {
     gpsPartial: "GPS 已保存到账号，但实时位置写入没有完成。",
     locationDenied: "没有获得位置权限。",
     setupPrompt: (name: string, key: string) =>
-      `npm install -g antenna-fyi`,
+      `npm install -g antenna-fyi && antenna config --key ${key}`,
     layer0Connected: "Agent 已连接",
     layer0NeedsSetup: "Agent 未连接",
     todayTitle: "今天",
