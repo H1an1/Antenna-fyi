@@ -324,16 +324,17 @@ async function reverseGeocode(lat: number, lng: number, language: Language): Pro
     );
     const data = await res.json();
     const address = data.address || {};
+    const country = address.country || "";
     const city =
-      address.country ||
-      address.state ||
       address.city ||
       address.town ||
       address.village ||
       address.county ||
+      address.state ||
       "";
 
-    return city;
+    if (country && city && city !== country) return `${country}, ${city}`;
+    return country || city || "";
   } catch {
     return "";
   }
@@ -901,6 +902,9 @@ export default function DashboardPage() {
                     t={t}
                     tagInput={tagInput}
                     setTagInput={setTagInput}
+                    onUpdateGps={updateGps}
+                    gpsState={gpsState}
+                    gpsActionLabel={gpsActionLabel}
                   />
                 ) : (
                   <div className="dashboard-side-stack flex h-full min-h-0 flex-col gap-4">

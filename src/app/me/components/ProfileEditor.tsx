@@ -14,11 +14,12 @@ import {
   sanitizeTags,
   type ProfileDraft,
 } from "@/lib/profile";
-import { AlertCircle, Check, Plus, Save, X } from "lucide-react";
+import { AlertCircle, Check, MapPin, Plus, RefreshCw, Save, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type SaveState = "idle" | "saving" | "saved" | "partial";
 type SlugStatus = "idle" | "checking" | "available" | "taken";
+type GpsState = "idle" | "requesting" | "saved" | "error";
 
 interface ProfileEditorProps {
   profileDraft: ProfileDraft;
@@ -56,6 +57,9 @@ interface ProfileEditorProps {
   };
   tagInput: string;
   setTagInput: (v: string) => void;
+  onUpdateGps: () => void;
+  gpsState: GpsState;
+  gpsActionLabel: string;
 }
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
@@ -158,6 +162,9 @@ export function ProfileEditor({
   t,
   tagInput,
   setTagInput,
+  onUpdateGps,
+  gpsState,
+  gpsActionLabel,
 }: ProfileEditorProps) {
   const [slugStatus, setSlugStatus] = useState<SlugStatus>("idle");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -326,12 +333,29 @@ export function ProfileEditor({
           {t.signalDetails}
         </p>
         <div className="grid gap-4 md:grid-cols-[1fr_180px]">
-          <TextInput
-            label={t.city}
-            value={profileDraft.city}
-            onChange={(value) => updateDraft({ city: value })}
-            placeholder={t.cityPlaceholder}
-          />
+          <div>
+            <FieldLabel>{t.city}</FieldLabel>
+            <div className="flex items-center gap-2">
+              {profileDraft.city ? (
+                <p className="flex min-w-0 items-center gap-2 border border-[#d7b866]/24 bg-[#070807]/70 px-3 py-2.5 font-mono text-sm text-[#A89888]">
+                  <MapPin size={14} className="shrink-0 text-[#e2c46e]" />
+                  <span className="truncate">{profileDraft.city}</span>
+                </p>
+              ) : (
+                <p className="border border-dashed border-[#d7b866]/18 bg-[#070807]/44 px-3 py-2.5 font-mono text-sm text-[#d8cab8]/48">
+                  {t.cityPlaceholder}
+                </p>
+              )}
+              <button
+                onClick={onUpdateGps}
+                disabled={gpsState === "requesting"}
+                className="inline-flex shrink-0 items-center gap-1.5 border border-[#d7b866]/24 px-3 py-2.5 font-mono text-xs text-[#A89888] transition-colors hover:border-[#d7b866]/50 hover:text-[#e2c46e] disabled:opacity-50"
+              >
+                <RefreshCw size={14} className={gpsState === "requesting" ? "animate-spin" : ""} />
+                {gpsActionLabel}
+              </button>
+            </div>
+          </div>
           <div>
             <FieldLabel>{t.status}</FieldLabel>
             <button
