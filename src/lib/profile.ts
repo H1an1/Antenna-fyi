@@ -24,7 +24,7 @@ export type ProfileDraft = {
   profileSlug: string;
   deviceId: string;
   lastGps: string | null;
-  archetypeOverride?: { name: string; reason: string } | null;
+  archetypeOverride?: { name: string; reason: string; reasonZh?: string } | null;
 };
 
 export type MoreInformation = {
@@ -36,7 +36,7 @@ export type MoreInformation = {
   isActive: boolean;
   links: string[];
   lastGps: string | null;
-  archetypeOverride?: { name: string; reason: string } | null;
+  archetypeOverride?: { name: string; reason: string; reasonZh?: string } | null;
 };
 
 function getSlugSource(value: string) {

@@ -59,7 +59,7 @@ export function ProfileCard({
 
   // Use archetype override from profile context if set, otherwise use computed match
   const displayArchetype = profileDraft.archetypeOverride
-    ? { primary: profileDraft.archetypeOverride.name, reason: profileDraft.archetypeOverride.reason }
+    ? { primary: profileDraft.archetypeOverride.name, reason: language === "zh" ? ((profileDraft.archetypeOverride as any).reasonZh || profileDraft.archetypeOverride.reason) : profileDraft.archetypeOverride.reason }
     : { primary: archetypeMatch.primary, reason: language === "zh" ? archetypeMatch.reasonZh : archetypeMatch.reason };
 
   const profileBackVideoSrc = getArchetypeAssets(
