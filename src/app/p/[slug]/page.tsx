@@ -70,15 +70,15 @@ export default async function ProfilePage({ params }: { params: Promise<{ slug: 
 
   const moreInfo = parseMoreInformation(profile.more_information || profile.matching_context);
 
-  const line1 = profile.personal_description || profile.line1 || "";
-  const line2 = profile.looking_for || profile.line2 || "";
-  const line3 = profile.our_conversation || profile.line3 || "";
+  const personalDescription = profile.personal_description || profile.line1 || "";
+  const lookingFor = profile.looking_for || profile.line2 || "";
+  const ourConversation = profile.our_conversation || profile.line3 || "";
 
   const profileData = {
     displayName: profile.display_name || "Anonymous",
-    line1,
-    line2,
-    line3,
+    personalDescription,
+    lookingFor,
+    ourConversation,
     context: moreInfo.context || "",
     interestTags: moreInfo.interestTags || [],
     city: moreInfo.city || "",
@@ -93,9 +93,9 @@ export default async function ProfilePage({ params }: { params: Promise<{ slug: 
     device_id: profile.device_id || null,
     user_id: profile.user_id || null,
     display_name: profile.display_name || "Anonymous",
-    personal_description: line1,
-    looking_for: line2,
-    our_conversation: line3,
+    personal_description: personalDescription,
+    looking_for: lookingFor,
+    our_conversation: ourConversation,
     more_information: moreInfo.context || "",
     interest_tags: moreInfo.interestTags || [],
     city: moreInfo.city || "",

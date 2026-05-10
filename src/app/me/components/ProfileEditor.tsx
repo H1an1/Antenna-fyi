@@ -258,8 +258,8 @@ export function ProfileEditor({
         <div className="space-y-4 border-t border-[#d7b866]/12 pt-4">
           <TextArea
             label={t.line(1)}
-            value={profileDraft.line1}
-            onChange={(value) => updateDraft({ line1: limitProfileDescription(value) })}
+            value={profileDraft.personalDescription}
+            onChange={(value) => updateDraft({ personalDescription: limitProfileDescription(value) })}
             rows={4}
             maxLength={PROFILE_DESCRIPTION_MAX_LENGTH}
           />
@@ -313,15 +313,15 @@ export function ProfileEditor({
         <div className="grid gap-4 border-t border-[#d7b866]/12 pt-4 md:grid-cols-2">
           <TextArea
             label={t.line(2)}
-            value={profileDraft.line2}
-            onChange={(value) => updateDraft({ line2: limitProfileLookingFor(value) })}
+            value={profileDraft.lookingFor}
+            onChange={(value) => updateDraft({ lookingFor: limitProfileLookingFor(value) })}
             rows={3}
             maxLength={PROFILE_LOOKING_FOR_MAX_LENGTH}
           />
           <TextArea
             label={t.line(3)}
-            value={profileDraft.line3}
-            onChange={(value) => updateDraft({ line3: limitProfileConversation(value) })}
+            value={profileDraft.ourConversation}
+            onChange={(value) => updateDraft({ ourConversation: limitProfileConversation(value) })}
             rows={3}
             maxLength={PROFILE_CONVERSATION_MAX_LENGTH}
           />

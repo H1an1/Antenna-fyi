@@ -7,9 +7,9 @@ import type { ProfileDraft } from "@/lib/profile";
 
 interface PublicProfileData {
   displayName: string;
-  line1: string;
-  line2: string;
-  line3: string;
+  personalDescription: string;
+  lookingFor: string;
+  ourConversation: string;
   context: string;
   interestTags: string[];
   city: string;
@@ -36,9 +36,9 @@ export function PublicProfileCard({ profile, t }: { profile: PublicProfileData; 
 
   const profileDraft: ProfileDraft = {
     displayName: profile.displayName,
-    line1: profile.line1,
-    line2: profile.line2,
-    line3: profile.line3,
+    personalDescription: profile.personalDescription,
+    lookingFor: profile.lookingFor,
+    ourConversation: profile.ourConversation,
     context: profile.context,
     showContextPublicly: false,
     interestTags: profile.interestTags,
@@ -53,7 +53,7 @@ export function PublicProfileCard({ profile, t }: { profile: PublicProfileData; 
 
   const archetypeMatch = useMemo(
     () => matchArchetype(profileDraft),
-    [profileDraft.line1, profileDraft.line2, profileDraft.line3, profileDraft.context, profileDraft.interestTags],
+    [profileDraft.personalDescription, profileDraft.lookingFor, profileDraft.ourConversation, profileDraft.context, profileDraft.interestTags],
   );
 
   return (

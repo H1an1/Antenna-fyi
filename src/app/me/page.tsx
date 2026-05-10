@@ -463,9 +463,9 @@ export default function DashboardPage() {
           deviceId: data.device_id || draft.deviceId,
           profileSlug: data.profile_slug || draft.profileSlug,
           displayName: data.display_name || draft.displayName,
-          line1: data.line1 || draft.line1,
-          line2: data.line2 || draft.line2,
-          line3: data.line3 || draft.line3,
+          personalDescription: data.line1 || draft.personalDescription,
+          lookingFor: data.line2 || draft.lookingFor,
+          ourConversation: data.line3 || draft.ourConversation,
           context: moreInfo.context || draft.context,
           showContextPublicly:
             typeof moreInfo.showContextPublicly === "boolean"
@@ -596,9 +596,9 @@ export default function DashboardPage() {
 
     const cleaned = mergeProfileDraft(profileDraft, {
       displayName: profileDraft.displayName.trim() || t.defaultUser,
-      line1: limitProfileDescription(profileDraft.line1.trim()),
-      line2: limitProfileLookingFor(profileDraft.line2.trim()),
-      line3: limitProfileConversation(profileDraft.line3.trim()),
+      personalDescription: limitProfileDescription(profileDraft.personalDescription.trim()),
+      lookingFor: limitProfileLookingFor(profileDraft.lookingFor.trim()),
+      ourConversation: limitProfileConversation(profileDraft.ourConversation.trim()),
       context: limitMoreInformation(profileDraft.context.trim()),
       showContextPublicly: false,
       city: profileDraft.city.trim(),
@@ -633,9 +633,9 @@ export default function DashboardPage() {
         .from("profiles")
         .update({
           display_name: cleaned.displayName,
-          line1: cleaned.line1,
-          line2: cleaned.line2,
-          line3: cleaned.line3,
+          line1: cleaned.personalDescription,
+          line2: cleaned.lookingFor,
+          line3: cleaned.ourConversation,
           profile_slug: cleaned.profileSlug,
           matching_context: serializeMoreInformation(cleaned),
           visible: true,
@@ -646,9 +646,9 @@ export default function DashboardPage() {
       // First save — use RPC to create/bind row (bypasses RLS)
       const { data: rpcResult, error: rpcErr } = await supabase.rpc("save_user_profile", {
         p_display_name: cleaned.displayName,
-        p_line1: cleaned.line1,
-        p_line2: cleaned.line2,
-        p_line3: cleaned.line3,
+        p_line1: cleaned.personalDescription,
+        p_line2: cleaned.lookingFor,
+        p_line3: cleaned.ourConversation,
         p_profile_slug: cleaned.profileSlug,
         p_matching_context: serializeMoreInformation(cleaned),
         p_visible: true,
@@ -783,9 +783,9 @@ export default function DashboardPage() {
   const profileStatusPill = profileDraft.isActive ? t.activeLower : t.quietLower;
   const dateLocale = language === "zh" ? "zh-CN" : "en-US";
   const isProfileComplete = Boolean(
-    profileDraft.line1.trim() &&
-      profileDraft.line2.trim() &&
-      profileDraft.line3.trim() &&
+    profileDraft.personalDescription.trim() &&
+      profileDraft.lookingFor.trim() &&
+      profileDraft.ourConversation.trim() &&
       profileDraft.interestTags.length > 0,
   );
 

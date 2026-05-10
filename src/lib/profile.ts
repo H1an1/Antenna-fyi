@@ -12,9 +12,9 @@ export const PROFILE_LINE_MAX_LENGTH = PROFILE_DESCRIPTION_MAX_LENGTH;
 
 export type ProfileDraft = {
   displayName: string;
-  line1: string;
-  line2: string;
-  line3: string;
+  personalDescription: string;
+  lookingFor: string;
+  ourConversation: string;
   context: string;
   showContextPublicly: boolean;
   interestTags: string[];
@@ -109,9 +109,9 @@ export function createDefaultProfileDraft(name: string, email: string, userId: s
 
   return {
     displayName,
-    line1: "",
-    line2: "",
-    line3: "",
+    personalDescription: "",
+    lookingFor: "",
+    ourConversation: "",
     context: "",
     showContextPublicly: false,
     interestTags: [],
@@ -192,9 +192,9 @@ export function mergeProfileDraft(base: ProfileDraft, patch: Partial<ProfileDraf
     next.context = legacyContext;
   }
   next.context = limitProfileContext(next.context || "");
-  next.line1 = limitProfileDescription(next.line1 || "");
-  next.line2 = limitProfileLookingFor(next.line2 || "");
-  next.line3 = limitProfileConversation(next.line3 || "");
+  next.personalDescription = limitProfileDescription(next.personalDescription || "");
+  next.lookingFor = limitProfileLookingFor(next.lookingFor || "");
+  next.ourConversation = limitProfileConversation(next.ourConversation || "");
 
   delete next.about;
   delete next.currentFocus;

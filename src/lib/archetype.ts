@@ -24,7 +24,7 @@ export interface ArchetypeMatch {
 
 interface ArchetypeRule {
   role: ArchetypeRole;
-  /** Keywords matched against line1, line2, line3, interestTags, and context. */
+  /** Keywords matched against personalDescription, lookingFor, ourConversation, interestTags, and context. */
   keywords: string[];
   /** Short description used when this role is primary (English). */
   reasonTemplate: string;
@@ -180,11 +180,11 @@ export function getArchetypeAssets(role: ArchetypeRole) {
   return archetypeAssets[role] || archetypeAssets.Prometheus;
 }
 
-export function matchArchetype(profile: Pick<ProfileDraft, "line1" | "line2" | "line3" | "interestTags" | "context">): ArchetypeMatch {
+export function matchArchetype(profile: Pick<ProfileDraft, "personalDescription" | "lookingFor" | "ourConversation" | "interestTags" | "context">): ArchetypeMatch {
   const corpus = [
-    profile.line1,
-    profile.line2,
-    profile.line3,
+    profile.personalDescription,
+    profile.lookingFor,
+    profile.ourConversation,
     profile.context,
     ...profile.interestTags,
   ]

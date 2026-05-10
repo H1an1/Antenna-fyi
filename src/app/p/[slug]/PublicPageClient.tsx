@@ -54,9 +54,9 @@ const copy = {
 
 interface PublicProfileData {
   displayName: string;
-  line1: string;
-  line2: string;
-  line3: string;
+  personalDescription: string;
+  lookingFor: string;
+  ourConversation: string;
   context: string;
   interestTags: string[];
   city: string;

@@ -53,8 +53,8 @@ export function ProfileCard({
   const visibleLinks = normalizeLinks(profileDraft.links);
 
   const isProfileDefault =
-    !profileDraft.line1 ||
-    profileDraft.line1 === DEFAULT_LINE1 ||
+    !profileDraft.personalDescription ||
+    profileDraft.personalDescription === DEFAULT_LINE1 ||
     profileDraft.displayName === t.defaultUser;
 
   // Use archetype override from profile context if set, otherwise use computed match
@@ -67,9 +67,9 @@ export function ProfileCard({
   ).profileBack;
   const profileContentLength = [
     profileDraft.displayName,
-    profileDraft.line1,
-    profileDraft.line2,
-    profileDraft.line3,
+    profileDraft.personalDescription,
+    profileDraft.lookingFor,
+    profileDraft.ourConversation,
     profileDraft.city,
     profileDraft.interestTags.join(" "),
   ].join(" ").trim().length;
@@ -164,7 +164,7 @@ export function ProfileCard({
               <>
                 <div className="profile-card-description-wrap">
                   <p className="profile-card-description font-mono text-[#FFF4E7]">
-                    {profileDraft.line1 || t.line(1)}
+                    {profileDraft.personalDescription || t.line(1)}
                   </p>
 
                   {profileDraft.interestTags.length > 0 && (
@@ -194,7 +194,7 @@ export function ProfileCard({
                       {t.line(2)}
                     </p>
                     <p className="profile-card-detail-copy font-mono text-[#FFF4E7]">
-                      {profileDraft.line2 || t.line(2)}
+                      {profileDraft.lookingFor || t.line(2)}
                     </p>
                   </div>
                   <div className="profile-card-detail">
@@ -202,7 +202,7 @@ export function ProfileCard({
                       {t.line(3)}
                     </p>
                     <p className="profile-card-detail-copy font-mono text-[#FFF4E7]">
-                      {profileDraft.line3 || t.line(3)}
+                      {profileDraft.ourConversation || t.line(3)}
                     </p>
                   </div>
                 </div>

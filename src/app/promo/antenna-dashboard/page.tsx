@@ -17,10 +17,10 @@ const mythicFigureSrc = "/profile-assets/ascii-angel-dashboard-crop-tone-transpa
 
 const profileDraft: ProfileDraft = {
   displayName: "Antenna",
-  line1:
+  personalDescription:
     "Agent-native signal for rooms, events, and chance encounters. Antenna helps agents understand who should meet before the moment passes.",
-  line2: "Builders, researchers, operators, and people working on ambitious things.",
-  line3: "Sharp, warm, concrete conversations that become real-world introductions.",
+  lookingFor: "Builders, researchers, operators, and people working on ambitious things.",
+  ourConversation: "Sharp, warm, concrete conversations that become real-world introductions.",
   context:
     "Antenna gives every person an agent-readable identity card, then lets agents scan nearby profiles, event context, and user intent to surface high-signal introductions.",
   showContextPublicly: false,
