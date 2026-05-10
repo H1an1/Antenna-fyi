@@ -69,6 +69,18 @@ html, body {
   transform: translate(-50%, -50%) scale(1.06);
 }
 
+/* Hide native video controls on mobile (iOS Safari play button) */
+.hero-gallery-video::-webkit-media-controls {
+  display: none !important;
+}
+.hero-gallery-video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none;
+}
+.hero-gallery-video::-webkit-media-controls-panel {
+  display: none !important;
+}
+
 .hero-gallery-content {
   position: absolute;
   inset: 0;
