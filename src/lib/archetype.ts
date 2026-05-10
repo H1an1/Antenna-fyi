@@ -19,14 +19,17 @@ export interface ArchetypeMatch {
   primary: ArchetypeRole;
   secondary: ArchetypeRole | null;
   reason: string;
+  reasonZh: string;
 }
 
 interface ArchetypeRule {
   role: ArchetypeRole;
   /** Keywords matched against line1, line2, line3, interestTags, and context. */
   keywords: string[];
-  /** Short description used when this role is primary. */
+  /** Short description used when this role is primary (English). */
   reasonTemplate: string;
+  /** Short description used when this role is primary (Chinese). */
+  reasonTemplateZh: string;
 }
 
 const archetypeRules: ArchetypeRule[] = [
@@ -39,6 +42,8 @@ const archetypeRules: ArchetypeRule[] = [
     ],
     reasonTemplate:
       "A frontier builder bringing new tools into the world — Prometheus carries fire to those who need it.",
+    reasonTemplateZh:
+      "前沿的建造者，把新工具带到这个世界——普罗米修斯为需要的人盗取火种。",
   },
   {
     role: "Athena",
@@ -49,6 +54,8 @@ const archetypeRules: ArchetypeRule[] = [
     ],
     reasonTemplate:
       "Strategic creator with clear judgment and craft — Athena builds with wisdom.",
+    reasonTemplateZh:
+      "有清晰判断力和手艺的策略创造者——雅典娜以智慧建造。",
   },
   {
     role: "Hermes",
@@ -59,6 +66,8 @@ const archetypeRules: ArchetypeRule[] = [
     ],
     reasonTemplate:
       "A connector who turns curiosity into real-world introductions — Hermes carries the signal.",
+    reasonTemplateZh:
+      "把好奇心变成真实连接的人——赫尔墨斯传递信号。",
   },
   {
     role: "Apollo",
@@ -69,6 +78,8 @@ const archetypeRules: ArchetypeRule[] = [
     ],
     reasonTemplate:
       "Radiant curator of signal and taste — Apollo brings clarity to public expression.",
+    reasonTemplateZh:
+      "品味与信号的策展人——阿波罗为公共表达带来清晰。",
   },
   {
     role: "Artemis",
@@ -79,6 +90,8 @@ const archetypeRules: ArchetypeRule[] = [
     ],
     reasonTemplate:
       "An independent scout protecting their focus — Artemis navigates their own path.",
+    reasonTemplateZh:
+      "独立的探索者，守护自己的节奏——阿尔忎弥斯走自己的路。",
   },
   {
     role: "Aphrodite",
@@ -89,6 +102,8 @@ const archetypeRules: ArchetypeRule[] = [
     ],
     reasonTemplate:
       "A social magnet who works through beauty and emotional resonance — Aphrodite draws people in.",
+    reasonTemplateZh:
+      "通过美和情感共鸣吸引人的社交磁场——阿佛洛狄忛让人欲罢不能。",
   },
   {
     role: "Dionysus",
@@ -99,6 +114,8 @@ const archetypeRules: ArchetypeRule[] = [
     ],
     reasonTemplate:
       "A community catalyst energizing culture and creative ritual — Dionysus hosts the gathering.",
+    reasonTemplateZh:
+      "激活文化和创意仪式的社区催化剂——狄俄尼索斯主持聚会。",
   },
   {
     role: "Hades",
@@ -109,6 +126,8 @@ const archetypeRules: ArchetypeRule[] = [
     ],
     reasonTemplate:
       "Quiet power operating deep systems and hidden leverage — Hades builds beneath the surface.",
+    reasonTemplateZh:
+      "在深层系统和隐藏杠杆中运作的安静力量——哈迪斯在表面之下建造。",
   },
   {
     role: "Persephone",
@@ -119,6 +138,8 @@ const archetypeRules: ArchetypeRule[] = [
     ],
     reasonTemplate:
       "A bridge between worlds — Persephone moves between scenes with depth and soft power.",
+    reasonTemplateZh:
+      "世界之间的桥梁——珀耳塞福涅在不同场景间穿行，带着深度和柔性力量。",
   },
   {
     role: "Odysseus",
@@ -129,6 +150,8 @@ const archetypeRules: ArchetypeRule[] = [
     ],
     reasonTemplate:
       "A strategic navigator on a long journey — Odysseus solves problems under constraint.",
+    reasonTemplateZh:
+      "长远旅途上的策略导航者——奥德修斯在约束下解决问题。",
   },
 ];
 
@@ -186,5 +209,6 @@ export function matchArchetype(profile: Pick<ProfileDraft, "line1" | "line2" | "
     primary: primary.role,
     secondary: secondary?.role ?? null,
     reason: primary.rule.reasonTemplate,
+    reasonZh: primary.rule.reasonTemplateZh,
   };
 }

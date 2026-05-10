@@ -35,6 +35,7 @@ interface ProfileCardProps {
   };
   statusPill: string;
   isActive: boolean;
+  language: "en" | "zh";
 }
 
 export function ProfileCard({
@@ -47,6 +48,7 @@ export function ProfileCard({
   t,
   statusPill,
   isActive,
+  language,
 }: ProfileCardProps) {
   const visibleLinks = normalizeLinks(profileDraft.links);
 
@@ -58,7 +60,7 @@ export function ProfileCard({
   // Use archetype override from profile context if set, otherwise use computed match
   const displayArchetype = profileDraft.archetypeOverride
     ? { primary: profileDraft.archetypeOverride.name, reason: profileDraft.archetypeOverride.reason }
-    : { primary: archetypeMatch.primary, reason: archetypeMatch.reason };
+    : { primary: archetypeMatch.primary, reason: language === "zh" ? archetypeMatch.reasonZh : archetypeMatch.reason };
 
   const profileBackVideoSrc = getArchetypeAssets(
     (profileDraft.archetypeOverride?.name || archetypeMatch.primary) as ArchetypeRole

@@ -384,7 +384,7 @@ export default function DashboardPage() {
   }, [primaryKey, profileDraft, t]);
 
   const archetypeMatch = useMemo(() => {
-    if (!profileDraft) return { primary: "Hermes" as const, secondary: null, reason: "" };
+    if (!profileDraft) return { primary: "Hermes" as const, secondary: null, reason: "", reasonZh: "" };
     return matchArchetype(profileDraft);
   }, [profileDraft]);
 
@@ -888,6 +888,7 @@ export default function DashboardPage() {
                   t={t}
                   statusPill={profileStatusPill}
                   isActive={profileDraft.isActive}
+                  language={language}
                 />
 
                 {profileEditorOpen ? (

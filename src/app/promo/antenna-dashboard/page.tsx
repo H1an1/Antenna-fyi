@@ -37,6 +37,7 @@ const promoArchetypeMatch: ArchetypeMatch = {
   primary: "Hermes",
   secondary: null,
   reason: "A connector who turns curiosity into real-world introductions - Hermes carries the signal.",
+  reasonZh: "把好奇心变成真实连接的人——赫尔墨斯传递信号。",
 };
 
 const t = {
@@ -206,6 +207,7 @@ export default function AntennaPromoDashboardPage() {
                   t={t}
                   statusPill={t.activeLower}
                   isActive={profileDraft.isActive}
+                  language="en"
                 />
 
                 <div className="dashboard-side-stack flex h-full min-h-0 flex-col gap-4">

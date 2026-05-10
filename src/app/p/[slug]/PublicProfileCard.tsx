@@ -67,6 +67,7 @@ export function PublicProfileCard({ profile, t }: { profile: PublicProfileData; 
       t={t}
       statusPill={profile.isActive ? "active" : "quiet"}
       isActive={profile.isActive}
+      language="en"
     />
   );
 }
