@@ -109,13 +109,12 @@ export function createDefaultProfileDraft(name: string, email: string, userId: s
 
   return {
     displayName,
-    line1:
-      "Builder, researcher, or curious operator. Interested in people working on ambitious things.",
-    line2: "People with serious curiosity, useful taste, and something they are actively building.",
-    line3: "Sharp, warm, concrete conversations that can turn context into real-world introductions.",
+    line1: "",
+    line2: "",
+    line3: "",
     context: "",
     showContextPublicly: false,
-    interestTags: ["AI agents", "events", "startups", "design", "research"],
+    interestTags: [],
     city: "",
     isActive: true,
     links: ["", "", ""],
