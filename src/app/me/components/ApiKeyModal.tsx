@@ -1,8 +1,8 @@
 "use client";
 
 import { EngravedPanel } from "@/app/components/EngravedPanel";
-import { Check, Copy, KeyRound, Plus, X } from "lucide-react";
-import { useState } from "react";
+import { Check, Copy, Plus, X } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface ApiKey {
   id: number;
@@ -59,6 +59,17 @@ export function ApiKeyModal({
 }: ApiKeyModalProps) {
   const [copied, setCopied] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (!open) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [onClose, open]);
+
   if (!open) return null;
 
   const copyToClipboard = async (text: string, id: string) => {
@@ -69,8 +80,16 @@ export function ApiKeyModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/70 px-4 py-10 backdrop-blur-sm">
-      <EngravedPanel className="w-full max-w-2xl shadow-2xl">
+    <div
+      className="api-settings-overlay fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto bg-[#030302]/48 px-4 py-6 backdrop-blur-[2px] sm:py-10"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="api-settings-title"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
+    >
+      <EngravedPanel className="api-settings-dialog w-full max-w-2xl shadow-2xl">
         <div className="flex items-start justify-between gap-4 border-b border-[#d7b866]/16 p-5">
           <div>
             <div className="flex items-center gap-3">
@@ -79,7 +98,9 @@ export function ApiKeyModal({
               </p>
               <SignalStrip />
             </div>
-            <h2 className="mt-1 font-serif text-2xl text-[#A89888]">{t.apiSettings}</h2>
+            <h2 id="api-settings-title" className="mt-1 font-serif text-2xl text-[#A89888]">
+              {t.apiSettings}
+            </h2>
           </div>
           <button
             onClick={onClose}

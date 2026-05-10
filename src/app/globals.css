@@ -348,10 +348,11 @@ html, body {
     calc(100vw - var(--dashboard-panel-width) - var(--dashboard-gap) - 4rem),
     calc(var(--dashboard-figure-width) - var(--dashboard-overlap-min) - var(--dashboard-gap))
   );
+  --dashboard-canvas-width: min(100%, calc(var(--dashboard-left-column) + var(--dashboard-gap) + var(--dashboard-panel-width)));
 
   position: relative;
   z-index: 10;
-  width: min(100%, calc(var(--dashboard-left-column) + var(--dashboard-gap) + var(--dashboard-panel-width)));
+  width: var(--dashboard-canvas-width);
   margin-inline: auto;
 }
 
@@ -389,13 +390,11 @@ html, body {
 
 @media (min-width: 64rem) {
   .dashboard-canvas .dashboard-figure-mobile {
-    position: absolute;
-    inset: auto;
-    top: -4.75rem;
-    left: 0;
+    position: fixed;
+    inset: 0 auto auto max(0px, calc((100vw - var(--dashboard-canvas-width)) / 2));
     width: var(--dashboard-figure-width);
-    height: min(1180px, calc(100% + 13rem));
-    background-position: left top;
+    height: 100vh;
+    background-position: left -45px;
     background-size: var(--dashboard-figure-width) auto;
   }
 
@@ -656,13 +655,53 @@ html, body {
 }
 
 .profile-card-front-content {
-  --profile-gap: clamp(0.5rem, 2.86cqw, 0.75rem);
+  --profile-gap: clamp(0.64rem, 3.34cqw, 0.95rem);
+  --profile-copy-size: clamp(0.84rem, 3.72cqw, 1.05rem);
+  --profile-copy-leading: 1.44;
+  --profile-label-size: clamp(0.58rem, 2.62cqw, 0.72rem);
+  --profile-name-size: clamp(1.75rem, 7.86cqw, 2.18rem);
+  --profile-tag-size: clamp(0.66rem, 2.98cqw, 0.8rem);
+  --profile-tag-pad-y: clamp(0.2rem, 1.06cqw, 0.3rem);
+  --profile-tag-pad-x: clamp(0.58rem, 3.1cqw, 0.86rem);
 
   display: flex;
   height: 100%;
   min-height: 0;
   flex-direction: column;
   gap: var(--profile-gap);
+}
+
+.profile-card-content-density-roomy {
+  --profile-gap: clamp(0.78rem, 4.05cqw, 1.16rem);
+  --profile-copy-size: clamp(0.94rem, 4.28cqw, 1.18rem);
+  --profile-copy-leading: 1.5;
+  --profile-label-size: clamp(0.62rem, 2.86cqw, 0.78rem);
+  --profile-name-size: clamp(1.9rem, 8.58cqw, 2.38rem);
+  --profile-tag-size: clamp(0.7rem, 3.1cqw, 0.86rem);
+  --profile-tag-pad-y: clamp(0.22rem, 1.18cqw, 0.34rem);
+  --profile-tag-pad-x: clamp(0.66rem, 3.34cqw, 0.95rem);
+}
+
+.profile-card-content-density-compact {
+  --profile-gap: clamp(0.46rem, 2.38cqw, 0.68rem);
+  --profile-copy-size: clamp(0.68rem, 3.1cqw, 0.84rem);
+  --profile-copy-leading: 1.36;
+  --profile-label-size: clamp(0.5rem, 2.14cqw, 0.5625rem);
+  --profile-name-size: clamp(1.48rem, 6.68cqw, 1.75rem);
+  --profile-tag-size: clamp(0.56rem, 2.38cqw, 0.625rem);
+  --profile-tag-pad-y: clamp(0.16rem, 0.72cqw, 0.2rem);
+  --profile-tag-pad-x: clamp(0.42rem, 2.18cqw, 0.625rem);
+}
+
+.profile-card-content-density-tight {
+  --profile-gap: clamp(0.34rem, 1.9cqw, 0.5rem);
+  --profile-copy-size: clamp(0.58rem, 2.62cqw, 0.72rem);
+  --profile-copy-leading: 1.3;
+  --profile-label-size: clamp(0.48rem, 1.9cqw, 0.52rem);
+  --profile-name-size: clamp(1.38rem, 6.2cqw, 1.62rem);
+  --profile-tag-size: clamp(0.52rem, 2.14cqw, 0.58rem);
+  --profile-tag-pad-y: clamp(0.14rem, 0.62cqw, 0.18rem);
+  --profile-tag-pad-x: clamp(0.36rem, 1.9cqw, 0.52rem);
 }
 
 .dashboard-side-stack {
@@ -712,14 +751,14 @@ html, body {
 }
 
 .profile-card-tag {
-  padding: clamp(0.18rem, 0.95cqw, 0.25rem) clamp(0.5rem, 2.86cqw, 0.75rem);
-  font-size: clamp(0.625rem, 2.86cqw, 0.75rem);
+  padding: var(--profile-tag-pad-y) var(--profile-tag-pad-x);
+  font-size: var(--profile-tag-size);
   line-height: 1.35;
 }
 
 .profile-card-titlebar {
-  min-height: clamp(2.4rem, 9.52cqw, 2.75rem);
-  padding-bottom: clamp(0.55rem, 2.86cqw, 0.75rem);
+  min-height: clamp(2.5rem, 10.24cqw, 3rem);
+  padding-bottom: var(--profile-gap);
 }
 
 .profile-card-kicker {
@@ -735,22 +774,17 @@ html, body {
 }
 
 .profile-card-name {
-  font-size: clamp(1.55rem, 7.14cqw, 1.875rem);
+  font-size: var(--profile-name-size);
   font-weight: 400;
   line-height: 1.25;
 }
 
 .profile-card-description,
 .profile-card-detail-copy {
-  display: -webkit-box;
-  overflow: hidden;
-  font-size: clamp(0.74rem, 3.34cqw, 0.875rem);
-  line-height: 1.42;
-  -webkit-box-orient: vertical;
-}
-
-.profile-card-description {
-  -webkit-line-clamp: 6;
+  display: block;
+  overflow: visible;
+  font-size: var(--profile-copy-size);
+  line-height: var(--profile-copy-leading);
 }
 
 .profile-card-rule {
@@ -767,13 +801,9 @@ html, body {
 
 .profile-card-detail-label {
   margin-bottom: clamp(0.35rem, 1.9cqw, 0.5rem);
-  font-size: clamp(0.54rem, 2.38cqw, 0.625rem);
+  font-size: var(--profile-label-size);
   line-height: 1.5;
   letter-spacing: 0.18em;
-}
-
-.profile-card-detail-copy {
-  -webkit-line-clamp: 2;
 }
 
 .profile-card-footer {
@@ -806,6 +836,19 @@ html, body {
   line-height: 1.58;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 4;
+}
+
+.api-settings-dialog {
+  max-height: calc(100svh - 3rem);
+  overflow-y: auto;
+}
+
+.api-settings-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 100 !important;
+  align-items: flex-start;
+  padding-top: clamp(3rem, 8svh, 5rem);
 }
 
 .profile-card-flipper:not(.is-flipped) .profile-card-back,
@@ -920,7 +963,7 @@ html, body {
 
   .profile-card-description,
   .profile-card-detail-copy {
-    line-height: 1.42;
+    line-height: var(--profile-copy-leading);
   }
 
   .profile-card-meta {
@@ -969,8 +1012,7 @@ html, body {
 
   .profile-card-description,
   .profile-card-detail-copy {
-    font-size: 0.765rem;
-    line-height: 1.45;
+    line-height: var(--profile-copy-leading);
   }
 
   .profile-card-action-button {
@@ -994,8 +1036,8 @@ html, body {
   }
 
   .profile-card-tag {
-    padding: 0.2rem 0.52rem;
-    font-size: 0.625rem;
+    padding: var(--profile-tag-pad-y) var(--profile-tag-pad-x);
+    font-size: var(--profile-tag-size);
   }
 
   .dashboard-side-empty-title {

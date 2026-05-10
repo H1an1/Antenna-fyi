@@ -968,17 +968,17 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <ApiKeyModal
-          open={apiModalOpen}
-          onClose={() => setApiModalOpen(false)}
-          activeKeys={activeKeys}
-          setupPrompt={setupPrompt}
-          generateKey={generateKey}
-          revokeKey={revokeKey}
-          dateLocale={dateLocale}
-          t={t}
-        />
       </div>
+      <ApiKeyModal
+        open={apiModalOpen}
+        onClose={() => setApiModalOpen(false)}
+        activeKeys={activeKeys}
+        setupPrompt={setupPrompt}
+        generateKey={generateKey}
+        revokeKey={revokeKey}
+        dateLocale={dateLocale}
+        t={t}
+      />
     </main>
   );
 }
