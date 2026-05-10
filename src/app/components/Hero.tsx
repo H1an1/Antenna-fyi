@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Link from "next/link";
 
 export function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -56,6 +57,15 @@ export function Hero() {
             You&apos;ve been in the same room as your next cofounder. Antenna
             noticed.
           </p>
+
+          <div className="hero-gallery-actions">
+            <Link href="/login" className="hero-gallery-button hero-gallery-button-primary">
+              Get started
+            </Link>
+            <a href="#product-intro" className="hero-gallery-button">
+              Learn more
+            </a>
+          </div>
         </div>
       </div>
     </section>
