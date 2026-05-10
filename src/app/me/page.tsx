@@ -321,14 +321,30 @@ async function reverseGeocode(lat: number, lng: number, language: Language): Pro
     );
     const data = await res.json();
     const address = data.address || {};
+    const displayName = data.display_name || "";
     const country = address.country || "";
-    const city =
-      address.city ||
-      address.town ||
-      address.village ||
-      address.county ||
-      address.state ||
-      "";
+
+    // City resolution: state > city > extract from display_name
+    // Chinese municipalities (Beijing/Shanghai/etc) put district in "city" and miss "state",
+    // but display_name has the correct city before the postcode.
+    let city = address.state || "";
+    if (!city || city === country) {
+      city = address.city || "";
+    }
+    // If city is a district (e.g. "朝阳区" / "Chaoyang District"), try display_name
+    if (city && (city.endsWith("区") || city.endsWith("District"))) {
+      // display_name format: "..., District, City, Postcode, Country"
+      const parts = displayName.split(",").map((s: string) => s.trim());
+      // Find the part right after the district — typically the city
+      const distIdx = parts.findIndex((p: string) => p === city);
+      if (distIdx >= 0 && distIdx + 1 < parts.length) {
+        const candidate = parts[distIdx + 1];
+        // Skip if it looks like a postcode
+        if (candidate && !/^\d+$/.test(candidate)) {
+          city = candidate;
+        }
+      }
+    }
 
     if (country && city && city !== country) return `${country}, ${city}`;
     return country || city || "";

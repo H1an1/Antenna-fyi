@@ -19,12 +19,20 @@ async function reverseGeocode(lat: number, lng: number): Promise<string> {
       { headers: { "Accept-Language": "en" } },
     );
     const data = await res.json();
-    // Build a short area name from address parts
     const a = data.address || {};
-    const parts = [
-      a.neighbourhood || a.suburb || a.quarter || "",
-      a.city || a.town || a.village || a.county || "",
-    ].filter(Boolean);
+    const displayName = data.display_name || "";
+    // Resolve city: state > city, but if city is a district, extract from display_name
+    let city = a.state || a.city || a.town || a.village || a.county || "";
+    if (city && city.endsWith("District")) {
+      const parts = displayName.split(",").map((s: string) => s.trim());
+      const distIdx = parts.findIndex((p: string) => p === city);
+      if (distIdx >= 0 && distIdx + 1 < parts.length) {
+        const candidate = parts[distIdx + 1];
+        if (candidate && !/^\d+$/.test(candidate)) city = candidate;
+      }
+    }
+    const area = a.neighbourhood || a.suburb || a.quarter || "";
+    const parts = [area, city].filter(Boolean);
     return parts.length > 0 ? `Near ${parts.join(", ")}` : "";
   } catch {
     return "";
