@@ -69,7 +69,7 @@ html, body {
   transform: translate(-50%, -50%) scale(1.06);
 }
 
-/* Hide native video controls on mobile (iOS Safari play button) */
+/* Hide native video controls on mobile (iOS Safari + Chrome) */
 .hero-gallery-video::-webkit-media-controls {
   display: none !important;
 }
@@ -78,6 +78,13 @@ html, body {
   -webkit-appearance: none;
 }
 .hero-gallery-video::-webkit-media-controls-panel {
+  display: none !important;
+}
+.hero-gallery-video::-webkit-media-controls-overlay-play-button {
+  display: none !important;
+}
+/* Firefox */
+.hero-gallery-video::-moz-media-controls {
   display: none !important;
 }
 

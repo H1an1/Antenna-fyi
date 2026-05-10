@@ -1,11 +1,37 @@
-import Link from "next/link";
+"use client";
+
+import { useEffect, useRef } from "react";
 
 export function Hero() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Chrome mobile may block autoplay even with muted — retry on user interaction
+    const tryPlay = () => {
+      video.play().catch(() => {
+        // Autoplay blocked — try again on first user interaction
+        const handler = () => {
+          video.play().catch(() => {});
+          document.removeEventListener("touchstart", handler);
+          document.removeEventListener("scroll", handler);
+        };
+        document.addEventListener("touchstart", handler, { once: true, passive: true });
+        document.addEventListener("scroll", handler, { once: true, passive: true });
+      });
+    };
+
+    tryPlay();
+  }, []);
+
   return (
     <section className="hero-gallery-shell">
       <div className="hero-gallery-frame" aria-hidden="true">
         <div className="hero-gallery-window">
           <video
+            ref={videoRef}
             className="hero-gallery-video"
             autoPlay
             loop
@@ -30,15 +56,6 @@ export function Hero() {
             You&apos;ve been in the same room as your next cofounder. Antenna
             noticed.
           </p>
-
-          <div className="hero-gallery-actions">
-            <Link href="/login" className="hero-gallery-button hero-gallery-button-primary">
-              Get started
-            </Link>
-            <a href="#product-intro" className="hero-gallery-button">
-              Learn more
-            </a>
-          </div>
         </div>
       </div>
     </section>
