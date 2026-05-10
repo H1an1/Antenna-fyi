@@ -1,7 +1,7 @@
 "use client";
 
 import { createClient } from "@/lib/supabase";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 type Step = "email" | "code";
@@ -12,8 +12,20 @@ export default function LoginPage() {
   const [step, setStep] = useState<Step>("email");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [checking, setChecking] = useState(true);
   const router = useRouter();
   const supabase = createClient();
+
+  // Redirect to dashboard if already logged in
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) {
+        router.replace("/me");
+      } else {
+        setChecking(false);
+      }
+    });
+  }, [supabase, router]);
 
   const handleGoogleLogin = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
@@ -76,6 +88,17 @@ export default function LoginPage() {
     }
     setLoading(false);
   };
+
+  if (checking) {
+    return (
+      <main
+        className="min-h-screen flex items-center justify-center px-6"
+        style={{ backgroundColor: "#1a1412" }}
+      >
+        <p className="font-mono text-sm text-[#b8ad9e]">Loading...</p>
+      </main>
+    );
+  }
 
   return (
     <main
