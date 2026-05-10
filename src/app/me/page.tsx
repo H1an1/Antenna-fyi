@@ -29,6 +29,7 @@ import { ProfileCard } from "./components/ProfileCard";
 import { ProfileEditor } from "./components/ProfileEditor";
 import { ApiKeyModal } from "./components/ApiKeyModal";
 import { MatchesSection } from "./components/MatchesSection";
+import { EventsSection } from "./components/EventsSection";
 import { TodaySection } from "./components/TodaySection";
 
 interface ApiKey {
@@ -197,6 +198,12 @@ const dashboardCopy = {
     matchContactShared: "Shared",
     matchTheirContact: "Their contact",
     matchLoading: "Loading...",
+    eventStatusPending: "Pending",
+    eventStatusActive: "Joined",
+    eventStatusRejected: "Not approved",
+    eventRoleOrganizer: "Organizer",
+    eventNotCheckedIn: "Not checked in",
+    eventViewPage: "View",
   },
   zh: {
     apiSettings: "API 设置",
@@ -331,6 +338,12 @@ const dashboardCopy = {
     matchContactShared: "已分享",
     matchTheirContact: "对方联系方式",
     matchLoading: "加载中...",
+    eventStatusPending: "待审批",
+    eventStatusActive: "已加入",
+    eventStatusRejected: "未通过",
+    eventRoleOrganizer: "组织者",
+    eventNotCheckedIn: "未签到",
+    eventViewPage: "查看",
   },
 } satisfies Record<Language, Record<string, unknown>>;
 
@@ -952,32 +965,11 @@ export default function DashboardPage() {
                       t={t}
                     />
 
-                    <EngravedPanel quiet className="dashboard-side-card flex-1 p-5">
-                      <div className="dashboard-side-header mb-4 flex items-start justify-between gap-3 border-b border-[#d7b866]/14 pb-3">
-                        <div className="flex items-center gap-3">
-                          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
-                            {t.eventsHeader}
-                          </p>
-                          <SignalStrip />
-                        </div>
-                        <button className="font-mono text-xs text-[#d8cab8] transition-colors hover:text-[#e2c46e]">
-                          {t.viewAll}
-                        </button>
-                      </div>
-                      <div className="dashboard-side-body pt-4">
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center justify-between gap-3">
-                            <p className="dashboard-side-empty-title mythic-soft-title font-serif text-xl leading-tight">
-                              {t.noEventTasks}
-                            </p>
-                            <SignalStrip className="hidden sm:flex" />
-                          </div>
-                          <p className="dashboard-side-empty-copy mt-2 font-mono text-[0.875rem] leading-[1.7] text-[#A89888]">
-                            {t.noEventTasksReason}
-                          </p>
-                        </div>
-                      </div>
-                    </EngravedPanel>
+                    <EventsSection
+                      deviceId={profileDraft.deviceId}
+                      supabase={supabase}
+                      t={t}
+                    />
                   </div>
                 )}
               </div>
