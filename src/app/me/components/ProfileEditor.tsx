@@ -328,39 +328,39 @@ export function ProfileEditor({
         </div>
       </EngravedPanel>
 
-      <EngravedPanel quiet className="space-y-4 p-4">
+      <EngravedPanel quiet className="profile-editor-signal-panel space-y-4 p-4">
         <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#e2c46e]">
           {t.signalDetails}
         </p>
-        <div className="grid gap-4 md:grid-cols-[1fr_180px]">
-          <div>
+        <div className="profile-editor-signal-grid grid gap-4">
+          <div className="min-w-0">
             <FieldLabel>{t.city}</FieldLabel>
-            <div className="flex items-center gap-2">
+            <div className="profile-editor-location-row grid items-center gap-2">
               {profileDraft.city ? (
                 <p className="flex min-w-0 items-center gap-2 border border-[#d7b866]/24 bg-[#070807]/70 px-3 py-2.5 font-mono text-sm text-[#A89888]">
                   <MapPin size={14} className="shrink-0 text-[#e2c46e]" />
                   <span className="truncate">{profileDraft.city}</span>
                 </p>
               ) : (
-                <p className="border border-dashed border-[#d7b866]/18 bg-[#070807]/44 px-3 py-2.5 font-mono text-sm text-[#d8cab8]/48">
+                <p className="min-w-0 border border-dashed border-[#d7b866]/18 bg-[#070807]/44 px-3 py-2.5 font-mono text-sm text-[#d8cab8]/48">
                   {t.cityPlaceholder}
                 </p>
               )}
               <button
                 onClick={onUpdateGps}
                 disabled={gpsState === "requesting"}
-                className="inline-flex shrink-0 items-center gap-1.5 border border-[#d7b866]/24 px-3 py-2.5 font-mono text-xs text-[#A89888] transition-colors hover:border-[#d7b866]/50 hover:text-[#e2c46e] disabled:opacity-50"
+                className="profile-editor-gps-button inline-flex items-center gap-1.5 border border-[#d7b866]/24 px-3 py-2.5 font-mono text-xs text-[#A89888] transition-colors hover:border-[#d7b866]/50 hover:text-[#e2c46e] disabled:opacity-50"
               >
                 <RefreshCw size={14} className={gpsState === "requesting" ? "animate-spin" : ""} />
-                {gpsActionLabel}
+                <span className="truncate">{gpsActionLabel}</span>
               </button>
             </div>
           </div>
-          <div>
+          <div className="min-w-0">
             <FieldLabel>{t.status}</FieldLabel>
             <button
               onClick={() => updateDraft({ isActive: !profileDraft.isActive })}
-              className={`h-[42px] w-full border px-3 font-mono text-xs transition-colors ${
+              className={`profile-editor-status-button border font-mono transition-colors ${
                 profileDraft.isActive
                   ? "border-emerald-300/35 text-emerald-200 hover:bg-emerald-400/8"
                   : "border-red-300/35 text-red-200 hover:bg-red-400/8"

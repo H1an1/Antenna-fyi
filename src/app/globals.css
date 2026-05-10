@@ -745,6 +745,56 @@ html, body {
   letter-spacing: 0.12em;
 }
 
+.profile-editor-signal-panel {
+  container-type: inline-size;
+}
+
+.profile-editor-signal-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.profile-editor-location-row {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.profile-editor-gps-button,
+.profile-editor-status-button {
+  min-width: 0;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.profile-editor-gps-button {
+  width: 100%;
+}
+
+.profile-editor-status-button {
+  width: 100%;
+  height: 42px;
+  overflow: hidden;
+  padding-inline: clamp(0.5rem, 2.8cqw, 0.75rem);
+  font-size: clamp(0.66rem, 2.3cqw, 0.75rem);
+  line-height: 1;
+  letter-spacing: clamp(0.04em, 0.44cqw, 0.12em);
+  text-overflow: ellipsis;
+}
+
+@container (min-width: 34rem) {
+  .profile-editor-signal-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(6.75rem, 0.3fr);
+    align-items: end;
+  }
+
+  .profile-editor-location-row {
+    grid-template-columns: minmax(0, 1fr) max-content;
+  }
+
+  .profile-editor-gps-button {
+    width: auto;
+    max-width: 12rem;
+  }
+}
+
 .profile-card-tags {
   gap: clamp(0.38rem, 1.9cqw, 0.5rem);
   margin-top: var(--profile-gap);
