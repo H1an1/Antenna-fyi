@@ -16,7 +16,6 @@ const antennaLogoSrc = "/brand/antenna.svg";
 const mythicFigureSrc = "/profile-assets/ascii-angel-dashboard-crop-tone-transparent.png";
 
 const profileDraft: ProfileDraft = {
-  emoji: "✦",
   displayName: "Antenna",
   line1:
     "Agent-native signal for rooms, events, and chance encounters. Antenna helps agents understand who should meet before the moment passes.",

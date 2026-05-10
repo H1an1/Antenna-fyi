@@ -9,14 +9,14 @@ import {
   createDefaultProfileDraft,
   createProfileSlug,
   limitProfileConversation,
-  limitProfileContext,
+  limitMoreInformation,
   limitProfileDescription,
   limitProfileLookingFor,
   mergeProfileDraft,
   normalizeLinks,
-  parseProfileContext,
+  parseMoreInformation,
   sanitizeTags,
-  serializeProfileContext,
+  serializeMoreInformation,
   type ProfileDraft,
 } from "@/lib/profile";
 import { matchArchetype } from "@/lib/archetype";
@@ -43,7 +43,6 @@ interface ProfileRow {
   device_id: string | null;
   profile_slug: string | null;
   display_name: string | null;
-  emoji: string | null;
   line1: string | null;
   line2: string | null;
   line3: string | null;
@@ -92,7 +91,6 @@ const dashboardCopy = {
     updateGps: "Update GPS",
     public: "Public",
     defaultUser: "Antenna user",
-    emoji: "Emoji",
     displayName: "Display name",
     publicSlug: "Handle / slug",
     publicSlugHint: "Auto-filled from display name. It stays editable and must be unique.",
@@ -221,7 +219,6 @@ const dashboardCopy = {
     updateGps: "更新 GPS",
     public: "公开",
     defaultUser: "Antenna 用户",
-    emoji: "Emoji",
     displayName: "显示名称",
     publicSlug: "Handle / slug",
     publicSlugHint: "会根据显示名称自动生成拼音，也可以手动修改；保存时需要唯一。",
@@ -429,7 +426,7 @@ export default function DashboardPage() {
 
       const { data, error: profileErr } = await supabase
         .from("profiles")
-        .select("device_id, profile_slug, display_name, emoji, line1, line2, line3, matching_context")
+        .select("device_id, profile_slug, display_name, line1, line2, line3, matching_context")
         .eq("user_id", currentUser.id)
         .limit(1)
         .maybeSingle<ProfileRow>();
@@ -439,26 +436,25 @@ export default function DashboardPage() {
       }
 
       if (data) {
-        const context = parseProfileContext(data.matching_context);
+        const moreInfo = parseMoreInformation(data.matching_context);
         draft = mergeProfileDraft(draft, {
           deviceId: data.device_id || draft.deviceId,
           profileSlug: data.profile_slug || draft.profileSlug,
           displayName: data.display_name || draft.displayName,
-          emoji: data.emoji || draft.emoji,
           line1: data.line1 || draft.line1,
           line2: data.line2 || draft.line2,
           line3: data.line3 || draft.line3,
-          context: context.context || draft.context,
+          context: moreInfo.context || draft.context,
           showContextPublicly:
-            typeof context.showContextPublicly === "boolean"
-              ? context.showContextPublicly
+            typeof moreInfo.showContextPublicly === "boolean"
+              ? moreInfo.showContextPublicly
               : draft.showContextPublicly,
-          interestTags: context.interestTags?.length ? context.interestTags : draft.interestTags,
-          city: context.city || draft.city,
-          isActive: typeof context.isActive === "boolean" ? context.isActive : draft.isActive,
-          links: context.links?.length ? context.links : draft.links,
-          lastGps: context.lastGps || draft.lastGps,
-          archetypeOverride: context.archetypeOverride || draft.archetypeOverride,
+          interestTags: moreInfo.interestTags?.length ? moreInfo.interestTags : draft.interestTags,
+          city: moreInfo.city || draft.city,
+          isActive: typeof moreInfo.isActive === "boolean" ? moreInfo.isActive : draft.isActive,
+          links: moreInfo.links?.length ? moreInfo.links : draft.links,
+          lastGps: moreInfo.lastGps || draft.lastGps,
+          archetypeOverride: moreInfo.archetypeOverride || draft.archetypeOverride,
         });
       }
 
@@ -577,12 +573,11 @@ export default function DashboardPage() {
     setSaveState("saving");
 
     const cleaned = mergeProfileDraft(profileDraft, {
-      emoji: profileDraft.emoji.trim() || "✦",
       displayName: profileDraft.displayName.trim() || t.defaultUser,
       line1: limitProfileDescription(profileDraft.line1.trim()),
       line2: limitProfileLookingFor(profileDraft.line2.trim()),
       line3: limitProfileConversation(profileDraft.line3.trim()),
-      context: limitProfileContext(profileDraft.context.trim()),
+      context: limitMoreInformation(profileDraft.context.trim()),
       showContextPublicly: false,
       city: profileDraft.city.trim(),
       interestTags: sanitizeTags(profileDraft.interestTags),
@@ -616,12 +611,11 @@ export default function DashboardPage() {
         .from("profiles")
         .update({
           display_name: cleaned.displayName,
-          emoji: cleaned.emoji,
           line1: cleaned.line1,
           line2: cleaned.line2,
           line3: cleaned.line3,
           profile_slug: cleaned.profileSlug,
-          matching_context: serializeProfileContext(cleaned),
+          matching_context: serializeMoreInformation(cleaned),
           visible: true,
         })
         .eq("user_id", user.id);
@@ -630,12 +624,11 @@ export default function DashboardPage() {
       // First save — use RPC to create/bind row (bypasses RLS)
       const { data: rpcResult, error: rpcErr } = await supabase.rpc("save_user_profile", {
         p_display_name: cleaned.displayName,
-        p_emoji: cleaned.emoji,
         p_line1: cleaned.line1,
         p_line2: cleaned.line2,
         p_line3: cleaned.line3,
         p_profile_slug: cleaned.profileSlug,
-        p_matching_context: serializeProfileContext(cleaned),
+        p_matching_context: serializeMoreInformation(cleaned),
         p_visible: true,
       });
       if (rpcErr) {

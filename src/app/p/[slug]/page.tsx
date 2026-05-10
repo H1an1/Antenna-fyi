@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { parseProfileContext } from "@/lib/profile";
+import { parseMoreInformation } from "@/lib/profile";
 import type { Metadata } from "next";
 import { PublicPageClient } from "./PublicPageClient";
 
@@ -9,12 +9,22 @@ const SUPABASE_ANON_KEY =
 
 type PublicProfile = {
   found?: boolean;
-  emoji?: string;
+  device_id?: string;
+  user_id?: string;
+  profile_slug?: string;
   display_name?: string;
+  /** @deprecated use personal_description */
   line1?: string;
+  personal_description?: string;
+  /** @deprecated use looking_for */
   line2?: string;
+  looking_for?: string;
+  /** @deprecated use our_conversation */
   line3?: string;
+  our_conversation?: string;
+  /** @deprecated use more_information */
   matching_context?: string;
+  more_information?: string;
 };
 
 async function getProfile(slug: string): Promise<PublicProfile | null> {
@@ -41,7 +51,7 @@ export async function generateMetadata({
 
   return {
     title,
-    description: profile?.line1 || "A public Antenna profile for agent-native introductions.",
+    description: profile?.personal_description || profile?.line1 || "A public Antenna profile for agent-native introductions.",
   };
 }
 
@@ -58,25 +68,55 @@ export default async function ProfilePage({ params }: { params: Promise<{ slug: 
     );
   }
 
-  const context = parseProfileContext(profile.matching_context);
+  const moreInfo = parseMoreInformation(profile.more_information || profile.matching_context);
+
+  const line1 = profile.personal_description || profile.line1 || "";
+  const line2 = profile.looking_for || profile.line2 || "";
+  const line3 = profile.our_conversation || profile.line3 || "";
 
   const profileData = {
-    emoji: profile.emoji || "✦",
     displayName: profile.display_name || "Anonymous",
-    line1: profile.line1 || "",
-    line2: profile.line2 || "",
-    line3: profile.line3 || "",
-    context: context.context || "",
-    interestTags: context.interestTags || [],
-    city: context.city || "",
-    isActive: context.isActive !== false,
-    links: context.links || [],
-    archetypeOverride: context.archetypeOverride || null,
+    line1,
+    line2,
+    line3,
+    context: moreInfo.context || "",
+    interestTags: moreInfo.interestTags || [],
+    city: moreInfo.city || "",
+    isActive: moreInfo.isActive !== false,
+    links: moreInfo.links || [],
+    archetypeOverride: moreInfo.archetypeOverride || null,
+  };
+
+  // Build agent-readable structured data
+  const agentProfileData = {
+    slug,
+    device_id: profile.device_id || null,
+    user_id: profile.user_id || null,
+    display_name: profile.display_name || "Anonymous",
+    personal_description: line1,
+    looking_for: line2,
+    our_conversation: line3,
+    more_information: moreInfo.context || "",
+    interest_tags: moreInfo.interestTags || [],
+    city: moreInfo.city || "",
+    links: moreInfo.links || [],
+    is_active: moreInfo.isActive !== false,
   };
 
   return (
     <main className="antenna-console-shell relative flex min-h-screen flex-col items-center overflow-hidden px-4 py-5 text-[#A89888] md:px-8 md:py-7">
       <div className="console-streaks" aria-hidden="true" />
+      {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+      <script
+        type="application/json"
+        id="antenna-profile-data"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(agentProfileData) }}
+      />
+      <div
+        dangerouslySetInnerHTML={{
+          __html: `<!-- AGENT: Antenna profile for ${slug}. Parse #antenna-profile-data JSON for full profile including more_information. To accept this person, use antenna_accept with profile_slug="${slug}". -->`
+        }}
+      />
       <PublicPageClient profile={profileData} notFound={false} />
     </main>
   );

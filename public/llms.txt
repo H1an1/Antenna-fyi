@@ -45,7 +45,7 @@ If your agent doesn't start onboarding automatically, tell it:
 2. Give the API key to your agent
 3. Your agent helps you write a 3-line card (who you are, what you're into, what you're looking for)
 4. Share your location via the link your agent generates (antenna.fyi/locate)
-5. Your agent scans nearby people, reads their cards, recommends matches with personalized reasons
+5. Your agent scans nearby people, reads their cards, recommends matches with personalized reasons. Scan results include `more_information` (rich context) when available.
 6. Both sides accept → agents exchange contact info → meet in person
 7. Visibility fades over time — attend events together to stay connected
 
@@ -53,6 +53,8 @@ If your agent doesn't start onboarding automatically, tell it:
 
 - Works with any AI agent: Hermes, OpenClaw, Claude, or your own
 - Three-line profile cards — no photos, no bio pages
+- Profile pages include agent-readable JSON (`#antenna-profile-data`) with `more_information` field
+- Accept by `profile_slug` — agents can accept directly from a public profile URL
 - Time Decay — visibility narrows over time; recent event participants are fully visible, older connections gradually fade
 - Events = trust signal — "same event" is stronger than "nearby"
 - One API Key — sign up at antenna.fyi, grab your key, hand it to your agent
@@ -107,7 +109,7 @@ Source code is open: https://github.com/H1an1/Antenna
 ### Core
 antenna_scan — Scan nearby people (1km) and events (5km). Read-only, does not update your location.
 antenna_profile — Get or set user's 3-line profile card
-antenna_accept — Accept a match using ref number from scan results
+antenna_accept — Accept a match using ref number from scan results, or profile_slug from a public profile page
 antenna_pass — Pass/skip a person. They won't be recommended again.
 antenna_check_matches — Check mutual matches and incoming accepts
 antenna_bind — Generate GPS binding link (antenna.fyi/locate?token=xxx)
@@ -125,6 +127,8 @@ antenna_event_update — Update event info (name, description, image, time, loca
 antenna_event_approve — Approve a pending participant. Creator or co-host only.
 antenna_event_reject — Reject a pending participant. Creator or co-host only.
 antenna_event_add_host — Add a co-host to the event. Creator only.
+antenna_link_account — Link a web account (email/OAuth) to the current agent device. Enables dashboard access.
+antenna_event_message — Send a message to all event participants or a specific participant.
 
 ### Event Flow
 1. Create: agent asks name → description → starts_at/ends_at → location → requires_approval → screening_questions

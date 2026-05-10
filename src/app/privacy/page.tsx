@@ -23,7 +23,7 @@ export default function PrivacyPage() {
             <strong>Fuzzy location</strong> — Your GPS coordinates are rounded to ~150m precision before being stored. We never see or store your exact location.
           </li>
           <li>
-            <strong>Profile card</strong> — An emoji, a display name, and three lines you write yourself. No photos, no real name required.
+            <strong>Profile card</strong> — A display name and three lines you write yourself. No photos, no real name required.
           </li>
           <li>
             <strong>Device ID</strong> — A platform-specific identifier (e.g. <code>telegram:123</code>) used to link your profile to your agent. No email, no phone number, no registration.

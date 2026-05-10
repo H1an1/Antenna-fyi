@@ -3,11 +3,11 @@
 import { EngravedPanel } from "@/app/components/EngravedPanel";
 import {
   PROFILE_CONVERSATION_MAX_LENGTH,
-  PROFILE_CONTEXT_MAX_LENGTH,
+  PROFILE_MORE_INFORMATION_MAX_LENGTH,
   PROFILE_DESCRIPTION_MAX_LENGTH,
   PROFILE_LOOKING_FOR_MAX_LENGTH,
   limitProfileConversation,
-  limitProfileContext,
+  limitMoreInformation,
   limitProfileDescription,
   limitProfileLookingFor,
   normalizeProfileSlug,
@@ -399,10 +399,10 @@ export function ProfileEditor({
         <TextArea
           label={t.profileContext}
           value={profileDraft.context}
-          onChange={(value) => updateDraft({ context: limitProfileContext(value) })}
+          onChange={(value) => updateDraft({ context: limitMoreInformation(value) })}
           placeholder={t.contextPlaceholder}
           rows={6}
-          maxLength={PROFILE_CONTEXT_MAX_LENGTH}
+          maxLength={PROFILE_MORE_INFORMATION_MAX_LENGTH}
         />
         <p className="border border-[#d7b866]/18 bg-black/10 p-3 font-mono text-[11px] leading-relaxed text-[#d8cab8]">
           {t.contextAgentOnlyHint}

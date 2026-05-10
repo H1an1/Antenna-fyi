@@ -53,7 +53,6 @@ const copy = {
 };
 
 interface PublicProfileData {
-  emoji: string;
   displayName: string;
   line1: string;
   line2: string;

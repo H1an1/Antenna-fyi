@@ -6,7 +6,6 @@ import { matchArchetype } from "@/lib/archetype";
 import type { ProfileDraft } from "@/lib/profile";
 
 interface PublicProfileData {
-  emoji: string;
   displayName: string;
   line1: string;
   line2: string;
@@ -36,7 +35,6 @@ export function PublicProfileCard({ profile, t }: { profile: PublicProfileData; 
   const [isFlipped, setIsFlipped] = useState(false);
 
   const profileDraft: ProfileDraft = {
-    emoji: profile.emoji,
     displayName: profile.displayName,
     line1: profile.line1,
     line2: profile.line2,

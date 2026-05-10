@@ -2,14 +2,15 @@ import { pinyin } from "pinyin-pro";
 
 export const PROFILE_METADATA_KEY = "antenna_profile";
 export const PROFILE_CONTEXT_VERSION = 1;
-export const PROFILE_CONTEXT_MAX_LENGTH = 1000;
+export const PROFILE_MORE_INFORMATION_MAX_LENGTH = 1000;
+/** @deprecated Use PROFILE_MORE_INFORMATION_MAX_LENGTH */
+export const PROFILE_CONTEXT_MAX_LENGTH = PROFILE_MORE_INFORMATION_MAX_LENGTH;
 export const PROFILE_DESCRIPTION_MAX_LENGTH = 220;
 export const PROFILE_LOOKING_FOR_MAX_LENGTH = 140;
 export const PROFILE_CONVERSATION_MAX_LENGTH = 160;
 export const PROFILE_LINE_MAX_LENGTH = PROFILE_DESCRIPTION_MAX_LENGTH;
 
 export type ProfileDraft = {
-  emoji: string;
   displayName: string;
   line1: string;
   line2: string;
@@ -26,7 +27,7 @@ export type ProfileDraft = {
   archetypeOverride?: { name: string; reason: string } | null;
 };
 
-export type ProfileContext = {
+export type MoreInformation = {
   version: number;
   context: string;
   showContextPublicly: boolean;
@@ -56,9 +57,12 @@ export function normalizeProfileSlug(value: string) {
     .slice(0, 48);
 }
 
-export function limitProfileContext(value: string) {
-  return value.slice(0, PROFILE_CONTEXT_MAX_LENGTH);
+export function limitMoreInformation(value: string) {
+  return value.slice(0, PROFILE_MORE_INFORMATION_MAX_LENGTH);
 }
+
+/** @deprecated Use limitMoreInformation */
+export const limitProfileContext = limitMoreInformation;
 
 export function limitProfileLine(value: string) {
   return value.slice(0, PROFILE_LINE_MAX_LENGTH);
@@ -104,7 +108,6 @@ export function createDefaultProfileDraft(name: string, email: string, userId: s
   const displayName = name || email.split("@")[0] || "Antenna user";
 
   return {
-    emoji: "✦",
     displayName,
     line1:
       "Builder, researcher, or curious operator. Interested in people working on ambitious things.",
@@ -123,7 +126,7 @@ export function createDefaultProfileDraft(name: string, email: string, userId: s
   };
 }
 
-export function draftToProfileContext(draft: ProfileDraft): ProfileContext {
+export function draftToMoreInformation(draft: ProfileDraft): MoreInformation {
   return {
     version: PROFILE_CONTEXT_VERSION,
     context: draft.context,
@@ -137,15 +140,18 @@ export function draftToProfileContext(draft: ProfileDraft): ProfileContext {
   };
 }
 
-export function serializeProfileContext(draft: ProfileDraft) {
-  return JSON.stringify(draftToProfileContext(draft));
+export function serializeMoreInformation(draft: ProfileDraft) {
+  return JSON.stringify(draftToMoreInformation(draft));
 }
 
-export function parseProfileContext(value: unknown): Partial<ProfileContext> {
+/** @deprecated Use serializeMoreInformation */
+export const serializeProfileContext = serializeMoreInformation;
+
+export function parseMoreInformation(value: unknown): Partial<MoreInformation> {
   if (typeof value !== "string" || !value.trim()) return {};
 
   try {
-    const parsed = JSON.parse(value) as Partial<ProfileContext> & {
+    const parsed = JSON.parse(value) as Partial<MoreInformation> & {
       about?: unknown;
       currentFocus?: unknown;
       targetPeople?: unknown;
@@ -207,3 +213,10 @@ export function mergeProfileDraft(base: ProfileDraft, patch: Partial<ProfileDraf
         : base.profileSlug || createProfileSlug(patch.displayName || base.displayName, base.deviceId),
   };
 }
+
+/** @deprecated Use parseMoreInformation */
+export const parseProfileContext = parseMoreInformation;
+/** @deprecated Use draftToMoreInformation */
+export const draftToProfileContext = draftToMoreInformation;
+/** @deprecated Use MoreInformation */
+export type ProfileContext = MoreInformation;
