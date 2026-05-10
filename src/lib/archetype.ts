@@ -140,6 +140,23 @@ const archetypeRules: ArchetypeRule[] = [
  *
  * TODO: Replace with LLM-based matching for richer, context-aware results.
  */
+const archetypeAssets: Record<ArchetypeRole, { dashboard: string; profileBack: string }> = {
+  Hermes: { dashboard: "/profile-archetypes/dashboard/01-Hermes-赫尔墨斯-dashboard-tone-1.3.png", profileBack: "/profile-archetypes/profile-back/01-Hermes-赫尔墨斯.mp4" },
+  Athena: { dashboard: "/profile-archetypes/dashboard/02-Athena-雅典娜-dashboard-tone-1.3.png", profileBack: "/profile-archetypes/profile-back/02-Athena-雅典娜.mp4" },
+  Prometheus: { dashboard: "/profile-archetypes/dashboard/03-Prometheus-普罗米修斯-dashboard-tone-1.3.png", profileBack: "/profile-archetypes/profile-back/03-Prometheus-普罗米修斯.mp4" },
+  Apollo: { dashboard: "/profile-archetypes/dashboard/04-Apollo-阿波罗-dashboard-tone-1.3.png", profileBack: "/profile-archetypes/profile-back/04-Apollo-阿波罗.mp4" },
+  Artemis: { dashboard: "/profile-archetypes/dashboard/05-Artemis-阿尔忒弥斯-dashboard-tone-1.3.png", profileBack: "/profile-archetypes/profile-back/05-Artemis-阿尔忒弥斯.mp4" },
+  Aphrodite: { dashboard: "/profile-archetypes/dashboard/06-Aphrodite-阿佛洛狄忒-dashboard-tone-1.3.png", profileBack: "/profile-archetypes/profile-back/06-Aphrodite-阿佛洛狄忒.mp4" },
+  Dionysus: { dashboard: "/profile-archetypes/dashboard/07-Dionysus-狄俄尼索斯-dashboard-tone-1.3.png", profileBack: "/profile-archetypes/profile-back/07-Dionysus-狄俄尼索斯.mp4" },
+  Hades: { dashboard: "/profile-archetypes/dashboard/08-Hades-哈迪斯-dashboard-tone-1.3.png", profileBack: "/profile-archetypes/profile-back/08-Hades-哈迪斯.mp4" },
+  Persephone: { dashboard: "/profile-archetypes/dashboard/09-Persephone-珀耳塞福涅-dashboard-tone-1.3.png", profileBack: "/profile-archetypes/profile-back/09-Persephone-珀耳塞福涅.mp4" },
+  Odysseus: { dashboard: "/profile-archetypes/dashboard/10-Odysseus-奥德修斯-dashboard-tone-1.3.png", profileBack: "/profile-archetypes/profile-back/10-Odysseus-奥德修斯.mp4" },
+};
+
+export function getArchetypeAssets(role: ArchetypeRole) {
+  return archetypeAssets[role] || archetypeAssets.Prometheus;
+}
+
 export function matchArchetype(profile: Pick<ProfileDraft, "line1" | "line2" | "line3" | "interestTags" | "context">): ArchetypeMatch {
   const corpus = [
     profile.line1,

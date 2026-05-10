@@ -19,7 +19,7 @@ import {
   serializeMoreInformation,
   type ProfileDraft,
 } from "@/lib/profile";
-import { matchArchetype } from "@/lib/archetype";
+import { matchArchetype, getArchetypeAssets } from "@/lib/archetype";
 import { ExternalLink, KeyRound } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -56,7 +56,7 @@ type Language = "en" | "zh";
 const mutedText = "text-[#ded2c1]";
 const languageStorageKey = "antenna.dashboard.language";
 const antennaLogoSrc = "/brand/antenna.svg";
-const mythicFigureSrc = "/profile-assets/ascii-angel-dashboard-crop-tone-transparent.png";
+const defaultMythicFigureSrc = "/profile-assets/ascii-angel-dashboard-crop-tone-transparent.png";
 
 const dashboardCopy = {
   en: {
@@ -387,6 +387,12 @@ export default function DashboardPage() {
     if (!profileDraft) return { primary: "Hermes" as const, secondary: null, reason: "" };
     return matchArchetype(profileDraft);
   }, [profileDraft]);
+
+  const mythicFigureSrc = useMemo(() => {
+    if (!profileDraft) return defaultMythicFigureSrc;
+    const role = profileDraft.archetypeOverride?.name || archetypeMatch.primary;
+    return getArchetypeAssets(role as import("@/lib/archetype").ArchetypeRole).dashboard;
+  }, [profileDraft, archetypeMatch.primary]);
 
   const changeLanguage = (nextLanguage: Language) => {
     setLanguage(nextLanguage);

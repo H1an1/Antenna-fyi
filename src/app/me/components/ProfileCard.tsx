@@ -5,10 +5,9 @@ import { EngravedPanel } from "@/app/components/EngravedPanel";
 import { SocialLinkIcon } from "@/app/components/SocialLinkIcon";
 import { MapPin, RefreshCw, WandSparkles } from "lucide-react";
 import { normalizeLinks, type ProfileDraft } from "@/lib/profile";
-import type { ArchetypeMatch } from "@/lib/archetype";
+import { getArchetypeAssets, type ArchetypeMatch, type ArchetypeRole } from "@/lib/archetype";
 import { formatProfileUrl, getSocialLinkKind, socialLinkLabels } from "@/lib/social-links";
 
-const profileBackVideoSrc = "/profile-assets/ascii-profile-back.mp4";
 const profileOrnamentSrc = "/profile-assets/wing-signal-ornament.png";
 
 const DEFAULT_LINE1 =
@@ -60,6 +59,10 @@ export function ProfileCard({
   const displayArchetype = profileDraft.archetypeOverride
     ? { primary: profileDraft.archetypeOverride.name, reason: profileDraft.archetypeOverride.reason }
     : { primary: archetypeMatch.primary, reason: archetypeMatch.reason };
+
+  const profileBackVideoSrc = getArchetypeAssets(
+    (profileDraft.archetypeOverride?.name || archetypeMatch.primary) as ArchetypeRole
+  ).profileBack;
   const profileContentLength = [
     profileDraft.displayName,
     profileDraft.line1,
