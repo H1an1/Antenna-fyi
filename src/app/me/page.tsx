@@ -28,6 +28,7 @@ import type { User } from "@supabase/supabase-js";
 import { ProfileCard } from "./components/ProfileCard";
 import { ProfileEditor } from "./components/ProfileEditor";
 import { ApiKeyModal } from "./components/ApiKeyModal";
+import { MatchesSection } from "./components/MatchesSection";
 import { TodaySection } from "./components/TodaySection";
 
 interface ApiKey {
@@ -186,6 +187,16 @@ const dashboardCopy = {
     noEventTasks: "No event tasks",
     noEventTasksReason: "Check-ins, approvals, and event reminders will show up as action rows.",
     viewAll: "View all",
+    matchDetail: "Detail",
+    matchAccept: "Accept",
+    matchPass: "Pass",
+    matchMutual: "Mutual match",
+    matchIncoming: "Wants to meet you",
+    matchShareContact: "Share your contact",
+    matchContactPlaceholder: "WeChat / Telegram / etc.",
+    matchContactShared: "Shared",
+    matchTheirContact: "Their contact",
+    matchLoading: "Loading...",
   },
   zh: {
     apiSettings: "API 设置",
@@ -310,6 +321,16 @@ const dashboardCopy = {
     noEventTasks: "没有活动待办",
     noEventTasksReason: "签到、审批和活动提醒会以可操作列表出现在这里。",
     viewAll: "查看全部",
+    matchDetail: "详情",
+    matchAccept: "接受",
+    matchPass: "跳过",
+    matchMutual: "双向匹配",
+    matchIncoming: "想认识你",
+    matchShareContact: "分享联系方式",
+    matchContactPlaceholder: "微信 / Telegram / 手机号...",
+    matchContactShared: "已分享",
+    matchTheirContact: "对方联系方式",
+    matchLoading: "加载中...",
   },
 } satisfies Record<Language, Record<string, unknown>>;
 
@@ -924,32 +945,12 @@ export default function DashboardPage() {
                   />
                 ) : (
                   <div className="dashboard-side-stack flex h-full min-h-0 flex-col gap-4">
-                    <EngravedPanel quiet className="dashboard-side-card flex-1 p-5">
-                      <div className="dashboard-side-header mb-4 flex items-start justify-between gap-3 border-b border-[#d7b866]/14 pb-3">
-                        <div className="flex items-center gap-3">
-                          <p className="dashboard-side-kicker font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
-                            {t.matchesHeader}
-                          </p>
-                          <SignalStrip />
-                        </div>
-                        <button className="font-mono text-xs text-[#d8cab8] transition-colors hover:text-[#e2c46e]">
-                          {t.viewAll}
-                        </button>
-                      </div>
-                      <div className="dashboard-side-body pt-4">
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center justify-between gap-3">
-                            <p className="dashboard-side-empty-title mythic-soft-title font-serif text-xl leading-tight">
-                              {t.noPendingMatches}
-                            </p>
-                            <SignalStrip className="hidden sm:flex" />
-                          </div>
-                          <p className="dashboard-side-empty-copy mt-2 font-mono text-[0.875rem] leading-[1.7] text-[#A89888]">
-                            {t.noPendingMatchesReason}
-                          </p>
-                        </div>
-                      </div>
-                    </EngravedPanel>
+                    <MatchesSection
+                      deviceId={profileDraft.deviceId}
+                      supabase={supabase}
+                      pendingMatchCount={pendingMatches.length}
+                      t={t}
+                    />
 
                     <EngravedPanel quiet className="dashboard-side-card flex-1 p-5">
                       <div className="dashboard-side-header mb-4 flex items-start justify-between gap-3 border-b border-[#d7b866]/14 pb-3">
