@@ -867,8 +867,7 @@ export default function DashboardPage() {
   const isProfileComplete = Boolean(
     profileDraft.personalDescription.trim() &&
       profileDraft.lookingFor.trim() &&
-      profileDraft.ourConversation.trim() &&
-      profileDraft.interestTags.length > 0,
+      profileDraft.ourConversation.trim(),
   );
 
   return (
