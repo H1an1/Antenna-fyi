@@ -300,15 +300,15 @@ export function ProfileEditor({
                   addTag();
                 }
               }}
-              disabled={profileDraft.interestTags.length >= 8}
+              disabled={profileDraft.interestTags.length >= 5}
               placeholder={
-                profileDraft.interestTags.length >= 8 ? t.tagsMax : t.addTagPlaceholder
+                profileDraft.interestTags.length >= 5 ? t.tagsMax : t.addTagPlaceholder
               }
               className="min-w-0 flex-1 border border-[#d7b866]/24 bg-[#070807]/70 px-3 py-2.5 font-mono text-sm text-[#A89888] outline-none placeholder:text-[#d8cab8]/48 focus:border-[#e2c46e]/70 disabled:opacity-50"
             />
             <button
               onClick={addTag}
-              disabled={!tagInput.trim() || profileDraft.interestTags.length >= 8}
+              disabled={!tagInput.trim() || profileDraft.interestTags.length >= 5}
               className="inline-flex items-center justify-center border border-[#d7b866]/40 px-3 text-[#e2c46e] transition-colors hover:bg-[#d7b866]/12 disabled:opacity-40"
               aria-label={t.addInterestTag}
             >
