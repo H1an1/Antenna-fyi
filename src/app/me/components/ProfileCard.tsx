@@ -15,7 +15,7 @@ const DEFAULT_LINE1 =
 
 interface ProfileCardProps {
   profileDraft: ProfileDraft;
-  archetypeMatch: ArchetypeMatch;
+  archetypeMatch?: ArchetypeMatch;
   isFlipped: boolean;
   onFlip: (flipped: boolean) => void;
   onEdit: () => void;
@@ -60,10 +60,10 @@ export function ProfileCard({
   // Use archetype override from profile context if set, otherwise use computed match
   const displayArchetype = profileDraft.archetypeOverride
     ? { primary: profileDraft.archetypeOverride.name, reason: language === "zh" ? ((profileDraft.archetypeOverride as any).reasonZh || profileDraft.archetypeOverride.reason) : profileDraft.archetypeOverride.reason }
-    : { primary: archetypeMatch.primary, reason: language === "zh" ? archetypeMatch.reasonZh : archetypeMatch.reason };
+    : null;
 
   const profileBackVideoSrc = getArchetypeAssets(
-    (profileDraft.archetypeOverride?.name || archetypeMatch.primary) as ArchetypeRole
+    (profileDraft.archetypeOverride?.name || "Prometheus") as ArchetypeRole
   ).profileBack;
   const profileContentLength = [
     profileDraft.displayName,
@@ -263,7 +263,7 @@ export function ProfileCard({
           <div className="relative z-10 flex h-full flex-col justify-between">
             <div className="flex items-center justify-between gap-3 border-b border-[#d7b866]/14 pb-3">
               <p className="dashboard-side-kicker font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
-                {isProfileDefault ? "MYTH://PENDING" : `MYTH://${displayArchetype.primary}`}
+                {isProfileDefault || !displayArchetype ? "MYTH://PENDING" : `MYTH://${displayArchetype.primary}`}
               </p>
               <button
                 onClick={() => onFlip(false)}
@@ -274,7 +274,7 @@ export function ProfileCard({
                 {t.flipFront}
               </button>
             </div>
-            {isProfileDefault ? (
+            {isProfileDefault || !displayArchetype ? (
               <div className="flex flex-1 flex-col items-center justify-center space-y-4 py-8 text-center">
                 <p className="mythic-soft-title font-serif text-2xl leading-tight">
                   {t.backPlaceholderTitle || "Your archetype awaits."}
