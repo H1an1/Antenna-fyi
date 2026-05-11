@@ -585,6 +585,40 @@ export default function DashboardPage() {
     };
   }, [supabase, profileDraft?.deviceId]);
 
+  // --- Realtime profile subscription + visibility refresh ---
+  useEffect(() => {
+    if (!user) return;
+    const currentUser = user;
+
+    // Realtime: re-load profile when profiles table changes for this user
+    const profileChannel = supabase
+      .channel('profile-realtime')
+      .on(
+        'postgres_changes' as never,
+        { event: '*', schema: 'public', table: 'profiles' },
+        (payload: { new?: Record<string, unknown>; old?: Record<string, unknown> }) => {
+          const row = payload.new || payload.old;
+          if (!row) return;
+          if (row.user_id !== currentUser.id && row.device_id !== profileDraft?.deviceId) return;
+          loadProfile(currentUser);
+        },
+      )
+      .subscribe();
+
+    // Visibility: refresh when tab becomes visible again
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        loadProfile(currentUser);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    return () => {
+      supabase.removeChannel(profileChannel);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
+  }, [supabase, user, profileDraft?.deviceId, loadProfile]);
+
   const updateDraft = (patch: Partial<ProfileDraft>) => {
     setProfileDraft((current) => {
       if (!current) return current;
