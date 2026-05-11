@@ -50,6 +50,7 @@ interface MatchesSectionProps {
     matchContactShared: string;
     matchTheirContact: string;
     matchLoading: string;
+    matchPending: string;
     line: (index: number) => string;
     flipBack: string;
     flipFront: string;
@@ -64,6 +65,7 @@ export function MatchesSection({ deviceId, supabase, pendingMatchCount, onMatchC
   const [selectedMatch, setSelectedMatch] = useState<MatchProfile | null>(null);
   const [selectedType, setSelectedType] = useState<"mutual" | "incoming">("incoming");
 
+  const [acceptedIds, setAcceptedIds] = useState<Set<string>>(new Set());
   const [shareTargetId, setShareTargetId] = useState<string | null>(null);
   const [inlineContact, setInlineContact] = useState("");
   const [inlineSharing, setInlineSharing] = useState(false);
@@ -98,6 +100,7 @@ export function MatchesSection({ deviceId, supabase, pendingMatchCount, onMatchC
       p_status: "accepted",
       p_contact_info: null,
     });
+    setAcceptedIds((prev) => new Set(prev).add(targetId));
     // Don't close modal — MatchDetailModal will transition to share-contact UI
     await fetchMatches();
   };
@@ -163,13 +166,26 @@ export function MatchesSection({ deviceId, supabase, pendingMatchCount, onMatchC
             </div>
           ) : (
             <div className="space-y-0">
-              {allMatches.map((match) => (
+              {allMatches.map((match) => {
+                const isPending = match._type === "incoming" && acceptedIds.has(match.target_id);
+                return (
                 <div key={match.target_id} className="border-b border-[#d7b866]/12 last:border-b-0">
                 <div className="flex items-center justify-between gap-3 py-3">
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className="font-mono text-sm text-[#A89888] truncate">{match.name}</span>
+                    <button
+                      onClick={() => {
+                        setSelectedMatch(match);
+                        setSelectedType(match._type);
+                      }}
+                      className="font-mono text-sm text-[#A89888] truncate hover:text-[#e2c46e] transition-colors cursor-pointer"
+                    >
+                      {match.name}
+                    </button>
                     {match._type === "mutual" && (
-                      <span className="font-mono text-[10px] text-[#e2c46e]/70">✓</span>
+                      <span className="text-sm" title={t.matchMutual}>✅</span>
+                    )}
+                    {isPending && (
+                      <span className="font-mono text-[10px] text-[#d8cab8]/60">{t.matchPending}</span>
                     )}
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
@@ -190,15 +206,6 @@ export function MatchesSection({ deviceId, supabase, pendingMatchCount, onMatchC
                         {t.matchContactShared}
                       </span>
                     )}
-                    <button
-                      onClick={() => {
-                        setSelectedMatch(match);
-                        setSelectedType(match._type);
-                      }}
-                      className="border border-[#d7b866]/30 px-3 py-1.5 font-mono text-[11px] text-[#d8cab8] transition-colors hover:border-[#d7b866]/50 hover:text-[#e2c46e]"
-                    >
-                      {t.matchDetail}
-                    </button>
                   </div>
                 </div>
                 {/* Inline share contact form */}
@@ -228,7 +235,8 @@ export function MatchesSection({ deviceId, supabase, pendingMatchCount, onMatchC
                   </div>
                 )}
                 </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

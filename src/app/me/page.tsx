@@ -198,6 +198,10 @@ const dashboardCopy = {
     matchContactShared: "Shared",
     matchTheirContact: "Their contact",
     matchLoading: "Loading...",
+    matchPending: "Pending",
+    contactInfo: "Contact info (private)",
+    contactInfoHint: "Only shared after mutual match",
+    contactInfoPlaceholder: "WeChat, Telegram, email...",
     eventStatusPending: "Pending",
     eventStatusActive: "Joined",
     eventStatusRejected: "Not approved",
@@ -338,6 +342,10 @@ const dashboardCopy = {
     matchContactShared: "已分享",
     matchTheirContact: "对方联系方式",
     matchLoading: "加载中...",
+    matchPending: "等待对方",
+    contactInfo: "联系方式（私密）",
+    contactInfoHint: "只在双向匹配后展示",
+    contactInfoPlaceholder: "微信、Telegram、邮箱...",
     eventStatusPending: "待审批",
     eventStatusActive: "已加入",
     eventStatusRejected: "未通过",
@@ -415,6 +423,7 @@ export default function DashboardPage() {
   const [profileEditorOpen, setProfileEditorOpen] = useState(false);
   const [profileCardFlipped, setProfileCardFlipped] = useState(false);
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
+  const [contactInfo, setContactInfo] = useState("");
   const [pendingMatches, setPendingMatches] = useState<Record<string, unknown>[]>([]);
   const [matchCount, setMatchCount] = useState(0);
   const [eventTodoCount, setEventTodoCount] = useState(0);
@@ -484,16 +493,17 @@ export default function DashboardPage() {
 
       const { data, error: profileErr } = await supabase
         .from("profiles")
-        .select("device_id, profile_slug, display_name, line1, line2, line3, matching_context")
+        .select("device_id, profile_slug, display_name, line1, line2, line3, matching_context, contact_info")
         .eq("user_id", currentUser.id)
         .limit(1)
-        .maybeSingle<ProfileRow>();
+        .maybeSingle<ProfileRow & { contact_info?: string | null }>();
 
       if (profileErr) {
         setProfileNotice(t.profileSyncRetry);
       }
 
       if (data) {
+        if (data.contact_info) setContactInfo(data.contact_info);
         const moreInfo = parseMoreInformation(data.matching_context);
         draft = mergeProfileDraft(draft, {
           deviceId: data.device_id || draft.deviceId,
@@ -675,6 +685,7 @@ export default function DashboardPage() {
           profile_slug: cleaned.profileSlug,
           matching_context: serializeMoreInformation(cleaned),
           visible: true,
+          contact_info: contactInfo.trim(),
         })
         .eq("user_id", user.id);
       profileErr = updateErr;
@@ -688,6 +699,7 @@ export default function DashboardPage() {
         p_profile_slug: cleaned.profileSlug,
         p_matching_context: serializeMoreInformation(cleaned),
         p_visible: true,
+        p_contact_info: contactInfo.trim(),
       });
       if (rpcErr) {
         profileErr = rpcErr;
@@ -959,6 +971,8 @@ export default function DashboardPage() {
                     onUpdateGps={updateGps}
                     gpsState={gpsState}
                     gpsActionLabel={gpsActionLabel}
+                    contactInfo={contactInfo}
+                    onContactInfoChange={setContactInfo}
                   />
                 ) : (
                   <div className="dashboard-side-stack flex h-full min-h-0 flex-col gap-4">

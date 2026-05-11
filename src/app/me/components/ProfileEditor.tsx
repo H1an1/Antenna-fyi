@@ -54,12 +54,17 @@ interface ProfileEditorProps {
     active: string;
     quiet: string;
     slugTaken: string;
+    contactInfo: string;
+    contactInfoHint: string;
+    contactInfoPlaceholder: string;
   };
   tagInput: string;
   setTagInput: (v: string) => void;
   onUpdateGps: () => void;
   gpsState: GpsState;
   gpsActionLabel: string;
+  contactInfo: string;
+  onContactInfoChange: (v: string) => void;
 }
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
@@ -165,6 +170,8 @@ export function ProfileEditor({
   onUpdateGps,
   gpsState,
   gpsActionLabel,
+  contactInfo,
+  onContactInfoChange,
 }: ProfileEditorProps) {
   const [slugStatus, setSlugStatus] = useState<SlugStatus>("idle");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -384,6 +391,15 @@ export function ProfileEditor({
               placeholder="https://..."
             />
           ))}
+        </div>
+        <div className="border-t border-[#d7b866]/12 pt-4">
+          <TextInput
+            label={t.contactInfo}
+            value={contactInfo}
+            onChange={onContactInfoChange}
+            placeholder={t.contactInfoPlaceholder}
+            helper={t.contactInfoHint}
+          />
         </div>
       </EngravedPanel>
 
