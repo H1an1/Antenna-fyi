@@ -16,7 +16,6 @@ function SignalStrip({ className = "" }: { className?: string }) {
 interface MatchProfile {
   target_id: string;
   name: string;
-  emoji?: string;
   line1?: string;
   line2?: string;
   line3?: string;
@@ -33,6 +32,7 @@ interface MatchesSectionProps {
   deviceId: string;
   supabase: SupabaseClient;
   pendingMatchCount: number;
+  onMatchCountChange?: (count: number) => void;
   t: {
     matchesHeader: string;
     viewAll: string;
@@ -48,14 +48,21 @@ interface MatchesSectionProps {
     matchContactShared: string;
     matchTheirContact: string;
     matchLoading: string;
+    line: (index: number) => string;
+    flipBack: string;
+    flipFront: string;
   };
 }
 
-export function MatchesSection({ deviceId, supabase, pendingMatchCount, t }: MatchesSectionProps) {
+export function MatchesSection({ deviceId, supabase, pendingMatchCount, onMatchCountChange, t }: MatchesSectionProps) {
   const [matches, setMatches] = useState<MatchesData | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedMatch, setSelectedMatch] = useState<MatchProfile | null>(null);
   const [selectedType, setSelectedType] = useState<"mutual" | "incoming">("incoming");
+
+  const [shareTargetId, setShareTargetId] = useState<string | null>(null);
+  const [inlineContact, setInlineContact] = useState("");
+  const [inlineSharing, setInlineSharing] = useState(false);
 
   const fetchMatches = useCallback(async () => {
     try {
@@ -67,6 +74,8 @@ export function MatchesSection({ deviceId, supabase, pendingMatchCount, t }: Mat
         return;
       }
       setMatches(data as MatchesData);
+      const total = (data as MatchesData)?.mutual_matches?.length + (data as MatchesData)?.incoming_accepts?.length || 0;
+      onMatchCountChange?.(total);
     } catch (err) {
       console.error("Failed to fetch matches:", err);
     } finally {
@@ -85,7 +94,7 @@ export function MatchesSection({ deviceId, supabase, pendingMatchCount, t }: Mat
       p_status: "accepted",
       p_contact_info: null,
     });
-    setSelectedMatch(null);
+    // Don't close modal — MatchDetailModal will transition to share-contact UI
     await fetchMatches();
   };
 
@@ -151,26 +160,69 @@ export function MatchesSection({ deviceId, supabase, pendingMatchCount, t }: Mat
           ) : (
             <div className="space-y-0">
               {allMatches.map((match) => (
-                <div
-                  key={match.target_id}
-                  className="flex items-center justify-between gap-3 border-b border-[#d7b866]/12 py-3 last:border-b-0"
-                >
+                <div key={match.target_id} className="border-b border-[#d7b866]/12 last:border-b-0">
+                <div className="flex items-center justify-between gap-3 py-3">
                   <div className="flex items-center gap-2 min-w-0">
-                    {match.emoji && <span className="text-base">{match.emoji}</span>}
                     <span className="font-mono text-sm text-[#A89888] truncate">{match.name}</span>
                     {match._type === "mutual" && (
                       <span className="font-mono text-[10px] text-[#e2c46e]/70">✓</span>
                     )}
                   </div>
-                  <button
-                    onClick={() => {
-                      setSelectedMatch(match);
-                      setSelectedType(match._type);
-                    }}
-                    className="shrink-0 border border-[#d7b866]/30 px-3 py-1.5 font-mono text-[11px] text-[#d8cab8] transition-colors hover:border-[#d7b866]/50 hover:text-[#e2c46e]"
-                  >
-                    {t.matchDetail}
-                  </button>
+                  <div className="flex items-center gap-2 shrink-0">
+                    {/* State-based action buttons */}
+                    {match._type === "mutual" && !match.you_shared && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShareTargetId(shareTargetId === match.target_id ? null : match.target_id);
+                        }}
+                        className="border border-[#d7b866]/40 bg-[#d7b866]/8 px-2.5 py-1.5 font-mono text-[11px] text-[#e2c46e] transition-colors hover:bg-[#d7b866]/14"
+                      >
+                        {t.matchShareContact}
+                      </button>
+                    )}
+                    {match._type === "mutual" && match.you_shared && (
+                      <span className="font-mono text-[10px] text-[#d8cab8]/60">
+                        {t.matchContactShared}
+                      </span>
+                    )}
+                    <button
+                      onClick={() => {
+                        setSelectedMatch(match);
+                        setSelectedType(match._type);
+                      }}
+                      className="border border-[#d7b866]/30 px-3 py-1.5 font-mono text-[11px] text-[#d8cab8] transition-colors hover:border-[#d7b866]/50 hover:text-[#e2c46e]"
+                    >
+                      {t.matchDetail}
+                    </button>
+                  </div>
+                </div>
+                {/* Inline share contact form */}
+                {shareTargetId === match.target_id && (
+                  <div className="flex gap-2 pb-3 pl-0">
+                    <input
+                      type="text"
+                      value={inlineContact}
+                      onChange={(e) => setInlineContact(e.target.value)}
+                      placeholder={t.matchContactPlaceholder}
+                      className="flex-1 border border-[#d7b866]/24 bg-[#070807]/60 px-3 py-2 font-mono text-xs text-[#A89888] placeholder:text-[#d8cab8]/50 focus:border-[#d7b866]/48 focus:outline-none"
+                    />
+                    <button
+                      onClick={async () => {
+                        if (!inlineContact.trim()) return;
+                        setInlineSharing(true);
+                        await handleShareContact(match.target_id, inlineContact.trim());
+                        setInlineSharing(false);
+                        setInlineContact("");
+                        setShareTargetId(null);
+                      }}
+                      disabled={inlineSharing || !inlineContact.trim()}
+                      className="border border-[#d7b866]/50 bg-[#d7b866]/10 px-3 py-2 font-mono text-xs text-[#e2c46e] transition-colors hover:bg-[#d7b866]/16 disabled:opacity-50"
+                    >
+                      {t.matchShareContact}
+                    </button>
+                  </div>
+                )}
                 </div>
               ))}
             </div>

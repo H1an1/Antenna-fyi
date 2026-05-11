@@ -1,16 +1,18 @@
 "use client";
 
 import { EngravedPanel } from "@/app/components/EngravedPanel";
-import { X } from "lucide-react";
+import { X, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface MatchProfile {
   target_id: string;
   name: string;
-  emoji?: string;
+  slug?: string;
   line1?: string;
   line2?: string;
   line3?: string;
+  interest_tags?: string[];
+  city?: string;
   their_contact?: string | null;
   you_shared?: string | null;
 }
@@ -33,6 +35,9 @@ interface MatchDetailModalProps {
     matchContactPlaceholder: string;
     matchContactShared: string;
     matchTheirContact: string;
+    line: (index: number) => string;
+    flipBack: string;
+    flipFront: string;
   };
 }
 
@@ -49,6 +54,8 @@ export function MatchDetailModal({
   const [contactInput, setContactInput] = useState("");
   const [sharing, setSharing] = useState(false);
   const [acting, setActing] = useState(false);
+  const [showShareAfterAccept, setShowShareAfterAccept] = useState(false);
+  const [isFlipped, setIsFlipped] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -64,6 +71,8 @@ export function MatchDetailModal({
       setContactInput("");
       setSharing(false);
       setActing(false);
+      setShowShareAfterAccept(false);
+      setIsFlipped(false);
     }
   }, [open, match?.target_id]);
 
@@ -73,6 +82,8 @@ export function MatchDetailModal({
     setActing(true);
     await onAccept(match.target_id);
     setActing(false);
+    // Bug 3: After accept, transition to share contact UI instead of closing
+    setShowShareAfterAccept(true);
   };
 
   const handlePass = async () => {
@@ -88,6 +99,8 @@ export function MatchDetailModal({
     setSharing(false);
   };
 
+  const isMutualOrAccepted = type === "mutual" || showShareAfterAccept;
+
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-[#030302]/48 px-4 py-6 backdrop-blur-[2px]"
@@ -102,38 +115,97 @@ export function MatchDetailModal({
         <div className="flex items-start justify-between gap-4 border-b border-[#d7b866]/16 p-5">
           <div>
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
-              {type === "mutual" ? t.matchMutual : t.matchIncoming}
+              {isMutualOrAccepted ? t.matchMutual : t.matchIncoming}
             </p>
             <h2 className="mt-1 font-serif text-2xl text-[#A89888]">
-              {match.emoji && <span className="mr-2">{match.emoji}</span>}
               {match.name}
             </h2>
           </div>
-          <button
-            onClick={onClose}
-            className="text-[#d8cab8] transition-colors hover:text-[#A89888]"
-            aria-label="Close"
-          >
-            <X size={20} />
-          </button>
+          <div className="flex items-center gap-2">
+            {(match.line1 || match.line2 || match.line3) && (
+              <button
+                onClick={() => setIsFlipped(!isFlipped)}
+                className="text-[#d8cab8] transition-colors hover:text-[#e2c46e]"
+                aria-label={isFlipped ? t.flipFront : t.flipBack}
+              >
+                <RefreshCw size={16} />
+              </button>
+            )}
+            <button
+              onClick={onClose}
+              className="text-[#d8cab8] transition-colors hover:text-[#A89888]"
+              aria-label="Close"
+            >
+              <X size={20} />
+            </button>
+          </div>
         </div>
 
-        {/* Profile info */}
-        <div className="space-y-3 p-5">
-          {match.line1 && (
-            <p className="font-mono text-[0.875rem] leading-[1.7] text-[#A89888]">{match.line1}</p>
-          )}
-          {match.line2 && (
-            <p className="font-mono text-[0.875rem] leading-[1.7] text-[#A89888]">{match.line2}</p>
-          )}
-          {match.line3 && (
-            <p className="font-mono text-[0.875rem] leading-[1.7] text-[#A89888]">{match.line3}</p>
+        {/* Profile card content — styled like PublicProfileCard */}
+        <div className="p-5">
+          {!isFlipped ? (
+            /* Front: main profile info */
+            <div className="space-y-4">
+              {match.line1 && (
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
+                    {t.line(1)}
+                  </p>
+                  <p className="mt-1 font-mono text-[0.875rem] leading-[1.7] text-[#A89888]">
+                    {match.line1}
+                  </p>
+                </div>
+              )}
+
+              {match.interest_tags && match.interest_tags.length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                  {match.interest_tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="border border-[#d7b866]/20 bg-[#d7b866]/8 px-2 py-0.5 font-mono text-[10px] text-[#A89888]"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {match.city && (
+                <p className="font-mono text-[11px] text-[#d8cab8]">
+                  {match.city}
+                </p>
+              )}
+            </div>
+          ) : (
+            /* Back: looking for + conversation */
+            <div className="space-y-4">
+              {match.line2 && (
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
+                    {t.line(2)}
+                  </p>
+                  <p className="mt-1 font-mono text-[0.875rem] leading-[1.7] text-[#A89888]">
+                    {match.line2}
+                  </p>
+                </div>
+              )}
+              {match.line3 && (
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
+                    {t.line(3)}
+                  </p>
+                  <p className="mt-1 font-mono text-[0.875rem] leading-[1.7] text-[#A89888]">
+                    {match.line3}
+                  </p>
+                </div>
+              )}
+            </div>
           )}
         </div>
 
         {/* Actions */}
         <div className="border-t border-[#d7b866]/16 p-5">
-          {type === "mutual" ? (
+          {isMutualOrAccepted ? (
             <div className="space-y-4">
               {/* Their contact */}
               {match.their_contact && (

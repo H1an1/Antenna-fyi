@@ -18,6 +18,8 @@ interface TodaySectionProps {
   isProfileComplete: boolean;
   gpsState: GpsState;
   gpsActionLabel: string;
+  matchCount: number;
+  eventTodoCount: number;
   onGenerateKey: () => void;
   onCompleteProfile: () => void;
   onUpdateGps: () => void;
@@ -33,9 +35,12 @@ interface TodaySectionProps {
     todayTitle: string;
     todayReadyTitle: string;
     todayReadyBody: string;
+    todaySummary?: (matchCount: number, eventTodoCount: number) => string;
     agentStatus: string;
     layer0Connected: string;
     layer0NeedsSetup: string;
+    pendingMatches: string;
+    eventTodos: string;
   };
 }
 
@@ -44,11 +49,18 @@ export function TodaySection({
   isProfileComplete,
   gpsState,
   gpsActionLabel,
+  matchCount,
+  eventTodoCount,
   onGenerateKey,
   onCompleteProfile,
   onUpdateGps,
   t,
 }: TodaySectionProps) {
+  const hasPendingItems = matchCount > 0 || eventTodoCount > 0;
+  const summaryParts: string[] = [];
+  if (matchCount > 0) summaryParts.push(`${matchCount} ${t.pendingMatches}`);
+  if (eventTodoCount > 0) summaryParts.push(`${eventTodoCount} ${t.eventTodos}`);
+  const todaySummary = summaryParts.join(" · ");
   if (!hasKey) {
     return (
       <EngravedPanel as="section" className="p-5 backdrop-blur-md md:p-6">
@@ -138,10 +150,14 @@ export function TodaySection({
               <Bell size={16} />
             </span>
             <div>
-              <p className="font-mono text-sm text-[#A89888]">{t.todayReadyTitle}</p>
-              <p className="mt-1 font-mono text-xs leading-relaxed text-[#d8cab8]">
-                {t.todayReadyBody}
+              <p className="font-mono text-sm text-[#A89888]">
+                {hasPendingItems ? todaySummary : t.todayReadyTitle}
               </p>
+              {!hasPendingItems && (
+                <p className="mt-1 font-mono text-xs leading-relaxed text-[#d8cab8]">
+                  {t.todayReadyBody}
+                </p>
+              )}
             </div>
           </div>
           <button

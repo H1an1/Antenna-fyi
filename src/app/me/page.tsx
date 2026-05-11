@@ -416,6 +416,8 @@ export default function DashboardPage() {
   const [profileCardFlipped, setProfileCardFlipped] = useState(false);
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
   const [pendingMatches, setPendingMatches] = useState<Record<string, unknown>[]>([]);
+  const [matchCount, setMatchCount] = useState(0);
+  const [eventTodoCount, setEventTodoCount] = useState(0);
   const [language, setLanguage] = useState<Language>(() => {
     if (typeof window === "undefined") return "en";
     const storedLanguage = window.localStorage.getItem(languageStorageKey);
@@ -913,6 +915,8 @@ export default function DashboardPage() {
               isProfileComplete={isProfileComplete}
               gpsState={gpsState}
               gpsActionLabel={gpsActionLabel}
+              matchCount={matchCount}
+              eventTodoCount={eventTodoCount}
               onGenerateKey={() => setApiModalOpen(true)}
               onCompleteProfile={() => setProfileEditorOpen(true)}
               onUpdateGps={updateGps}
@@ -962,12 +966,14 @@ export default function DashboardPage() {
                       deviceId={profileDraft.deviceId}
                       supabase={supabase}
                       pendingMatchCount={pendingMatches.length}
+                      onMatchCountChange={setMatchCount}
                       t={t}
                     />
 
                     <EventsSection
                       deviceId={profileDraft.deviceId}
                       supabase={supabase}
+                      onEventTodoCountChange={setEventTodoCount}
                       t={t}
                     />
                   </div>

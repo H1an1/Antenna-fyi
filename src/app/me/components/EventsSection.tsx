@@ -28,6 +28,7 @@ interface EventUpdate {
 interface EventsSectionProps {
   deviceId: string;
   supabase: SupabaseClient;
+  onEventTodoCountChange?: (count: number) => void;
   t: {
     eventsHeader: string;
     viewAll: string;
@@ -48,7 +49,7 @@ const statusStyles: Record<EventUpdate["status"], string> = {
   rejected: "border-red-300/40 text-red-200/60",
 };
 
-export function EventsSection({ deviceId, supabase, t }: EventsSectionProps) {
+export function EventsSection({ deviceId, supabase, onEventTodoCountChange, t }: EventsSectionProps) {
   const [events, setEvents] = useState<EventUpdate[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -62,6 +63,8 @@ export function EventsSection({ deviceId, supabase, t }: EventsSectionProps) {
         return;
       }
       setEvents((data as EventUpdate[]) || []);
+      const todoCount = ((data as EventUpdate[]) || []).filter(e => e.status === "pending" || (!e.checked_in && e.status === "active" && new Date(e.starts_at) <= new Date())).length;
+      onEventTodoCountChange?.(todoCount);
     } catch (err) {
       console.error("Failed to fetch events:", err);
     } finally {

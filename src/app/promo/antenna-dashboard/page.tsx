@@ -51,6 +51,8 @@ const t = {
   agentStatus: "AGENT STATUS",
   layer0Connected: "Agent connected",
   layer0NeedsSetup: "Agent not connected",
+  pendingMatches: "pending matches",
+  eventTodos: "event todos",
   agentConnection: "Agent connection",
   firstTimeTitle: "Connect your agent first.",
   firstTimeBody: "Antenna only becomes useful after your agent has an API key.",
@@ -189,6 +191,8 @@ export default function AntennaPromoDashboardPage() {
               isProfileComplete
               gpsState="idle"
               gpsActionLabel={t.updateGps}
+              matchCount={0}
+              eventTodoCount={0}
               onGenerateKey={() => undefined}
               onCompleteProfile={() => undefined}
               onUpdateGps={() => undefined}
