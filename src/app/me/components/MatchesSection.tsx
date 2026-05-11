@@ -80,8 +80,8 @@ export function MatchesSection({ deviceId, supabase, pendingMatchCount, onMatchC
         return;
       }
       setMatches(data as MatchesData);
-      const total = (data as MatchesData)?.mutual_matches?.length + (data as MatchesData)?.incoming_accepts?.length || 0;
-      onMatchCountChange?.(total);
+      const incoming = (data as MatchesData)?.incoming_accepts?.length || 0;
+      onMatchCountChange?.(incoming);
     } catch (err) {
       console.error("Failed to fetch matches:", err);
     } finally {
@@ -201,9 +201,14 @@ export function MatchesSection({ deviceId, supabase, pendingMatchCount, onMatchC
                         {t.matchShareContact}
                       </button>
                     )}
-                    {match._type === "mutual" && match.you_shared && (
+                    {match._type === "mutual" && match.you_shared && match.their_contact && (
+                      <span className="font-mono text-[10px] text-[#d8cab8] truncate max-w-[150px]" title={match.their_contact}>
+                        📇 {match.their_contact}
+                      </span>
+                    )}
+                    {match._type === "mutual" && match.you_shared && !match.their_contact && (
                       <span className="font-mono text-[10px] text-[#d8cab8]/60">
-                        {t.matchContactShared}
+                        ✅ {t.matchContactShared}
                       </span>
                     )}
                   </div>
