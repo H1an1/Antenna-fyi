@@ -97,7 +97,7 @@ export function sanitizeTags(tags: string[]) {
       seen.add(key);
       return true;
     })
-    .slice(0, 8);
+    .slice(0, 5);
 }
 
 export function normalizeLinks(links: string[]) {
