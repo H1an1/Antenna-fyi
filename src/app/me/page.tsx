@@ -154,8 +154,8 @@ const dashboardCopy = {
     locationDenied: "Location permission was not granted.",
     setupPrompt: (name: string, key: string) =>
       `npm install -g antenna-fyi && antenna config --key ${key}`,
-    layer0Connected: "Agent connected",
-    layer0NeedsSetup: "Agent not connected",
+    layer0Connected: "Agent configured",
+    layer0NeedsSetup: "Agent not set up",
     todayTitle: "Today",
     todayReadyTitle: "Nothing needs action right now.",
     todayReadyBody: "Matches, event tasks, and agent recommendations will appear here as rows.",
@@ -298,8 +298,8 @@ const dashboardCopy = {
     locationDenied: "没有获得位置权限。",
     setupPrompt: (name: string, key: string) =>
       `npm install -g antenna-fyi && antenna config --key ${key}`,
-    layer0Connected: "Agent 已连接",
-    layer0NeedsSetup: "Agent 未连接",
+    layer0Connected: "Agent 已配置",
+    layer0NeedsSetup: "Agent 未配置",
     todayTitle: "今天",
     todayReadyTitle: "现在没有需要处理的事。",
     todayReadyBody: "Match、活动待办和 agent 推荐会以列表行出现在这里。",
@@ -438,9 +438,8 @@ export default function DashboardPage() {
   const activeKeys = useMemo(() => keys.filter((key) => !key.revoked), [keys]);
   const primaryKey = activeKeys[0] || null;
   const agentConnected = useMemo(() => {
-    if (!primaryKey?.last_used_at) return false;
-    const lastUsed = new Date(primaryKey.last_used_at).getTime();
-    return Date.now() - lastUsed < 30 * 60 * 1000; // 30 minutes
+    if (!primaryKey) return false;
+    return !!primaryKey.last_used_at; // Has been used at least once = configured
   }, [primaryKey]);
   const publicHref = profileDraft?.profileSlug ? `/p/${profileDraft.profileSlug}` : null;
 
