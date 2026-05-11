@@ -437,6 +437,11 @@ export default function DashboardPage() {
 
   const activeKeys = useMemo(() => keys.filter((key) => !key.revoked), [keys]);
   const primaryKey = activeKeys[0] || null;
+  const agentConnected = useMemo(() => {
+    if (!primaryKey?.last_used_at) return false;
+    const lastUsed = new Date(primaryKey.last_used_at).getTime();
+    return Date.now() - lastUsed < 30 * 60 * 1000; // 30 minutes
+  }, [primaryKey]);
   const publicHref = profileDraft?.profileSlug ? `/p/${profileDraft.profileSlug}` : null;
 
   const setupPrompt = useMemo(() => {
@@ -957,6 +962,7 @@ export default function DashboardPage() {
           <div className="dashboard-panel-column mx-auto w-full max-w-[848px] space-y-6 lg:mx-0 lg:max-w-none">
             <TodaySection
               hasKey={!!primaryKey}
+              agentConnected={agentConnected}
               isProfileComplete={isProfileComplete}
               gpsState={gpsState}
               gpsActionLabel={gpsActionLabel}

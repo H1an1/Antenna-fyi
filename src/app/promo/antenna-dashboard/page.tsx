@@ -188,6 +188,7 @@ export default function AntennaPromoDashboardPage() {
           <div className="dashboard-panel-column mx-auto w-full max-w-[848px] space-y-6 lg:mx-0 lg:max-w-none">
             <TodaySection
               hasKey
+              agentConnected
               isProfileComplete
               gpsState="idle"
               gpsActionLabel={t.updateGps}

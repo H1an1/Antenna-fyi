@@ -15,6 +15,7 @@ function SignalStrip({ className = "" }: { className?: string }) {
 
 interface TodaySectionProps {
   hasKey: boolean;
+  agentConnected: boolean;
   isProfileComplete: boolean;
   gpsState: GpsState;
   gpsActionLabel: string;
@@ -46,6 +47,7 @@ interface TodaySectionProps {
 
 export function TodaySection({
   hasKey,
+  agentConnected,
   isProfileComplete,
   gpsState,
   gpsActionLabel,
@@ -138,10 +140,17 @@ export function TodaySection({
           </div>
           <div className="flex flex-wrap items-center gap-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[#d8cab8]">
             <span>{t.agentStatus}</span>
-            <span className="inline-flex items-center gap-1 border border-emerald-300/35 bg-emerald-400/7 px-2.5 py-1 text-[10px] text-emerald-100">
-              <span className="text-emerald-200">●</span>
-              {t.layer0Connected}
-            </span>
+            {agentConnected ? (
+              <span className="inline-flex items-center gap-1 border border-emerald-300/35 bg-emerald-400/7 px-2.5 py-1 text-[10px] text-emerald-100">
+                <span className="text-emerald-200">●</span>
+                {t.layer0Connected}
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 border border-amber-300/35 bg-amber-400/7 px-2.5 py-1 text-[10px] text-amber-100">
+                <span className="text-amber-200">○</span>
+                {t.layer0NeedsSetup}
+              </span>
+            )}
           </div>
         </div>
         <EngravedPanel quiet className="flex flex-col gap-4 p-4 sm:flex-row sm:items-start sm:justify-between">
