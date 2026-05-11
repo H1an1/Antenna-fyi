@@ -19,6 +19,8 @@ interface MatchProfile {
   line1?: string;
   line2?: string;
   line3?: string;
+  matching_context?: string;
+  profile_slug?: string;
   their_contact?: string | null;
   you_shared?: string | null;
 }
@@ -51,6 +53,8 @@ interface MatchesSectionProps {
     line: (index: number) => string;
     flipBack: string;
     flipFront: string;
+    defaultUser: string;
+    mythArchetypeLabel: string;
   };
 }
 

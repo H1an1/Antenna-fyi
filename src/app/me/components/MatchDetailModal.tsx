@@ -1,8 +1,11 @@
 "use client";
 
 import { EngravedPanel } from "@/app/components/EngravedPanel";
-import { X, RefreshCw } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ProfileCard } from "./ProfileCard";
+import { X } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { parseMoreInformation, type ProfileDraft } from "@/lib/profile";
+import { matchArchetype } from "@/lib/archetype";
 
 interface MatchProfile {
   target_id: string;
@@ -11,8 +14,8 @@ interface MatchProfile {
   line1?: string;
   line2?: string;
   line3?: string;
-  interest_tags?: string[];
-  city?: string;
+  matching_context?: string;
+  profile_slug?: string;
   their_contact?: string | null;
   you_shared?: string | null;
 }
@@ -38,6 +41,8 @@ interface MatchDetailModalProps {
     line: (index: number) => string;
     flipBack: string;
     flipFront: string;
+    defaultUser: string;
+    mythArchetypeLabel: string;
   };
 }
 
@@ -76,13 +81,39 @@ export function MatchDetailModal({
     }
   }, [open, match?.target_id]);
 
+  // Build ProfileDraft from match data — same pattern as PublicProfileCard
+  const moreInfo = useMemo(() => {
+    return parseMoreInformation(match?.matching_context || null);
+  }, [match?.matching_context]);
+
+  const profileDraft: ProfileDraft = useMemo(() => ({
+    displayName: match?.name || "Anonymous",
+    personalDescription: match?.line1 || "",
+    lookingFor: match?.line2 || "",
+    ourConversation: match?.line3 || "",
+    context: moreInfo.context || "",
+    showContextPublicly: false,
+    interestTags: moreInfo.interestTags || [],
+    city: moreInfo.city || "",
+    isActive: moreInfo.isActive !== false,
+    links: ["", "", ""],
+    profileSlug: match?.profile_slug || "",
+    deviceId: "",
+    lastGps: null,
+    archetypeOverride: moreInfo.archetypeOverride || null,
+  }), [match, moreInfo]);
+
+  const archetypeMatch = useMemo(
+    () => matchArchetype(profileDraft),
+    [profileDraft],
+  );
+
   if (!open || !match) return null;
 
   const handleAccept = async () => {
     setActing(true);
     await onAccept(match.target_id);
     setActing(false);
-    // Bug 3: After accept, transition to share contact UI instead of closing
     setShowShareAfterAccept(true);
   };
 
@@ -101,6 +132,15 @@ export function MatchDetailModal({
 
   const isMutualOrAccepted = type === "mutual" || showShareAfterAccept;
 
+  const cardT = {
+    flipBack: t.flipBack,
+    flipFront: t.flipFront,
+    editProfile: "",
+    defaultUser: t.defaultUser,
+    mythArchetypeLabel: t.mythArchetypeLabel,
+    line: t.line,
+  };
+
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-[#030302]/48 px-4 py-6 backdrop-blur-[2px]"
@@ -110,104 +150,40 @@ export function MatchDetailModal({
         if (event.target === event.currentTarget) onClose();
       }}
     >
-      <EngravedPanel className="w-full max-w-md shadow-2xl">
-        {/* Header */}
-        <div className="flex items-start justify-between gap-4 border-b border-[#d7b866]/16 p-5">
-          <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
-              {isMutualOrAccepted ? t.matchMutual : t.matchIncoming}
-            </p>
-            <h2 className="mt-1 font-serif text-2xl text-[#A89888]">
-              {match.name}
-            </h2>
-          </div>
-          <div className="flex items-center gap-2">
-            {(match.line1 || match.line2 || match.line3) && (
-              <button
-                onClick={() => setIsFlipped(!isFlipped)}
-                className="text-[#d8cab8] transition-colors hover:text-[#e2c46e]"
-                aria-label={isFlipped ? t.flipFront : t.flipBack}
-              >
-                <RefreshCw size={16} />
-              </button>
-            )}
-            <button
-              onClick={onClose}
-              className="text-[#d8cab8] transition-colors hover:text-[#A89888]"
-              aria-label="Close"
-            >
-              <X size={20} />
-            </button>
-          </div>
+      <div className="w-full max-w-md space-y-4">
+        {/* Close button */}
+        <div className="flex justify-end">
+          <button
+            onClick={onClose}
+            className="rounded-full bg-black/40 p-2 text-[#d8cab8] backdrop-blur transition-colors hover:text-[#A89888]"
+            aria-label="Close"
+          >
+            <X size={20} />
+          </button>
         </div>
 
-        {/* Profile card content — styled like PublicProfileCard */}
-        <div className="p-5">
-          {!isFlipped ? (
-            /* Front: main profile info */
-            <div className="space-y-4">
-              {match.line1 && (
-                <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
-                    {t.line(1)}
-                  </p>
-                  <p className="mt-1 font-mono text-[0.875rem] leading-[1.7] text-[#A89888]">
-                    {match.line1}
-                  </p>
-                </div>
-              )}
+        {/* Profile card — exactly like public profile page */}
+        <ProfileCard
+          profileDraft={profileDraft}
+          archetypeMatch={archetypeMatch}
+          isFlipped={isFlipped}
+          onFlip={setIsFlipped}
+          onEdit={() => {}}
+          showEditButton={false}
+          t={cardT}
+          statusPill={isMutualOrAccepted ? "mutual" : "incoming"}
+          isActive={moreInfo.isActive !== false}
+          language="en"
+        />
 
-              {match.interest_tags && match.interest_tags.length > 0 && (
-                <div className="flex flex-wrap gap-1.5">
-                  {match.interest_tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="border border-[#d7b866]/20 bg-[#d7b866]/8 px-2 py-0.5 font-mono text-[10px] text-[#A89888]"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
+        {/* Actions panel */}
+        <EngravedPanel className="p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
+            {isMutualOrAccepted ? t.matchMutual : t.matchIncoming}
+          </p>
 
-              {match.city && (
-                <p className="font-mono text-[11px] text-[#d8cab8]">
-                  {match.city}
-                </p>
-              )}
-            </div>
-          ) : (
-            /* Back: looking for + conversation */
-            <div className="space-y-4">
-              {match.line2 && (
-                <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
-                    {t.line(2)}
-                  </p>
-                  <p className="mt-1 font-mono text-[0.875rem] leading-[1.7] text-[#A89888]">
-                    {match.line2}
-                  </p>
-                </div>
-              )}
-              {match.line3 && (
-                <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
-                    {t.line(3)}
-                  </p>
-                  <p className="mt-1 font-mono text-[0.875rem] leading-[1.7] text-[#A89888]">
-                    {match.line3}
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Actions */}
-        <div className="border-t border-[#d7b866]/16 p-5">
           {isMutualOrAccepted ? (
             <div className="space-y-4">
-              {/* Their contact */}
               {match.their_contact && (
                 <div className="border border-[#d7b866]/18 bg-[#070807]/48 p-3">
                   <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#e2c46e]">
@@ -217,7 +193,6 @@ export function MatchDetailModal({
                 </div>
               )}
 
-              {/* Share your contact */}
               {match.you_shared ? (
                 <p className="font-mono text-[11px] text-[#d8cab8]">
                   {t.matchContactShared}: {match.you_shared}
@@ -259,8 +234,8 @@ export function MatchDetailModal({
               </button>
             </div>
           )}
-        </div>
-      </EngravedPanel>
+        </EngravedPanel>
+      </div>
     </div>
   );
 }
