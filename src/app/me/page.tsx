@@ -783,42 +783,24 @@ export default function DashboardPage() {
 
     if (updateData.user) setUser(updateData.user);
 
-    // Regenerate archetype after profile content changes
+    // Regenerate archetype after profile content changes (LLM picks archetype)
     try {
       const profileText = [cleaned.personalDescription, cleaned.lookingFor, cleaned.ourConversation, cleaned.context].filter(Boolean).join(". ");
       if (profileText) {
-        const corpus = profileText.toLowerCase();
-        const archetypeKeywords: Record<string, string[]> = {
-          Prometheus: ["ai", "agent", "llm", "founder", "startup", "build", "developer", "hacker", "tools"],
-          Athena: ["product", "strategy", "research", "design", "craft", "pm", "ux"],
-          Hermes: ["network", "connect", "community", "social", "bridge"],
-          Apollo: ["music", "media", "content", "creator", "writing", "taste"],
-          Artemis: ["independent", "explore", "freelance", "health", "outdoor"],
-          Aphrodite: ["beauty", "brand", "fashion", "relationship"],
-          Dionysus: ["event", "culture", "party", "art", "festival"],
-          Hades: ["finance", "invest", "infrastructure", "backend", "security"],
-          Persephone: ["transform", "cross", "research", "academic"],
-          Odysseus: ["founder", "journey", "resilience", "travel"],
-        };
-        let bestArchetype = "Prometheus";
-        let bestScore = 0;
-        for (const [role, keywords] of Object.entries(archetypeKeywords)) {
-          const score = keywords.reduce((s, kw) => s + (corpus.includes(kw) ? 1 : 0), 0);
-          if (score > bestScore) { bestScore = score; bestArchetype = role; }
-        }
         const res = await fetch("https://bcudjloikmpcqwcptuyd.supabase.co/functions/v1/generate-archetype", {
           method: "POST",
           headers: { "Content-Type": "application/json", "Authorization": `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}` },
-          body: JSON.stringify({ archetype: bestArchetype, profile_text: profileText }),
+          body: JSON.stringify({ profile_text: profileText }),
         });
         if (res.ok) {
           const archetypeData = await res.json();
-          // Write back to matching_context
-          const existingCtx = parseMoreInformation(cleaned.context ? serializeMoreInformation(cleaned) : null);
-          const updatedCtx = { ...existingCtx, archetypeOverride: { name: bestArchetype, reason: archetypeData.reason, reasonZh: archetypeData.reasonZh } };
-          const updatedJson = serializeMoreInformation({ ...cleaned, archetypeOverride: updatedCtx.archetypeOverride });
-          await supabase.from("profiles").update({ matching_context: updatedJson }).eq("user_id", user.id);
-          setProfileDraft(prev => prev ? { ...prev, archetypeOverride: updatedCtx.archetypeOverride } : prev);
+          if (archetypeData?.archetype && archetypeData?.reason) {
+            const existingCtx = parseMoreInformation(cleaned.context ? serializeMoreInformation(cleaned) : null);
+            const updatedCtx = { ...existingCtx, archetypeOverride: { name: archetypeData.archetype, reason: archetypeData.reason, reasonZh: archetypeData.reasonZh } };
+            const updatedJson = serializeMoreInformation({ ...cleaned, archetypeOverride: updatedCtx.archetypeOverride });
+            await supabase.from("profiles").update({ matching_context: updatedJson }).eq("user_id", user.id);
+            setProfileDraft(prev => prev ? { ...prev, archetypeOverride: updatedCtx.archetypeOverride } : prev);
+          }
         }
       }
     } catch { /* non-fatal */ }
