@@ -109,7 +109,7 @@ Source code is open: https://github.com/H1an1/Antenna
 ### Core
 antenna_scan — Scan nearby people (1km) and events (5km). Read-only, does not update your location.
 antenna_profile — Get or set user's 3-line profile card
-After setting a profile, the agent must send the returned `public_url` to the user as their public profile link. User-written profile content should remain in the user's original language; Antenna translates UI labels, not the user's own text.
+Profile writes require the user's Antenna API key from antenna.fyi/me. Pass `api_key` to antenna_profile(action="set"); the tool verifies it and writes to the dashboard-linked `user:<uuid>` profile. Do not create profiles from sender_id/channel. After setting a profile, the agent must send the returned `public_url` to the user as their public profile link. User-written profile content should remain in the user's original language; Antenna translates UI labels, not the user's own text.
 antenna_accept — Accept a match using ref number from scan results, or profile_slug from a public profile page
 antenna_pass — Pass/skip a person. They won't be recommended again.
 antenna_check_matches — Check mutual matches and incoming accepts
