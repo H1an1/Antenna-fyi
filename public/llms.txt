@@ -116,7 +116,7 @@ antenna_bind — Generate GPS binding link (antenna.fyi/locate?token=xxx)
 antenna_checkin — Update location (this is the only way to set your position besides GPS bind)
 antenna_discover — Get today's global recommendation (1 per day, no repeats)
 antenna_initial_recommendations — First-use recommendations (2-3 people). One-time, does not consume daily discover quota. Use in onboarding right after profile save.
-antenna_find_people — Find 1-3 people by free-form intent, e.g. "I want someone who understands consumer social growth". Returns profile refs and safe profile fields, not contact info or raw device_id.
+antenna_find_people — Find 1-3 people by free-form intent, e.g. "I want someone who understands consumer social growth". Use this whenever the user says "I want to find/meet someone who..." or "有没有做 X 的人". Returns profile refs and safe profile fields, not contact info or raw device_id. CLI fallback: `antenna find --id <platform>:<user_id> --query "<user intent>" --limit 3`.
 
 ### Events
 antenna_event_create — Create an event. Required: name, starts_at (ISO), ends_at (ISO). Optional: lat, lng, description, og_image, requires_approval, screening_questions.
