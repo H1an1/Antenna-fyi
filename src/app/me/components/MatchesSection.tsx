@@ -79,15 +79,17 @@ export function MatchesSection({ deviceId, supabase, pendingMatchCount, onMatchC
         console.error("Failed to fetch matches:", error);
         return;
       }
-      setMatches(data as MatchesData);
-      const incoming = (data as MatchesData)?.incoming_accepts?.length || 0;
-      onMatchCountChange?.(incoming);
+      const matchData = data as MatchesData;
+      setMatches(matchData);
+      const incoming = matchData?.incoming_accepts?.length || 0;
+      const contactActions = (matchData?.mutual_matches || []).filter((match) => !match.you_shared).length;
+      onMatchCountChange?.(incoming + contactActions);
     } catch (err) {
       console.error("Failed to fetch matches:", err);
     } finally {
       setLoading(false);
     }
-  }, [supabase, deviceId]);
+  }, [supabase, deviceId, onMatchCountChange]);
 
   useEffect(() => {
     fetchMatches();

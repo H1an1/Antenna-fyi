@@ -46,6 +46,7 @@ const t = {
   signOut: "Sign out",
   activeLower: "active",
   todayTitle: "Today",
+  todayActionTitle: "Needs action.",
   todayReadyTitle: "Nothing needs action right now.",
   todayReadyBody: "Matches, event tasks, and agent recommendations will appear here as rows.",
   agentStatus: "AGENT STATUS",

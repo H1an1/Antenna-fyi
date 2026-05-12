@@ -157,6 +157,7 @@ const dashboardCopy = {
     layer0Connected: "Agent configured",
     layer0NeedsSetup: "Agent not set up",
     todayTitle: "Today",
+    todayActionTitle: "Needs action.",
     todayReadyTitle: "Nothing needs action right now.",
     todayReadyBody: "Matches, event tasks, and agent recommendations will appear here as rows.",
     firstTimeTitle: "Connect your agent first.",
@@ -301,6 +302,7 @@ const dashboardCopy = {
     layer0Connected: "Agent 已配置",
     layer0NeedsSetup: "Agent 未配置",
     todayTitle: "今天",
+    todayActionTitle: "有需要处理的事。",
     todayReadyTitle: "现在没有需要处理的事。",
     todayReadyBody: "Match、活动待办和 agent 推荐会以列表行出现在这里。",
     firstTimeTitle: "先连接你的 agent。",
@@ -558,7 +560,6 @@ export default function DashboardPage() {
   // --- Realtime matches subscription ---
   useEffect(() => {
     if (!profileDraft?.deviceId) return;
-    const deviceId = profileDraft.deviceId;
 
     const channel = supabase
       .channel('matches-realtime')
@@ -568,7 +569,6 @@ export default function DashboardPage() {
         (payload: { new?: Record<string, unknown>; old?: Record<string, unknown>; eventType?: string }) => {
           const row = payload.new || payload.old;
           if (!row) return;
-          if (row.device_id_a !== deviceId && row.device_id_b !== deviceId) return;
 
           setPendingMatches((prev) => {
             const id = row.id as string | number;

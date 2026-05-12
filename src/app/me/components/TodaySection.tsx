@@ -34,6 +34,7 @@ interface TodaySectionProps {
     profileIncompleteBody: string;
     completeProfile: string;
     todayTitle: string;
+    todayActionTitle: string;
     todayReadyTitle: string;
     todayReadyBody: string;
     todaySummary?: (matchCount: number, eventTodoCount: number) => string;
@@ -59,6 +60,7 @@ export function TodaySection({
   t,
 }: TodaySectionProps) {
   const hasPendingItems = matchCount > 0 || eventTodoCount > 0;
+  const todayHeadline = hasPendingItems ? t.todayActionTitle : t.todayReadyTitle;
   const summaryParts: string[] = [];
   if (matchCount > 0) summaryParts.push(`${matchCount} ${t.pendingMatches}`);
   if (eventTodoCount > 0) summaryParts.push(`${eventTodoCount} ${t.eventTodos}`);
@@ -135,7 +137,7 @@ export function TodaySection({
               <SignalStrip />
             </div>
             <h1 className="mythic-soft-title mt-1 font-serif text-3xl leading-tight md:text-4xl">
-              {t.todayReadyTitle}
+              {todayHeadline}
             </h1>
           </div>
           <div className="flex flex-wrap items-center gap-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[#d8cab8]">
