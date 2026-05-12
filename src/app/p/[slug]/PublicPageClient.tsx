@@ -184,7 +184,7 @@ export function PublicPageClient({
         </div>
       </header>
 
-      <PublicProfileCard profile={profile} t={t} />
+      <PublicProfileCard profile={profile} t={t} language={language} />
     </div>
   );
 }

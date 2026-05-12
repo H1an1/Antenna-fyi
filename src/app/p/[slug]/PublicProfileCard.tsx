@@ -31,7 +31,15 @@ interface PublicProfileT {
   emptyStateBody?: string;
 }
 
-export function PublicProfileCard({ profile, t }: { profile: PublicProfileData; t: PublicProfileT }) {
+export function PublicProfileCard({
+  profile,
+  t,
+  language,
+}: {
+  profile: PublicProfileData;
+  t: PublicProfileT;
+  language: "en" | "zh";
+}) {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const profileDraft: ProfileDraft = {
@@ -67,7 +75,7 @@ export function PublicProfileCard({ profile, t }: { profile: PublicProfileData; 
       t={t}
       statusPill={profile.isActive ? "active" : "quiet"}
       isActive={profile.isActive}
-      language="en"
+      language={language}
     />
   );
 }
