@@ -1209,7 +1209,7 @@ function DoorAndRooms() {
   return (
     <section className={styles.doorSection} data-scene="door-scroll">
       <div className={`${styles.peopleHosts} ${styles.doorFullWorld}`} data-door-full-world aria-hidden="true">
-        <PeopleHostsContent imageLoading="eager" />
+        <PeopleHostsContent imageLoading="lazy" />
       </div>
       <div className={styles.sectionHeader} data-door-header>
         <h2>
@@ -1231,7 +1231,7 @@ function DoorAndRooms() {
               alt=""
               className={styles.doorPortalBg}
               data-door-portal-bg
-              loading="eager"
+              loading="lazy"
               src="/redesign/figma/people-hosts-bg.png"
             />
           </div>
@@ -1242,7 +1242,7 @@ function DoorAndRooms() {
               muted
               playsInline
               poster="/redesign/figma/rooms-door.png"
-              preload="auto"
+              preload="metadata"
             >
               <source src="/redesign/figma/rooms-door-transition-transparent.webm" type="video/webm" />
               <source src="/redesign/figma/rooms-door-transition.mp4" type="video/mp4" />
