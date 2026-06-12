@@ -5,6 +5,10 @@ html, body {
   max-width: 100vw;
 }
 
+body:has([data-redesign-homepage]) {
+  background: #f7f7f7 !important;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
@@ -13,6 +17,7 @@ html, body {
 
 @theme {
   --font-serif: var(--font-cormorant), serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), monospace;
   --color-bg: #1a1412;
   --color-bg-card: #2a2218;
@@ -178,6 +183,718 @@ html, body {
 .hero-gallery-button-primary {
   border-color: rgba(215, 184, 102, 0.72);
   background: rgba(215, 184, 102, 0.16);
+}
+
+.glass-profile-root {
+  min-height: 100svh;
+  overflow-x: clip;
+  background: #f7f7f7;
+  color: #1c2a1d;
+}
+
+.glass-profile-loading {
+  display: flex;
+  min-height: 100svh;
+  align-items: center;
+  justify-content: center;
+  background: #f7f7f7;
+  color: #1c2a1d;
+  font-family: var(--font-cormorant), serif;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+}
+
+.glass-profile-page {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: min(100%, 92rem);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  margin-inline: auto;
+  padding: clamp(1.5rem, 3.5vw, 3.5rem) clamp(1rem, 3vw, 2.75rem);
+}
+
+.glass-profile-shell {
+  --ink: #1c2a1d;
+  --paper: #f3efe7;
+
+  container-type: inline-size;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1236 / 810;
+  min-height: 36rem;
+  overflow: hidden;
+  border-radius: clamp(1.25rem, 2vw, 1.5rem);
+  background: #ece9e6;
+  color: var(--ink);
+  box-shadow: 0 30px 90px rgba(99, 88, 77, 0.18);
+}
+
+.glass-profile-background {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.glass-profile-brand {
+  position: absolute;
+  left: 3.88%;
+  top: 2.96%;
+  z-index: 2;
+  display: grid;
+  width: 10.4375em;
+  gap: 0.5625em;
+  font-size: clamp(0.75rem, 1.294cqw, 1rem);
+  justify-items: center;
+}
+
+.glass-profile-logo {
+  position: relative;
+  display: block;
+  width: 10.125em;
+  height: 2em;
+}
+
+.glass-profile-logo img {
+  position: absolute;
+  display: block;
+}
+
+.glass-profile-logo img:first-child {
+  left: 0.3125em;
+  top: 0.3125em;
+  width: 1.3009em;
+  height: 1.7044em;
+}
+
+.glass-profile-logo img:last-child {
+  left: 2.25em;
+  top: 0.25em;
+  width: 7.875em;
+  height: 1.75em;
+}
+
+.glass-profile-brand > span:last-child {
+  color: var(--ink);
+  font-family: var(--font-cormorant), serif;
+  font-size: 0.625em;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: -0.02em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.glass-profile-nav {
+  position: absolute;
+  top: 3.7%;
+  right: 2.427%;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5em;
+  font-size: clamp(0.75rem, 1.294cqw, 1rem);
+  white-space: nowrap;
+}
+
+.glass-profile-language {
+  display: inline-flex;
+  height: 2.4615em;
+  align-items: center;
+  gap: 0;
+  border-radius: 999px;
+  background: var(--ink);
+  padding: 0.1538em;
+  color: var(--paper);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.8125em;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.glass-profile-language-option {
+  display: inline-flex;
+  height: 2.1538em;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--paper);
+  cursor: pointer;
+  font: inherit;
+  padding: 0 1.3846em;
+  white-space: nowrap;
+}
+
+.glass-profile-language-option[data-active="true"] {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.glass-profile-grid {
+  position: absolute;
+  left: 37.06%;
+  top: 12.1%;
+  z-index: 2;
+  display: grid;
+  width: 60.52%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5em;
+  font-size: clamp(0.75rem, 1.294cqw, 1rem);
+}
+
+.glass-profile-panel {
+  --profile-panel-fill: rgba(236, 233, 230, 0.5);
+
+  position: relative;
+  box-sizing: border-box;
+  overflow: visible;
+  border: 0;
+  border-radius: 24px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--ink);
+  cursor: pointer;
+  isolation: isolate;
+  transform: translateZ(0);
+}
+
+.glass-profile-panel-content {
+  position: relative;
+  box-sizing: border-box;
+  z-index: 3;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow: clip;
+  border-radius: inherit;
+  padding: 1.5em;
+}
+
+.glass-profile-panel-glass,
+.glass-profile-panel-inset,
+.glass-profile-panel-shadow,
+.glass-profile-panel-stroke {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.glass-profile-panel-glass {
+  z-index: 0;
+  background: var(--profile-panel-fill);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+
+.glass-profile-panel-inset {
+  z-index: 1;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 244, 231, 0.03),
+    inset 0 0 28px rgba(226, 196, 110, 0.03);
+}
+
+.glass-profile-panel-shadow {
+  z-index: 1;
+  box-shadow: 0 20px 80px rgba(99, 88, 77, 0.32);
+}
+
+.glass-profile-panel-stroke {
+  z-index: 2;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(184, 143, 79, 0.4) 100%);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+}
+
+.glass-profile-today-panel {
+  grid-column: 1 / -1;
+  min-height: 10.875em;
+}
+
+.glass-profile-identity-panel {
+  height: 28.125em;
+  min-height: 28.125em;
+}
+
+.glass-profile-side-stack {
+  display: grid;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 1.5em;
+}
+
+.glass-profile-panel-header,
+.glass-profile-panel-footer,
+.glass-profile-title-row,
+.glass-profile-meta {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+}
+
+.glass-profile-panel-header {
+  min-height: 2.4615em;
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.8125em;
+  font-weight: 500;
+  line-height: 1.0256;
+}
+
+.glass-profile-panel-header > span:first-child {
+  text-transform: uppercase;
+}
+
+.glass-profile-panel-footer {
+  align-items: flex-start;
+  margin-top: 0.9em;
+}
+
+.glass-profile-button-group,
+.glass-profile-socials {
+  display: inline-flex;
+  margin-left: auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5em;
+  flex: 0 0 auto;
+}
+
+.glass-profile-button {
+  appearance: none;
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  height: 2.4615em;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6154em;
+  overflow: hidden;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.32);
+  color: var(--ink);
+  cursor: pointer;
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.8125em;
+  font-weight: 500;
+  isolation: isolate;
+  line-height: 1;
+  padding: 0 1.2308em;
+  text-decoration: none;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.glass-profile-nav .glass-profile-button {
+  box-shadow: none;
+}
+
+.glass-profile-panel-header .glass-profile-button {
+  font-size: 1em;
+}
+
+.glass-profile-button-fill,
+.glass-profile-button-inset {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.glass-profile-button-fill {
+  z-index: -2;
+  background: var(--paper);
+  transition: background 180ms ease;
+}
+
+.glass-profile-button:hover .glass-profile-button-fill {
+  background: #e8e2d3;
+}
+
+.glass-profile-button-inset {
+  z-index: -1;
+  box-shadow:
+    inset 0 0 0 0 rgba(255, 244, 231, 0.03),
+    inset 0 0 28px rgba(226, 196, 110, 0.03);
+}
+
+.glass-profile-nav .glass-profile-button-inset {
+  display: none;
+}
+
+.glass-profile-button-icon {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 0.9231em;
+  height: 0.9231em;
+  flex: 0 0 auto;
+}
+
+.glass-profile-button-label {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.glass-profile-button-count {
+  border-left: 1px solid rgba(28, 42, 29, 0.18);
+  padding-left: 0.5em;
+}
+
+.glass-profile-divider {
+  display: block;
+  width: 100%;
+  height: 0.025em;
+  margin: 0.75em 0;
+  background-image: url("/redesign/figma/profile-line-card.svg");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.glass-profile-divider-wide {
+  background-image: url("/redesign/figma/profile-line-wide.svg");
+}
+
+.glass-profile-identity-panel .glass-profile-panel-content,
+.glass-profile-side-stack .glass-profile-panel-content {
+  gap: 0.75em;
+}
+
+.glass-profile-identity-panel .glass-profile-divider,
+.glass-profile-side-stack .glass-profile-divider {
+  margin: 0;
+}
+
+.glass-profile-status {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  min-height: 2.6em;
+  border: 1px solid rgba(54, 96, 65, 0.5);
+  border-radius: 999px;
+  background: rgba(142, 216, 162, 0.3);
+  color: #366041;
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.625rem;
+  font-weight: 600;
+  line-height: 1.3333;
+  padding: 0.6em 1.2em;
+  white-space: nowrap;
+}
+
+.glass-profile-status[data-active="false"] {
+  border-color: rgba(94, 87, 76, 0.36);
+  background: rgba(243, 239, 231, 0.34);
+  color: rgba(28, 42, 29, 0.7);
+}
+
+.glass-profile-status-dot {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 1em;
+}
+
+.glass-profile-panel h3,
+.glass-profile-panel h4,
+.glass-profile-title-row h3 {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-cormorant), serif;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.glass-profile-today-panel h3,
+.glass-profile-title-row h3 {
+  font-size: 1.75em;
+  line-height: 1.4;
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
+}
+
+.glass-profile-title-row {
+  min-height: 2em;
+}
+
+.glass-profile-panel h4 {
+  font-size: 1em;
+  line-height: 1.6;
+}
+
+.glass-profile-panel p,
+.glass-profile-summary,
+.glass-profile-field p,
+.glass-profile-meta,
+.glass-profile-myth p {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-cormorant), serif;
+  font-size: 0.8125em;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: -0.02em;
+}
+
+.glass-profile-panel-footer p {
+  font-size: 1em;
+}
+
+.glass-profile-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25em;
+  width: max-content;
+  max-width: 100%;
+}
+
+.glass-profile-tag {
+  position: relative;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.6em;
+  overflow: visible;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(243, 239, 231, 0.3);
+  color: var(--ink);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.625em;
+  font-weight: 600;
+  isolation: isolate;
+  line-height: 1.3333;
+  letter-spacing: 0;
+  padding: 0.6em 1.2em;
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  white-space: nowrap;
+}
+
+.glass-profile-tag-edge {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border: 0.5px solid rgba(255, 255, 255, 0.6);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.glass-profile-tag > span:not(.glass-profile-tag-edge) {
+  position: relative;
+  z-index: 2;
+}
+
+.glass-profile-field {
+  display: grid;
+  width: 100%;
+  gap: 0.75em;
+}
+
+.glass-profile-field span,
+.glass-profile-myth span {
+  color: var(--paper);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.6875em;
+  font-weight: 500;
+  line-height: 1.2121;
+  text-transform: uppercase;
+}
+
+.glass-profile-meta {
+  margin-top: 0;
+}
+
+.glass-profile-location {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3077em;
+  min-width: 0;
+}
+
+.glass-profile-location img {
+  display: block;
+  width: 1.0769em;
+  height: 1.0769em;
+  flex: 0 0 auto;
+}
+
+.glass-profile-social-lens {
+  position: relative;
+  display: inline-flex;
+  width: 2em;
+  height: 2em;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  color: var(--ink);
+  text-decoration: none;
+  isolation: isolate;
+}
+
+.glass-profile-social-glass {
+  position: absolute;
+  inset: 0;
+  border: 0.5px solid rgba(255, 255, 255, 0.56);
+  border-radius: inherit;
+  background: rgba(243, 239, 231, 0.3);
+  box-shadow: 0 20px 30px rgba(99, 88, 77, 0.18);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+
+.glass-profile-social-icon {
+  position: relative;
+  z-index: 1;
+  filter: brightness(0) saturate(100%) invert(13%) sepia(16%) saturate(672%) hue-rotate(75deg) brightness(92%) contrast(90%);
+}
+
+.glass-profile-myth {
+  display: grid;
+  gap: 0.9em;
+  width: 100%;
+  padding-top: 0.25em;
+}
+
+.glass-profile-myth h3 {
+  font-size: 2.25em;
+  line-height: 1;
+}
+
+.glass-profile-workspace {
+  display: grid;
+  gap: 1rem;
+  width: min(100%, 76rem);
+  margin-inline: auto;
+}
+
+.glass-profile-notice {
+  margin: 0;
+  border: 1px solid rgba(184, 143, 79, 0.24);
+  border-radius: 1rem;
+  background: rgba(236, 233, 230, 0.72);
+  padding: 0.9rem 1rem;
+  color: #1c2a1d;
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.85rem;
+}
+
+.glass-profile-error {
+  border-color: rgba(145, 58, 58, 0.32);
+  background: rgba(255, 235, 235, 0.72);
+  color: #5a2020;
+}
+
+.glass-profile-workspace .engraved-panel {
+  border-radius: 1.25rem;
+  background: rgba(236, 233, 230, 0.72);
+  box-shadow: 0 20px 80px rgba(99, 88, 77, 0.16);
+  color: #1c2a1d;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.glass-profile-workspace .engraved-panel::before,
+.glass-profile-workspace .engraved-panel-frame {
+  display: none;
+}
+
+.glass-profile-workspace :is(input, textarea) {
+  border-color: rgba(184, 143, 79, 0.28) !important;
+  background: rgba(243, 239, 231, 0.62) !important;
+  color: #1c2a1d !important;
+}
+
+@media (max-width: 64rem) {
+  .glass-profile-shell {
+    aspect-ratio: auto;
+    min-height: auto;
+    overflow: visible;
+    border-radius: 1.25rem;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .glass-profile-background {
+    display: none;
+  }
+
+  .glass-profile-brand,
+  .glass-profile-nav,
+  .glass-profile-grid {
+    position: relative;
+    inset: auto;
+  }
+
+  .glass-profile-brand {
+    width: min(13rem, 100%);
+    margin-bottom: 1rem;
+    justify-items: start;
+  }
+
+  .glass-profile-nav {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin-bottom: 1.25rem;
+  }
+
+  .glass-profile-grid {
+    width: 100%;
+    grid-template-columns: 1fr;
+  }
+
+  .glass-profile-identity-panel {
+    height: auto;
+    min-height: 28rem;
+  }
+
+  .glass-profile-side-stack {
+    grid-template-rows: none;
+  }
+}
+
+@media (max-width: 42rem) {
+  .glass-profile-page {
+    padding-inline: 0.9rem;
+  }
+
+  .glass-profile-panel-content {
+    padding: 1.15em;
+  }
+
+  .glass-profile-panel-header,
+  .glass-profile-panel-footer,
+  .glass-profile-title-row,
+  .glass-profile-meta {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .glass-profile-button-group,
+  .glass-profile-socials {
+    margin-left: 0;
+  }
 }
 
 @supports not (height: 100svh) {

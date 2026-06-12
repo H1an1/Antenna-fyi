@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ExternalLink } from "lucide-react";
 import { PublicProfileCard } from "./PublicProfileCard";
 
 const antennaLogoSrc = "/brand/antenna.svg";
@@ -108,7 +107,7 @@ export function PublicPageClient({
 
   if (notFound || !profile) {
     return (
-      <div className="relative z-10 mx-auto w-full max-w-lg">
+      <div className="relative z-10 mx-auto w-full max-w-lg px-4 py-8 text-[#1c2a1d]">
         <header className="mb-8 flex items-center justify-between">
           <div>
             <Link href="/" className="block w-fit" aria-label="Antenna">
@@ -118,10 +117,10 @@ export function PublicPageClient({
                 width={188}
                 height={60}
                 priority
-                className="antenna-brand-mark h-12 w-auto max-w-[220px]"
+                className="h-12 w-auto max-w-[220px]"
               />
             </Link>
-            <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#d8cab8]">
+            <p className="mt-2 font-serif text-[10px] uppercase tracking-[0.02em] text-[#1c2a1d]/70">
               {t.subtitle}
             </p>
           </div>
@@ -132,19 +131,19 @@ export function PublicPageClient({
           <h1 className="mythic-soft-title font-serif text-3xl leading-tight">
             {t.notPublished}
           </h1>
-          <p className="mt-4 font-mono text-sm leading-relaxed text-[#d8cab8]">
+          <p className="mt-4 font-serif text-sm leading-relaxed text-[#1c2a1d]/72">
             {t.notPublishedBody}
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Link
               href="/me"
-              className="inline-flex items-center gap-2 border border-[#d7b866]/42 bg-[#d7b866]/10 px-4 py-2.5 font-mono text-xs text-[#e2c46e] transition-colors hover:bg-[#d7b866]/16"
+              className="inline-flex items-center gap-2 rounded-full bg-[#1c2a1d] px-4 py-2.5 font-sans text-xs text-[#f3efe7] transition-colors hover:bg-[#2d3d2e]"
             >
               {t.backToDashboard}
             </Link>
             <Link
               href="/"
-              className="inline-flex items-center gap-2 border border-[#d7b866]/24 bg-black/10 px-4 py-2.5 font-mono text-xs text-[#A89888] transition-colors hover:border-[#d7b866]/48 hover:text-[#e2c46e]"
+              className="inline-flex items-center gap-2 rounded-full bg-[#ece9e6] px-4 py-2.5 font-sans text-xs text-[#1c2a1d] transition-colors hover:bg-[#e3ded7]"
             >
               {t.antennaHome}
             </Link>
@@ -155,36 +154,6 @@ export function PublicPageClient({
   }
 
   return (
-    <div className="relative z-10 w-full max-w-lg">
-      <header className="mb-8 flex items-center justify-between">
-        <div>
-          <Link href="/" className="block w-fit" aria-label="Antenna">
-            <Image
-              src={antennaLogoSrc}
-              alt="Antenna"
-              width={188}
-              height={60}
-              priority
-              className="antenna-brand-mark h-12 w-auto max-w-[220px]"
-            />
-          </Link>
-          <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#d8cab8]">
-            {t.subtitle}
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          {langSwitcher}
-          <Link
-            href="/login"
-            className="inline-flex items-center gap-2 border border-[#d7b866]/28 px-3 py-2 font-mono text-[11px] uppercase tracking-[0.12em] text-[#d8cab8] transition-colors hover:border-[#d7b866]/50 hover:text-[#e2c46e]"
-          >
-            {t.getYours}
-            <ExternalLink size={13} />
-          </Link>
-        </div>
-      </header>
-
-      <PublicProfileCard profile={profile} t={t} language={language} />
-    </div>
+    <PublicProfileCard profile={profile} language={language} onLanguageChange={changeLanguage} />
   );
 }

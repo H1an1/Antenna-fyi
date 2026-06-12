@@ -1,7 +1,5 @@
 "use client";
-
-import { useState, useMemo } from "react";
-import { ProfileCard } from "@/app/me/components/ProfileCard";
+import { GlassProfileConsole } from "@/app/me/components/GlassProfileConsole";
 import { matchArchetype } from "@/lib/archetype";
 import type { ProfileDraft } from "@/lib/profile";
 
@@ -18,30 +16,17 @@ interface PublicProfileData {
   archetypeOverride?: { name: string; reason: string } | null;
 }
 
-interface PublicProfileT {
-  flipBack: string;
-  flipFront: string;
-  editProfile: string;
-  defaultUser: string;
-  mythArchetypeLabel: string;
-  line: (index: number) => string;
-  backPlaceholderTitle?: string;
-  backPlaceholderBody?: string;
-  emptyStateTitle?: string;
-  emptyStateBody?: string;
-}
+type Language = "en" | "zh";
 
 export function PublicProfileCard({
   profile,
-  t,
   language,
+  onLanguageChange,
 }: {
   profile: PublicProfileData;
-  t: PublicProfileT;
-  language: "en" | "zh";
+  language: Language;
+  onLanguageChange: (language: Language) => void;
 }) {
-  const [isFlipped, setIsFlipped] = useState(false);
-
   const profileDraft: ProfileDraft = {
     displayName: profile.displayName,
     personalDescription: profile.personalDescription,
@@ -59,23 +44,23 @@ export function PublicProfileCard({
     archetypeOverride: profile.archetypeOverride || null,
   };
 
-  const archetypeMatch = useMemo(
-    () => matchArchetype(profileDraft),
-    [profileDraft.personalDescription, profileDraft.lookingFor, profileDraft.ourConversation, profileDraft.context, profileDraft.interestTags],
+  const archetypeMatch = matchArchetype(profileDraft);
+
+  const isProfileComplete = Boolean(
+    profileDraft.personalDescription.trim() &&
+      profileDraft.lookingFor.trim() &&
+      profileDraft.ourConversation.trim()
   );
 
   return (
-    <ProfileCard
+    <GlassProfileConsole
       profileDraft={profileDraft}
       archetypeMatch={archetypeMatch}
-      isFlipped={isFlipped}
-      onFlip={setIsFlipped}
-      onEdit={() => {}}
-      showEditButton={false}
-      t={t}
-      statusPill={profile.isActive ? "active" : "quiet"}
-      isActive={profile.isActive}
       language={language}
+      onLanguageChange={onLanguageChange}
+      isProfileComplete={isProfileComplete}
+      isActive={profile.isActive}
+      mode="public"
     />
   );
 }

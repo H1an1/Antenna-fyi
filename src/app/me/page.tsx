@@ -1,8 +1,5 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import { EngravedPanel } from "@/app/components/EngravedPanel";
 import { useSupabase } from "@/lib/useSupabase";
 import {
   PROFILE_METADATA_KEY,
@@ -19,18 +16,14 @@ import {
   serializeMoreInformation,
   type ProfileDraft,
 } from "@/lib/profile";
-import { matchArchetype, getArchetypeAssets } from "@/lib/archetype";
-import { ExternalLink, KeyRound } from "lucide-react";
+import { matchArchetype } from "@/lib/archetype";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 
-import { ProfileCard } from "./components/ProfileCard";
+import { GlassProfileConsole } from "./components/GlassProfileConsole";
 import { ProfileEditor } from "./components/ProfileEditor";
 import { ApiKeyModal } from "./components/ApiKeyModal";
-import { MatchesSection } from "./components/MatchesSection";
-import { EventsSection } from "./components/EventsSection";
-import { TodaySection } from "./components/TodaySection";
 
 interface ApiKey {
   id: number;
@@ -55,10 +48,7 @@ type SaveState = "idle" | "saving" | "saved" | "partial";
 type GpsState = "idle" | "requesting" | "saved" | "error";
 type Language = "en" | "zh";
 
-const mutedText = "text-[#ded2c1]";
 const languageStorageKey = "antenna.dashboard.language";
-const antennaLogoSrc = "/brand/antenna.svg";
-const defaultMythicFigureSrc = "/profile-assets/ascii-angel-dashboard-crop-tone-transparent.png";
 
 const dashboardCopy = {
   en: {
@@ -397,14 +387,6 @@ async function reverseGeocode(lat: number, lng: number, language: Language): Pro
   }
 }
 
-function SignalStrip({ className = "" }: { className?: string }) {
-  return (
-    <div className={`signal-rule w-16 ${className}`} aria-hidden="true">
-      <span className="sr-only">signal divider</span>
-    </div>
-  );
-}
-
 function isDuplicateSlugError(error: { code?: string; message?: string; details?: string } | null) {
   const message = `${error?.message || ""} ${error?.details || ""}`.toLowerCase();
   return error?.code === "23505" || (message.includes("profile_slug") && message.includes("duplicate"));
@@ -423,12 +405,8 @@ export default function DashboardPage() {
   const [tagInput, setTagInput] = useState("");
   const [apiModalOpen, setApiModalOpen] = useState(false);
   const [profileEditorOpen, setProfileEditorOpen] = useState(false);
-  const [profileCardFlipped, setProfileCardFlipped] = useState(false);
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
   const [contactInfo, setContactInfo] = useState("");
-  const [pendingMatches, setPendingMatches] = useState<Record<string, unknown>[]>([]);
-  const [matchCount, setMatchCount] = useState(0);
-  const [eventTodoCount, setEventTodoCount] = useState(0);
   const [language, setLanguage] = useState<Language>(() => {
     if (typeof window === "undefined") return "en";
     const storedLanguage = window.localStorage.getItem(languageStorageKey);
@@ -439,10 +417,6 @@ export default function DashboardPage() {
 
   const activeKeys = useMemo(() => keys.filter((key) => !key.revoked), [keys]);
   const primaryKey = activeKeys[0] || null;
-  const agentConnected = useMemo(() => {
-    if (!primaryKey) return false;
-    return !!primaryKey.last_used_at; // Has been used at least once = configured
-  }, [primaryKey]);
   const publicHref = profileDraft?.profileSlug ? `/p/${profileDraft.profileSlug}` : null;
 
   const setupPrompt = useMemo(() => {
@@ -454,12 +428,6 @@ export default function DashboardPage() {
     if (!profileDraft) return { primary: "Hermes" as const, secondary: null, reason: "", reasonZh: "" };
     return matchArchetype(profileDraft);
   }, [profileDraft]);
-
-  const mythicFigureSrc = useMemo(() => {
-    if (!profileDraft) return defaultMythicFigureSrc;
-    const role = profileDraft.archetypeOverride?.name || archetypeMatch.primary;
-    return getArchetypeAssets(role as import("@/lib/archetype").ArchetypeRole).dashboard;
-  }, [profileDraft, archetypeMatch.primary]);
 
   const changeLanguage = (nextLanguage: Language) => {
     setLanguage(nextLanguage);
@@ -557,38 +525,6 @@ export default function DashboardPage() {
     };
   }, [loadKeys, loadProfile, router, supabase]);
 
-  // --- Realtime matches subscription ---
-  useEffect(() => {
-    if (!profileDraft?.deviceId) return;
-
-    const channel = supabase
-      .channel('matches-realtime')
-      .on(
-        'postgres_changes' as never,
-        { event: '*', schema: 'public', table: 'matches' },
-        (payload: { new?: Record<string, unknown>; old?: Record<string, unknown>; eventType?: string }) => {
-          const row = payload.new || payload.old;
-          if (!row) return;
-
-          setPendingMatches((prev) => {
-            const id = row.id as string | number;
-            const existing = prev.findIndex((m) => m.id === id);
-            if (existing >= 0) {
-              const next = [...prev];
-              next[existing] = row;
-              return next;
-            }
-            return [...prev, row];
-          });
-        },
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [supabase, profileDraft?.deviceId]);
-
   // --- Realtime profile subscription + visibility refresh ---
   useEffect(() => {
     if (!user) return;
@@ -622,7 +558,6 @@ export default function DashboardPage() {
       document.removeEventListener('visibilitychange', handleVisibility);
     };
   }, [supabase, user, profileDraft?.deviceId, loadProfile]);
-
   const updateDraft = (patch: Partial<ProfileDraft>) => {
     setProfileDraft((current) => {
       if (!current) return current;
@@ -872,10 +807,8 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <main className="antenna-console-shell antenna-console-loading relative flex min-h-screen items-center justify-start overflow-hidden px-[7vw]">
-        <EngravedPanel className="relative z-10 px-5 py-4">
-          <p className="font-mono text-sm tracking-[0.16em] text-[#d8cab8]">Loading...</p>
-        </EngravedPanel>
+      <main className="glass-profile-loading">
+        <p>Loading...</p>
       </main>
     );
   }
@@ -888,7 +821,6 @@ export default function DashboardPage() {
       : gpsState === "saved"
         ? t.updated
         : t.updateGps;
-  const profileStatusPill = profileDraft.isActive ? t.activeLower : t.quietLower;
   const dateLocale = language === "zh" ? "zh-CN" : "en-US";
   const isProfileComplete = Boolean(
     profileDraft.personalDescription.trim() &&
@@ -897,167 +829,43 @@ export default function DashboardPage() {
   );
 
   return (
-    <main className="antenna-console-shell relative min-h-screen overflow-hidden px-4 py-6 text-[#A89888] md:px-8 md:py-9">
-      <div className="console-streaks" aria-hidden="true" />
-      <div className="dashboard-canvas">
-        <div
-          className="dashboard-figure-mobile"
-          style={{ backgroundImage: `url(${mythicFigureSrc})` }}
-          aria-hidden="true"
-        />
-        <header className="mb-6">
-          <div className="flex flex-col gap-5 px-1 py-2 lg:flex-row lg:items-center lg:justify-between">
-            <div className="min-w-0">
-              <Link href="/" className="block w-fit" aria-label="Antenna">
-                <Image
-                  src={antennaLogoSrc}
-                  alt="Antenna"
-                  width={188}
-                  height={60}
-                  priority
-                  className="antenna-brand-mark h-12 w-auto max-w-[220px]"
-                />
-              </Link>
-              <p className={`mt-2 font-mono text-[10px] uppercase tracking-[0.18em] ${mutedText}`}>
-                Personal agent control console
-              </p>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2 lg:justify-end">
-              <div className="inline-flex border border-[#d7b866]/22 bg-black/18 font-mono text-xs">
-                {(["en", "zh"] as const).map((option) => (
-                  <button
-                    key={option}
-                    onClick={() => changeLanguage(option)}
-                    className={`px-3 py-2 transition-colors ${
-                      language === option
-                        ? "bg-[#d7b866]/14 text-[#e2c46e]"
-                        : "text-[#d8cab8] hover:text-[#A89888]"
-                    }`}
-                  >
-                    {option === "en" ? "EN" : "中文"}
-                  </button>
-                ))}
-              </div>
-              <button
-                onClick={() => setApiModalOpen(true)}
-                className="inline-flex items-center gap-2 border border-[#d7b866]/42 bg-[#d7b866]/10 px-3 py-2 font-mono text-xs text-[#e2c46e] transition-colors hover:bg-[#d7b866]/16"
-              >
-                <KeyRound size={14} />
-                {t.apiSettings}
-                <span className="border-l border-[#d7b866]/28 pl-2">{activeKeys.length}</span>
-              </button>
-              {publicHref && (
-                <Link
-                  href={publicHref}
-                  className="inline-flex items-center gap-2 border border-[#d7b866]/24 bg-black/10 px-3 py-2 font-mono text-xs text-[#A89888] transition-colors hover:border-[#d7b866]/48 hover:text-[#e2c46e]"
-                >
-                  <ExternalLink size={14} />
-                  {t.publicProfile}
-                </Link>
-              )}
-              <button
-                onClick={handleSignOut}
-                className="border border-[#d7b866]/20 bg-black/10 px-3 py-2 font-mono text-xs text-[#d8cab8] transition-colors hover:text-[#A89888]"
-              >
-                {t.signOut}
-              </button>
-            </div>
-          </div>
-        </header>
-
-        {error && (
-          <div className="mb-5 border border-red-400/35 bg-red-500/12 px-4 py-3">
-            <p className="font-mono text-xs text-red-200">{error}</p>
-          </div>
-        )}
-
-        {profileNotice && (
-          <div className="mb-5 border border-[#d7b866]/40 bg-[#d7b866]/10 px-4 py-3">
-            <p className="font-mono text-xs text-[#e0c879]">{profileNotice}</p>
-          </div>
-        )}
-
-        <div className="dashboard-workbench grid gap-6">
-          <div className="dashboard-workbench-spacer" aria-hidden="true" />
-          <div className="dashboard-panel-column mx-auto w-full max-w-[848px] space-y-6 lg:mx-0 lg:max-w-none">
-            <TodaySection
-              hasKey={!!primaryKey}
-              agentConnected={agentConnected}
-              isProfileComplete={isProfileComplete}
-              gpsState={gpsState}
-              gpsActionLabel={gpsActionLabel}
-              matchCount={matchCount}
-              eventTodoCount={eventTodoCount}
-              onGenerateKey={() => setApiModalOpen(true)}
-              onCompleteProfile={() => setProfileEditorOpen(true)}
-              onUpdateGps={updateGps}
-              t={t}
-            />
-
-            <section>
-              <div
-                className={`profile-dashboard-grid ${
-                  profileEditorOpen ? "profile-dashboard-grid-editing" : ""
-                }`}
-              >
-                <ProfileCard
-                  profileDraft={profileDraft}
-                  archetypeMatch={archetypeMatch}
-                  isFlipped={profileCardFlipped}
-                  onFlip={(flipped) => setProfileCardFlipped(flipped)}
-                  onEdit={() => {
-                    setProfileCardFlipped(false);
-                    setProfileEditorOpen(true);
-                  }}
-                  showEditButton={!profileEditorOpen}
-                  t={t}
-                  statusPill={profileStatusPill}
-                  isActive={profileDraft.isActive}
-                  language={language}
-                />
-
-                {profileEditorOpen ? (
-                  <ProfileEditor
-                    profileDraft={profileDraft}
-                    updateDraft={updateDraft}
-                    saveProfile={saveProfile}
-                    saveState={saveState}
-                    setSlugManuallyEdited={setSlugManuallyEdited}
-                    checkSlugAvailability={checkSlugAvailability}
-                    t={t}
-                    tagInput={tagInput}
-                    setTagInput={setTagInput}
-                    onUpdateGps={updateGps}
-                    gpsState={gpsState}
-                    gpsActionLabel={gpsActionLabel}
-                    contactInfo={contactInfo}
-                    onContactInfoChange={setContactInfo}
-                  />
-                ) : (
-                  <div className="dashboard-side-stack flex h-full min-h-0 flex-col gap-4">
-                    <MatchesSection
-                      deviceId={profileDraft.deviceId}
-                      supabase={supabase}
-                      pendingMatchCount={pendingMatches.length}
-                      onMatchCountChange={setMatchCount}
-                      t={t}
-                    />
-
-                    <EventsSection
-                      deviceId={profileDraft.deviceId}
-                      supabase={supabase}
-                      onEventTodoCountChange={setEventTodoCount}
-                      t={t}
-                    />
-                  </div>
-                )}
-              </div>
-            </section>
-          </div>
-        </div>
-
-      </div>
+    <main className="glass-profile-root">
+      <GlassProfileConsole
+        profileDraft={profileDraft}
+        archetypeMatch={archetypeMatch}
+        language={language}
+        onLanguageChange={changeLanguage}
+        isProfileComplete={isProfileComplete}
+        isActive={profileDraft.isActive}
+        activeKeysCount={activeKeys.length}
+        publicHref={publicHref}
+        onApiSettings={() => setApiModalOpen(true)}
+        onSignOut={handleSignOut}
+        onEdit={() => setProfileEditorOpen((current) => !current)}
+        onUpdateGps={updateGps}
+        gpsActionLabel={gpsActionLabel}
+        editorOpen={profileEditorOpen}
+        error={error}
+        profileNotice={profileNotice}
+        editor={
+          <ProfileEditor
+            profileDraft={profileDraft}
+            updateDraft={updateDraft}
+            saveProfile={saveProfile}
+            saveState={saveState}
+            setSlugManuallyEdited={setSlugManuallyEdited}
+            checkSlugAvailability={checkSlugAvailability}
+            t={t}
+            tagInput={tagInput}
+            setTagInput={setTagInput}
+            onUpdateGps={updateGps}
+            gpsState={gpsState}
+            gpsActionLabel={gpsActionLabel}
+            contactInfo={contactInfo}
+            onContactInfoChange={setContactInfo}
+          />
+        }
+      />
       <ApiKeyModal
         open={apiModalOpen}
         onClose={() => setApiModalOpen(false)}

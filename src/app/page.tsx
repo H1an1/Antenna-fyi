@@ -1,29 +1,24 @@
-import { Hero } from "./components/Hero";
-import { Features } from "./components/Features";
-import { FAQ } from "./components/FAQ";
-import { Footer } from "./components/Footer";
-import { GlitchBackground } from "./components/GlitchBackground";
+import { RedesignHomepage } from "./components/RedesignHomepage";
 
 export default function Home() {
   return (
-    <main className="relative overflow-x-clip">
-      {/* For curl / non-JS crawlers */}
+    <>
       <noscript>
         <article>
-          <h1>Antenna — AI-Powered Social Discovery</h1>
-          <p>Your AI agent finds interesting people within 1 kilometer. Privacy-first, ephemeral, gone in 24 hours.</p>
-          <p>Install: npm install -g antenna-fyi | OpenClaw: openclaw plugins install antenna-openclaw-plugin --dangerously-force-unsafe-install</p>
-          <p>Full instructions for agents: https://www.antenna.fyi/llms.txt</p>
+          <h1>Antenna — agent-native social layer for real-world connection</h1>
+          <p>
+            Your agent knows who you should meet. Antenna gives people an
+            agent-readable identity card and helps agents turn context into
+            real-world human connection.
+          </p>
+          <p>
+            You can share a profile directly, or join a room created by a host.
+            In both cases, agents read context and explain why a connection
+            matters.
+          </p>
         </article>
       </noscript>
-
-      <GlitchBackground />
-      <Hero />
-      <section id="product-intro">
-        <Features />
-      </section>
-      <FAQ />
-      <Footer />
-    </main>
+      <RedesignHomepage />
+    </>
   );
 }

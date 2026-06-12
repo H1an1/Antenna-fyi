@@ -61,8 +61,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ slug: 
 
   if (!profile || !profile.found) {
     return (
-      <main className="antenna-console-shell relative flex min-h-screen flex-col overflow-hidden px-4 py-5 text-[#A89888] md:px-8 md:py-7">
-        <div className="console-streaks" aria-hidden="true" />
+      <main className="glass-profile-root">
         <PublicPageClient profile={null} notFound />
       </main>
     );
@@ -104,9 +103,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ slug: 
   };
 
   return (
-    <main className="antenna-console-shell relative flex min-h-screen flex-col items-center overflow-hidden px-4 py-5 text-[#A89888] md:px-8 md:py-7">
-      <div className="console-streaks" aria-hidden="true" />
-      {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+    <main className="glass-profile-root">
       <script
         type="application/json"
         id="antenna-profile-data"
