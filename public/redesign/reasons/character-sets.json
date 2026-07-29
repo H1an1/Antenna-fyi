@@ -1,0 +1,67 @@
+[
+  {
+    "slug": "serena",
+    "name": "Serena",
+    "archetype": "distribution",
+    "status": "svgnew_layered",
+    "tokenPng": "/redesign/reasons/serena-token-v2.png",
+    "portraitPng": "/redesign/reasons/serena-portrait-v2.png",
+    "svgNew": {
+      "tokenFull": "/redesign/reasons/svgnew/serena-token-full.svg",
+      "tokenLayers": "/redesign/reasons/svgnew/serena-token-layers",
+      "tokenLayerCount": 30,
+      "portraitFull": "/redesign/reasons/svgnew/serena-portrait-full.svg",
+      "portraitLayers": "/redesign/reasons/svgnew/serena-portrait-layers",
+      "portraitLayerCount": 48
+    }
+  },
+  {
+    "slug": "you",
+    "name": "You",
+    "archetype": "community-growth",
+    "status": "svgnew_layered",
+    "tokenPng": "/redesign/reasons/you-token-v2.png",
+    "portraitPng": "/redesign/reasons/you-portrait-v2.png",
+    "svgNew": {
+      "tokenFull": "/redesign/reasons/svgnew/you-token-full.svg",
+      "tokenLayers": "/redesign/reasons/svgnew/you-token-layers",
+      "tokenLayerCount": 63,
+      "portraitFull": "/redesign/reasons/svgnew/you-portrait-full.svg",
+      "portraitLayers": "/redesign/reasons/svgnew/you-portrait-layers",
+      "portraitLayerCount": 69
+    },
+    "pair": "serena-you"
+  },
+  {
+    "slug": "cassian",
+    "name": "Cassian",
+    "archetype": "builder-craft",
+    "status": "svgnew_layered",
+    "tokenPng": "/redesign/reasons/generated-v1/cassian-token-v1.png",
+    "portraitPng": "/redesign/reasons/generated-v1/cassian-portrait-v1.png",
+    "svgNew": {
+      "tokenFull": "/redesign/reasons/svgnew/cassian-token-full.svg",
+      "tokenLayers": "/redesign/reasons/svgnew/cassian-token-layers",
+      "tokenLayerCount": 16,
+      "portraitFull": "/redesign/reasons/svgnew/cassian-portrait-full.svg",
+      "portraitLayers": "/redesign/reasons/svgnew/cassian-portrait-layers",
+      "portraitLayerCount": 19
+    }
+  },
+  {
+    "slug": "mira",
+    "name": "Mira",
+    "archetype": "host-community",
+    "status": "svgnew_layered",
+    "tokenPng": "/redesign/reasons/generated-v1/mira-token-v1.png",
+    "portraitPng": "/redesign/reasons/generated-v1/mira-portrait-v1.png",
+    "svgNew": {
+      "tokenFull": "/redesign/reasons/svgnew/mira-token-full.svg",
+      "tokenLayers": "/redesign/reasons/svgnew/mira-token-layers",
+      "tokenLayerCount": 16,
+      "portraitFull": "/redesign/reasons/svgnew/mira-portrait-full.svg",
+      "portraitLayers": "/redesign/reasons/svgnew/mira-portrait-layers",
+      "portraitLayerCount": 33
+    }
+  }
+]

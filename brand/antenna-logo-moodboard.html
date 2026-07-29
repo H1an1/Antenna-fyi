@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Antenna Logo Moodboard</title>
+    <style>
+      :root {
+        --bg: #14100e;
+        --panel: #211a16;
+        --ink: #eee4d4;
+        --muted: #a99b8a;
+        --line: rgba(238, 228, 212, 0.14);
+        --gold: #c4a862;
+        --green: #9ec7a8;
+        --red: #ba6658;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #14100e;
+        color: var(--ink);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        letter-spacing: 0;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .wrap {
+        width: min(1440px, calc(100vw - 28px));
+        margin: 0 auto;
+        padding: 28px 0 64px;
+      }
+
+      header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 360px;
+        gap: 28px;
+        align-items: end;
+        min-height: 34vh;
+        border-bottom: 1px solid var(--line);
+        padding: 48px 0 26px;
+      }
+
+      .kicker,
+      .label,
+      .source {
+        font-family:
+          "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .kicker {
+        color: var(--gold);
+        font-size: 12px;
+        margin-bottom: 14px;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 960px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(48px, 8vw, 116px);
+        line-height: 0.9;
+        font-weight: 500;
+      }
+
+      .brief {
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.55;
+      }
+
+      .brief b {
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 18px;
+      }
+
+      .chip {
+        border: 1px solid var(--line);
+        color: var(--muted);
+        padding: 7px 10px;
+        font-size: 12px;
+      }
+
+      .section {
+        margin-top: 36px;
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 24px;
+        padding: 18px 0 14px;
+      }
+
+      h2 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(30px, 4vw, 56px);
+        font-weight: 500;
+      }
+
+      .note {
+        max-width: 480px;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+
+      .board {
+        columns: 5 210px;
+        column-gap: 16px;
+      }
+
+      .pin {
+        display: inline-block;
+        width: 100%;
+        margin: 0 0 16px;
+        break-inside: avoid;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        overflow: hidden;
+        text-decoration: none;
+      }
+
+      .pin img {
+        display: block;
+        width: 100%;
+        min-height: 180px;
+        object-fit: cover;
+        background:
+          linear-gradient(135deg, rgba(196, 168, 98, 0.18), transparent 45%),
+          #0f0c0b;
+      }
+
+      .pin.tall img {
+        min-height: 340px;
+      }
+
+      .pin.short img {
+        min-height: 150px;
+      }
+
+      .caption {
+        padding: 12px;
+      }
+
+      .label {
+        display: block;
+        color: var(--gold);
+        font-size: 10px;
+        margin-bottom: 7px;
+      }
+
+      .caption p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.42;
+      }
+
+      .source {
+        display: inline-block;
+        margin-top: 10px;
+        color: var(--ink);
+        font-size: 10px;
+        opacity: 0.72;
+      }
+
+      .strip {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        border: 1px solid var(--line);
+      }
+
+      .swatch {
+        min-height: 118px;
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+        padding: 12px;
+        color: #fff8ec;
+      }
+
+      .swatch b,
+      .swatch span {
+        display: block;
+        text-shadow: 0 1px 8px rgba(0, 0, 0, 0.36);
+      }
+
+      .swatch b {
+        font-size: 13px;
+      }
+
+      .swatch span {
+        margin-top: 4px;
+        color: rgba(255, 248, 236, 0.76);
+        font-family:
+          "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        font-size: 11px;
+      }
+
+      .direction-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .direction {
+        border: 1px solid var(--line);
+        background: rgba(33, 26, 22, 0.82);
+        padding: 18px;
+        min-height: 180px;
+      }
+
+      .direction h3 {
+        margin: 0 0 10px;
+        font-size: 19px;
+      }
+
+      .direction p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.48;
+        font-size: 14px;
+      }
+
+      .search-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .search-links a {
+        border: 1px solid var(--line);
+        padding: 10px 12px;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 13px;
+      }
+
+      @media (max-width: 900px) {
+        header,
+        .direction-grid,
+        .strip {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <header>
+        <div>
+          <div class="kicker">Antenna / Pinterest mood board</div>
+          <h1>Signals, hands, radar, terminal texture.</h1>
+        </div>
+        <div class="brief">
+          <b>这版只拼 mood board。</b>
+          不做最终 logo，不画新图。重点看 Pinterest 里的形态：波纹、中心点、线性手势、雷达界面、ASCII/terminal 的颗粒感。
+          <div class="chips">
+            <span class="chip">signal marks</span>
+            <span class="chip">radar glyph</span>
+            <span class="chip">line-art hands</span>
+            <span class="chip">terminal UI</span>
+            <span class="chip">occult diagrams</span>
+          </div>
+        </div>
+      </header>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Collected Pins</h2>
+          <p class="note">图都来自 Pinterest / pinimg 预览。这里先看气质和构图关系，不评价版权可用性，也不把任何一张当成可直接抄的 logo。</p>
+        </div>
+
+        <div class="board">
+          <a class="pin tall" href="https://in.pinterest.com/pin/signal-logo-technology-branding-brand-identity-behance--235031674297731098/" target="_blank" rel="noreferrer">
+            <img src="https://i.pinimg.com/736x/ef/5f/91/ef5f912edabb2430653ffbc4e3997bbc.jpg" referrerpolicy="no-referrer" alt="Signal logo reference from Pinterest" />
+            <span class="caption">
+              <span class="label">Signal / black ground</span>
+              <p>黑底上的线性 signal 字母，很接近 Antenna 现在的暗场景。</p>
+              <span class="source">Pinterest pin</span>
+            </span>
+          </a>
+
+          <a class="pin" href="https://in.pinterest.com/pin/radar-logo-design--543317142565891891/" target="_blank" rel="noreferrer">
+            <img src="https://i.pinimg.com/736x/fe/89/2e/fe892ed02edaefdf0f664a94aaf4a617.jpg" referrerpolicy="no-referrer" alt="Radar logo sketch reference from Pinterest" />
+            <span class="caption">
+              <span class="label">Radar / letterform</span>
+              <p>雷达和字母结合，适合看“波纹如何不变成 Wi-Fi”。</p>
+              <span class="source">Pinterest pin</span>
+            </span>
+          </a>
+
+          <a class="pin" href="https://in.pinterest.com/pin/letter-r-radar-logo--844143523939528248/" target="_blank" rel="noreferrer">
+            <img src="https://i.pinimg.com/736x/ab/75/e6/ab75e6e7a3c4169240c4467bbe4b7c38.jpg" referrerpolicy="no-referrer" alt="Letter radar logo reference from Pinterest" />
+            <span class="caption">
+              <span class="label">Sweep / monogram</span>
+              <p>中心扇形扫描的识别很强，但要注意 surveillance 感。</p>
+              <span class="source">Pinterest pin</span>
+            </span>
+          </a>
+
+          <a class="pin tall" href="https://in.pinterest.com/pin/503910645827944249/" target="_blank" rel="noreferrer">
+            <img src="https://i.pinimg.com/736x/48/bd/3e/48bd3e49ca987df1cef2aad36358b1f9.jpg" referrerpolicy="no-referrer" alt="Minimal line art hand logo from Pinterest" />
+            <span class="caption">
+              <span class="label">Line-art hand</span>
+              <p>手可以是轮廓语言，不一定非要画成具象手掌。</p>
+              <span class="source">Pinterest pin</span>
+            </span>
+          </a>
+
+          <a class="pin tall" href="https://www.pinterest.com/pin/100416266674307181/" target="_blank" rel="noreferrer">
+            <img src="https://i.pinimg.com/736x/66/52/72/665272f17a2d1964ad441a9e9ec87292.jpg" referrerpolicy="no-referrer" alt="Occult symbols reference from Pinterest" />
+            <span class="caption">
+              <span class="label">Occult / symbol sheet</span>
+              <p>不是要神秘学化，而是借“符号系统”的密度和手绘感。</p>
+              <span class="source">Pinterest pin</span>
+            </span>
+          </a>
+
+          <a class="pin tall" href="https://www.pinterest.com/pin/511369732698172994/" target="_blank" rel="noreferrer">
+            <img src="https://i.pinimg.com/736x/be/2f/c4/be2fc4215d626e11db93d97c170b86a6.jpg" referrerpolicy="no-referrer" alt="Ritual object and beads reference from Pinterest" />
+            <span class="caption">
+              <span class="label">Ritual object / material</span>
+              <p>材质、串珠、金属、手作感，可以提醒我们别做太干净的 SaaS 图标。</p>
+              <span class="source">Pinterest pin</span>
+            </span>
+          </a>
+
+          <a class="pin" href="https://www.pinterest.com/chzsh1995/terminal-ui/" target="_blank" rel="noreferrer">
+            <img src="https://i.pinimg.com/236x/a5/54/d3/a554d3035c4874e7c2a966ec0d01c7a0.jpg" referrerpolicy="no-referrer" alt="Terminal UI poster reference from Pinterest" />
+            <span class="caption">
+              <span class="label">Terminal UI / poster</span>
+              <p>文字块和屏幕感，适合作为 CLI/agent 的副视觉。</p>
+              <span class="source">Pinterest board</span>
+            </span>
+          </a>
+
+          <a class="pin" href="https://www.pinterest.com/chzsh1995/terminal-ui/" target="_blank" rel="noreferrer">
+            <img src="https://i.pinimg.com/236x/f3/dc/78/f3dc78537e533ced282874ef0474aac0.jpg" referrerpolicy="no-referrer" alt="Green radar screen reference from Pinterest" />
+            <span class="caption">
+              <span class="label">Radar screen / green</span>
+              <p>绿黑雷达有强信号感，但容易太军事；只取 glow 和坐标感。</p>
+              <span class="source">Pinterest board</span>
+            </span>
+          </a>
+
+          <a class="pin" href="https://www.pinterest.com/chzsh1995/terminal-ui/" target="_blank" rel="noreferrer">
+            <img src="https://i.pinimg.com/236x/8a/ed/63/8aed6300742d2c1cca00fd3ed2ad85bc.jpg" referrerpolicy="no-referrer" alt="Futuristic interface circles reference from Pinterest" />
+            <span class="caption">
+              <span class="label">Circular interface</span>
+              <p>圆环、刻度、数据层叠，可以转成 event badge 语言。</p>
+              <span class="source">Pinterest board</span>
+            </span>
+          </a>
+
+          <a class="pin" href="https://www.pinterest.com/chzsh1995/terminal-ui/" target="_blank" rel="noreferrer">
+            <img src="https://i.pinimg.com/236x/f8/94/c4/f894c42baaa91275ac2aa7c1064c3942.jpg" referrerpolicy="no-referrer" alt="Black and white HUD circle reference from Pinterest" />
+            <span class="caption">
+              <span class="label">HUD / monochrome</span>
+              <p>黑白线条层次可以帮助 logo 在小尺寸下保持清楚。</p>
+              <span class="source">Pinterest board</span>
+            </span>
+          </a>
+
+          <a class="pin short" href="https://www.pinterest.com/pin/72479875250432228/" target="_blank" rel="noreferrer">
+            <img src="https://i.pinimg.com/736x/44/19/4e/44194ef82c802c03d105e9722fb966f2.jpg" referrerpolicy="no-referrer" alt="ASCII graphic design reference from Pinterest" />
+            <span class="caption">
+              <span class="label">ASCII / graphic texture</span>
+              <p>给现有 scramble / terminal 视觉找一个更 graphic 的参照。</p>
+              <span class="source">Pinterest pin</span>
+            </span>
+          </a>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Read From The Board</h2>
+          <p class="note">先不定稿，只把视觉信号摘出来。</p>
+        </div>
+        <div class="direction-grid">
+          <article class="direction">
+            <span class="label">01 / mark</span>
+            <h3>中心点 + 外圈</h3>
+            <p>Antenna 最稳定的识别可以是一个“有人在场”的中心点，再加一层接收范围。</p>
+          </article>
+          <article class="direction">
+            <span class="label">02 / texture</span>
+            <h3>线条不要太干净</h3>
+            <p>手绘符号、ASCII、CRT 都在说一件事：它需要有一点人工痕迹。</p>
+          </article>
+          <article class="direction">
+            <span class="label">03 / avoid</span>
+            <h3>别做定位 app</h3>
+            <p>雷达可以借，地图 pin 不要借。Antenna 是“人和信号”，不是“导航到地址”。</p>
+          </article>
+          <article class="direction">
+            <span class="label">04 / system</span>
+            <h3>主 logo + 副语言</h3>
+            <p>logo 应该克制；terminal/radar/HUD 可以变成活动页、CLI、badge 的视觉系统。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Color Pull</h2>
+          <p class="note">从当前产品和 Pinterest 气质里抽的色，不是最终 token。</p>
+        </div>
+        <div class="strip">
+          <div class="swatch" style="background:#14100e"><b>Near Black</b><span>#14100E</span></div>
+          <div class="swatch" style="background:#2b211b"><b>Warm Shadow</b><span>#2B211B</span></div>
+          <div class="swatch" style="background:#c4a862"><b>Signal Gold</b><span>#C4A862</span></div>
+          <div class="swatch" style="background:#eee4d4;color:#14100e"><b>Paper Line</b><span style="color:#4a4038">#EEE4D4</span></div>
+          <div class="swatch" style="background:#9ec7a8;color:#14100e"><b>Radar Green</b><span style="color:#2d4438">#9EC7A8</span></div>
+          <div class="swatch" style="background:#ba6658"><b>Human Red</b><span>#BA6658</span></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Pinterest Searches</h2>
+          <p class="note">继续找图的时候，从这几个入口扩，不用先设计。</p>
+        </div>
+        <nav class="search-links" aria-label="Pinterest searches">
+          <a href="https://www.pinterest.com/search/pins/?q=signal%20logo%20brand%20identity" target="_blank" rel="noreferrer">signal logo brand identity</a>
+          <a href="https://www.pinterest.com/search/pins/?q=radar%20logo%20minimal%20brand%20identity" target="_blank" rel="noreferrer">radar logo minimal</a>
+          <a href="https://www.pinterest.com/search/pins/?q=line%20art%20hand%20logo%20brand%20identity" target="_blank" rel="noreferrer">line-art hand logo</a>
+          <a href="https://www.pinterest.com/search/pins/?q=occult%20diagram%20symbol%20design" target="_blank" rel="noreferrer">occult diagram symbol</a>
+          <a href="https://www.pinterest.com/search/pins/?q=terminal%20ui%20graphic%20design" target="_blank" rel="noreferrer">terminal UI graphic</a>
+          <a href="https://www.pinterest.com/search/pins/?q=ascii%20graphic%20design%20poster" target="_blank" rel="noreferrer">ASCII graphic poster</a>
+        </nav>
+      </section>
+    </main>
+  </body>
+</html>

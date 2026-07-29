@@ -12,6 +12,9 @@
 
 # testing
 /coverage
+/test-results/
+/.playwright-cli/
+/.playwright-mcp/
 
 # next.js
 /.next/
@@ -24,8 +27,19 @@
 .DS_Store
 *.pem
 .superpowers/
+**/__pycache__/
+/tmp/
+/output/
 videos/antenna-hyperframes-promo/.thumbnails/
 videos/antenna-hyperframes-promo/tmp/
+videos/antenna-hyperframes-promo/renders/
+
+# local review captures
+/events-snapshot.md
+/hero-1440.png
+/hero-desktop.png
+/live-events-1440.png
+/paper-export-me.png
 
 # debug
 npm-debug.log*
