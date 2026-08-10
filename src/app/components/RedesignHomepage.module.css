@@ -326,6 +326,15 @@
   height: 6.125rem;
 }
 
+.shiftScene[data-anim-off] .shiftCardFloat {
+  animation-play-state: paused;
+}
+
+.doorSection[data-anim-off] .roomSteps li,
+.doorSection[data-anim-off] .roomSteps b::before {
+  animation-play-state: paused;
+}
+
 @keyframes shiftCardFloat {
   from {
     transform: translate3d(var(--float-start-x), var(--float-start-y), 0);
@@ -1675,6 +1684,20 @@
   will-change: transform;
 }
 
+.doorPortalWorld {
+  position: absolute;
+  z-index: 1;
+  overflow: hidden;
+  transform-origin: 50% 50%;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.doorPortalWorldInner {
+  width: 100%;
+  height: 100%;
+}
+
 .doorVideoWrap {
   position: absolute;
   inset: 0;
@@ -2356,6 +2379,117 @@
     min-height: 100svh;
   }
 
+  .nav {
+    top: 1.5rem;
+    left: 1.25rem;
+    right: 1.25rem;
+    align-items: center;
+  }
+
+  /* Without desktop GSAP the scroll narrative never reveals these lines —
+     show the full copy statically. */
+  .shiftText [data-shift-line="2"],
+  .shiftText [data-shift-line="3"] {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+
+  /* Static mobile composition: cards shrink and regroup into a band above
+     and a band below the centered copy (which sits at ~40-62% of the scene),
+     so nothing overlaps the text or pokes past the viewport edge. */
+  .shiftScene {
+    overflow: hidden;
+  }
+
+  .shiftCardGroup {
+    width: calc(var(--group-width) * 0.62);
+    height: calc(var(--group-height) * 0.62);
+    opacity: 0.85;
+  }
+
+  .shiftGroupBrowser {
+    left: 3%;
+    top: 4%;
+  }
+
+  .shiftGroupMedia {
+    left: auto;
+    right: 4%;
+    top: 9%;
+  }
+
+  .shiftGroupInbox {
+    left: 6%;
+    top: 24%;
+  }
+
+  .shiftGroupSearch {
+    left: auto;
+    right: 8%;
+    top: 26%;
+  }
+
+  .shiftGroupFeed {
+    left: 5%;
+    top: 66%;
+  }
+
+  .shiftGroupMap {
+    left: auto;
+    right: 5%;
+    top: 70%;
+  }
+
+  .shiftGroupCalendar {
+    left: 12%;
+    top: 84%;
+  }
+
+  .shiftGroupProfile {
+    left: auto;
+    right: 12%;
+    top: 85%;
+  }
+
+  /* The door scene is a pinned scrub story on desktop. On mobile it becomes
+     normal flow: header → door visual + steps → the room content that the
+     door would have revealed. */
+  .doorSection {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+  }
+
+  .doorSection .sectionHeader {
+    order: 1;
+  }
+
+  .doorStage {
+    order: 2;
+  }
+
+  .doorCameraRig {
+    width: min(29.5rem, calc(100vw - 2rem));
+  }
+
+  .doorPortal {
+    display: none;
+  }
+
+  .peopleHosts.doorFullWorld {
+    position: relative;
+    inset: auto;
+    order: 3;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .peopleHosts.doorFullWorld .peopleHostsContent {
+    opacity: 1;
+    visibility: visible;
+  }
+
   .heroCopy {
     top: 18%;
     left: 1.5rem;
@@ -2477,6 +2611,64 @@
     margin-top: clamp(3.25rem, 12vw, 5rem);
   }
 
+  /* Touch hardware has no hover — the CTA overlay is forced visible on
+     mobile but still inherited pointer-events: none. */
+  .roleOverlay {
+    pointer-events: auto;
+  }
+
+  /* The mobile grid-template-columns rules below never applied because the
+     card stayed display: flex. */
+  .reasonCard,
+  .reasonCardExpanded {
+    display: grid;
+    align-items: center;
+  }
+
+  .reasonText {
+    min-width: 0;
+  }
+
+  .reasonText p {
+    white-space: normal;
+  }
+
+  .reasonCardExpanded .reasonText p {
+    width: auto;
+    max-width: 100%;
+  }
+
+  /* 44px touch targets */
+  .signIn,
+  .menuButton {
+    min-height: 2.75rem;
+  }
+
+  .menuButton {
+    min-width: 2.75rem;
+  }
+
+  .faqItem button {
+    min-height: 2.75rem;
+    padding-block: 0.5rem;
+  }
+
+  .footerNav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+
+  .consoleButton {
+    min-height: 2.75rem;
+  }
+
+  .consoleTag,
+  .consoleStatusLabel,
+  .consoleField > span {
+    font-size: 0.75rem;
+  }
+
   .verticalGrid {
     grid-template-columns: 1fr;
   }
@@ -2504,6 +2696,50 @@
   }
 }
 
+@media (max-width: 72rem) {
+  /* The fixed-aspect Figma console mock clips its own grid and drops body
+     text below 10px anywhere under ~1150px — restack it as flowing cards. */
+  .dashboardMock {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    width: min(44rem, calc(100% - 2rem));
+    aspect-ratio: auto;
+    padding: 1.25rem 1rem 1.5rem;
+  }
+
+  .consoleBrand {
+    position: static;
+    width: auto;
+    font-size: 1rem;
+  }
+
+  .consoleNav {
+    position: static;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    font-size: 1rem;
+  }
+
+  .profileConsoleGrid {
+    position: static;
+    width: 100%;
+    grid-template-columns: 1fr;
+    font-size: 0.9375rem;
+  }
+
+  /* The footer wordmark is 56.5vw — between 900px and 1150px it collides
+     with the link columns. Stack the footer instead. */
+  .footerNav {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .footerBrand {
+    width: min(100%, 34rem);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .page *,
   .page *::before,
@@ -2525,6 +2761,30 @@
 
   .mythToken,
   .shiftFinalCopy {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Reduced motion shows the story's end state — hide the early state so the
+     two headlines and card fronts don't stack on top of each other. */
+  .shiftText,
+  .internetFrontCard {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* On mobile the static composition is the early state (cards + full copy) —
+   invert the reduced-motion choice so exactly one state shows. */
+@media (prefers-reduced-motion: reduce) and (max-width: 56rem) {
+  .mythToken,
+  .shiftFinalCopy {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .shiftText,
+  .internetFrontCard {
     opacity: 1;
     visibility: visible;
   }

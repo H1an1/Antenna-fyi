@@ -192,6 +192,65 @@ body:has([data-redesign-homepage]) {
   color: #1c2a1d;
 }
 
+.events-hero-frame {
+  background-image: url("/hand-bg.png");
+  background-repeat: no-repeat;
+}
+
+.events-hero-content {
+  display: contents;
+}
+
+@media (max-width: 71.875rem) {
+  .events-hero-content {
+    position: absolute;
+    inset: clamp(4rem, 12svh, 6.5rem) max(1rem, env(safe-area-inset-right)) clamp(1.5rem, 5svh, 3.5rem) max(1rem, env(safe-area-inset-left));
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .events-hero-title,
+  .events-hero-install {
+    position: static;
+    width: 100%;
+  }
+
+  .events-hero-title {
+    padding-inline: 0;
+  }
+
+  .events-hero-install {
+    padding: 0 0 env(safe-area-inset-bottom);
+  }
+}
+
+@media (max-width: 47.9375rem) and (orientation: portrait) {
+  .events-hero-frame {
+    background-image: linear-gradient(135deg, #ead48f 0%, #6f5225 22%, #c4a862 48%, #493218 72%, #d7bd75 100%);
+    background-size: auto;
+    box-shadow:
+      inset 0 0 0 4px rgba(232, 208, 139, 0.9),
+      inset 0 0 0 10px rgba(64, 43, 22, 0.95),
+      inset 0 0 0 13px rgba(196, 168, 98, 0.72);
+  }
+
+  .events-hero-inner {
+    inset: 16px;
+  }
+
+  .events-hero-scanlines {
+    clip-path: inset(16px);
+  }
+
+  .events-hero-content {
+    right: max(1.5rem, env(safe-area-inset-right));
+    left: max(1.5rem, env(safe-area-inset-left));
+  }
+}
+
 .glass-profile-loading {
   display: flex;
   min-height: 100svh;
@@ -824,6 +883,51 @@ body:has([data-redesign-homepage]) {
   border-color: rgba(184, 143, 79, 0.28) !important;
   background: rgba(243, 239, 231, 0.62) !important;
   color: #1c2a1d !important;
+}
+
+@media (max-width: 71.875rem) {
+  .glass-profile-brand > span:last-child,
+  .glass-profile-tag,
+  .glass-profile-status,
+  .glass-profile-field span,
+  .glass-profile-myth span {
+    font-size: 0.75rem;
+  }
+
+  .glass-profile-panel-header,
+  .glass-profile-panel p,
+  .glass-profile-panel-footer p,
+  .glass-profile-panel h4,
+  .glass-profile-summary,
+  .glass-profile-field p,
+  .glass-profile-meta,
+  .glass-profile-myth p {
+    font-size: 0.8125rem;
+  }
+
+  .glass-profile-button,
+  .glass-profile-nav .glass-profile-button {
+    height: auto;
+    min-height: 44px;
+    padding-block: 0.65rem;
+    font-size: 0.8125rem;
+  }
+
+  .glass-profile-language {
+    height: auto;
+    min-height: 44px;
+    font-size: 0.8125rem;
+  }
+
+  .glass-profile-language-option {
+    height: auto;
+    min-height: 44px;
+  }
+
+  .glass-profile-social-lens {
+    width: 44px;
+    height: 44px;
+  }
 }
 
 @media (max-width: 64rem) {
@@ -1515,6 +1619,13 @@ body:has([data-redesign-homepage]) {
   text-overflow: ellipsis;
 }
 
+@media (max-width: 71.875rem) {
+  .profile-editor-status-button {
+    height: 44px;
+    min-height: 44px;
+  }
+}
+
 @container (min-width: 34rem) {
   .profile-editor-signal-grid {
     grid-template-columns: minmax(0, 1fr) minmax(6.75rem, 0.3fr);
@@ -1915,7 +2026,12 @@ body:has([data-redesign-homepage]) {
     rgba(0, 0, 0, 0.03) 2px,
     rgba(0, 0, 0, 0.03) 4px
   );
-  animation: flicker 8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .scanline-overlay {
+    animation: flicker 8s ease-in-out infinite;
+  }
 }
 
 @keyframes flicker {

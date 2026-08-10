@@ -104,7 +104,7 @@ export function ApiKeyModal({
           </div>
           <button
             onClick={onClose}
-            className="text-[#d8cab8] transition-colors hover:text-[#A89888]"
+            className="text-[#d8cab8] transition-colors hover:text-[#A89888] max-[1150px]:inline-flex max-[1150px]:min-h-11 max-[1150px]:min-w-11 max-[1150px]:items-center max-[1150px]:justify-center max-[1150px]:p-3"
             aria-label={t.closeApiSettings}
           >
             <X size={20} />
@@ -117,7 +117,7 @@ export function ApiKeyModal({
               <h3 className="font-mono text-sm text-[#A89888]">{t.keys}</h3>
               <button
                 onClick={generateKey}
-                className="inline-flex items-center gap-2 border border-[#d7b866]/40 bg-[#d7b866]/10 px-3 py-2 font-mono text-xs text-[#e2c46e] transition-colors hover:bg-[#d7b866]/16"
+                className="inline-flex items-center gap-2 border border-[#d7b866]/40 bg-[#d7b866]/10 px-3 py-2 font-mono text-xs text-[#e2c46e] transition-colors hover:bg-[#d7b866]/16 max-[1150px]:min-h-11"
               >
                 <Plus size={14} />
                 {t.generateKey}
@@ -144,7 +144,7 @@ export function ApiKeyModal({
                       </div>
                       <button
                         onClick={() => copyToClipboard(key.key, key.key)}
-                        className="text-[#d8cab8] transition-colors hover:text-[#e2c46e]"
+                        className="text-[#d8cab8] transition-colors hover:text-[#e2c46e] max-[1150px]:inline-flex max-[1150px]:min-h-11 max-[1150px]:min-w-11 max-[1150px]:items-center max-[1150px]:justify-center max-[1150px]:p-3"
                         aria-label={t.copy}
                       >
                         {copied === key.key ? <Check size={16} /> : <Copy size={16} />}
@@ -154,7 +154,7 @@ export function ApiKeyModal({
                       onClick={() => {
                         if (confirm(t.revokeConfirm)) revokeKey(key.id);
                       }}
-                      className="mt-3 font-mono text-[11px] text-red-200 transition-colors hover:text-red-100"
+                      className="mt-3 font-mono text-[12px] min-[1151px]:text-[11px] text-red-200 transition-colors hover:text-red-100 max-[1150px]:inline-flex max-[1150px]:min-h-11 max-[1150px]:min-w-11 max-[1150px]:items-center max-[1150px]:justify-center max-[1150px]:py-3"
                     >
                       {t.revoke}
                     </button>
@@ -170,7 +170,7 @@ export function ApiKeyModal({
               {setupPrompt && (
                 <button
                   onClick={() => copyToClipboard(setupPrompt, "setup")}
-                  className="inline-flex items-center gap-2 border border-[#d7b866]/24 px-3 py-2 font-mono text-xs text-[#A89888] transition-colors hover:border-[#d7b866]/48 hover:text-[#e2c46e]"
+                  className="inline-flex items-center gap-2 border border-[#d7b866]/24 px-3 py-2 font-mono text-xs text-[#A89888] transition-colors hover:border-[#d7b866]/48 hover:text-[#e2c46e] max-[1150px]:min-h-11"
                 >
                   {copied === "setup" ? <Check size={14} /> : <Copy size={14} />}
                   {copied === "setup" ? t.copied : t.copy}

@@ -530,20 +530,40 @@ export default function DashboardPage() {
     if (!user) return;
     const currentUser = user;
 
-    // Realtime: re-load profile when profiles table changes for this user
-    const profileChannel = supabase
+    // Realtime: re-load profile when profiles table changes for this user.
+    // Two server-side filters (user_id, device_id) together cover the same rows
+    // the previous client-side check accepted, without streaming the whole table.
+    const handleProfileChange = (payload: { new?: Record<string, unknown>; old?: Record<string, unknown> }) => {
+      const row = payload.new || payload.old;
+      if (!row) return;
+      if (row.user_id !== currentUser.id && row.device_id !== profileDraft?.deviceId) return;
+      loadProfile(currentUser);
+    };
+    let profileChannel = supabase
       .channel('profile-realtime')
       .on(
         'postgres_changes' as never,
-        { event: '*', schema: 'public', table: 'profiles' },
-        (payload: { new?: Record<string, unknown>; old?: Record<string, unknown> }) => {
-          const row = payload.new || payload.old;
-          if (!row) return;
-          if (row.user_id !== currentUser.id && row.device_id !== profileDraft?.deviceId) return;
-          loadProfile(currentUser);
+        {
+          event: '*',
+          schema: 'public',
+          table: 'profiles',
+          filter: `user_id=eq.${currentUser.id}`,
         },
-      )
-      .subscribe();
+        handleProfileChange,
+      );
+    if (profileDraft?.deviceId) {
+      profileChannel = profileChannel.on(
+        'postgres_changes' as never,
+        {
+          event: '*',
+          schema: 'public',
+          table: 'profiles',
+          filter: `device_id=eq.${profileDraft.deviceId}`,
+        },
+        handleProfileChange,
+      );
+    }
+    profileChannel.subscribe();
 
     // Visibility: refresh when tab becomes visible again
     const handleVisibility = () => {

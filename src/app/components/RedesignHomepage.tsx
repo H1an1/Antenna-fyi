@@ -258,25 +258,25 @@ const reasons = [
 const roomRoleCards = [
   {
     cta: "Get your key",
-    image: "/redesign/figma/party-people.png",
+    image: "/redesign/figma/party-people.webp",
     label: "For People",
     text: "Give your agent an identity card.\nWalk into a room. Find the\npeople you would have missed.",
   },
   {
     cta: "Host with Antenna",
-    image: "/redesign/figma/party-hosts.png",
+    image: "/redesign/figma/party-hosts.webp",
     label: "For Hosts",
     text: "Turn your gathering into an\nintelligent room where the right\npeople actually meet.",
   },
 ] as const;
 
 const verticals = [
-  { id: "communities", image: "/redesign/figma/vertical-communities.png", label: "Communities" },
-  { id: "hiring", image: "/redesign/figma/vertical-hiring.png", label: "Hiring" },
-  { id: "dating", image: "/redesign/figma/vertical-dating.png", label: "Dating" },
-  { id: "founder", image: "/redesign/figma/vertical-founder.png", label: "Founder" },
-  { id: "collaboration", image: "/redesign/figma/vertical-collaboration.png", label: "Collaboration" },
-  { id: "local-discovery", image: "/redesign/figma/vertical-local-discovery.png", label: "Local discovery" },
+  { id: "communities", image: "/redesign/figma/vertical-communities.webp", label: "Communities" },
+  { id: "hiring", image: "/redesign/figma/vertical-hiring.webp", label: "Hiring" },
+  { id: "dating", image: "/redesign/figma/vertical-dating.webp", label: "Dating" },
+  { id: "founder", image: "/redesign/figma/vertical-founder.webp", label: "Founder" },
+  { id: "collaboration", image: "/redesign/figma/vertical-collaboration.webp", label: "Collaboration" },
+  { id: "local-discovery", image: "/redesign/figma/vertical-local-discovery.webp", label: "Local discovery" },
 ] as const;
 
 const reasonAssets = {
@@ -334,7 +334,7 @@ const profileConsoleIcons = {
   location: "/redesign/figma/profile-icon-location.svg",
 } as const;
 
-const profileConsoleBackground = "/redesign/figma/profile-console-bg.png";
+const profileConsoleBackground = "/redesign/figma/profile-console-bg.webp";
 
 const profileConsoleCopy = {
   en: {
@@ -535,18 +535,63 @@ export function RedesignHomepage() {
             doorVideo?.addEventListener("loadedmetadata", syncDoorVideo);
             scrubDoorVideo(0);
 
+            const getCssSize = (element: HTMLElement, property: "width" | "height") => {
+              const value = Number.parseFloat(window.getComputedStyle(element)[property]);
+              return Number.isFinite(value) ? value : 0;
+            };
+
             const getDoorPushScale = () => {
               const camera = root.querySelector<HTMLElement>("[data-door-camera-rig]");
               if (!camera) return 7;
-              const getCssSize = (element: HTMLElement, property: "width" | "height") => {
-                const value = Number.parseFloat(window.getComputedStyle(element)[property]);
-                return Number.isFinite(value) ? value : 0;
-              };
               const width = getCssSize(camera, "width") || camera.offsetWidth || camera.getBoundingClientRect().width;
               const height = getCssSize(camera, "height") || camera.offsetHeight || camera.getBoundingClientRect().height;
               if (!width || !height) return 7;
               return Math.max(2.8, Math.max(window.innerWidth / width, window.innerHeight / height) * 1.34);
             };
+
+            // Position the miniature next-screen copy inside the door opening so
+            // that when the camera rig reaches full push scale, the copy lands
+            // exactly on the viewport — the crossfade to the real section then
+            // swaps identical content. All measurements use layout metrics
+            // (offset* / computed style), which ignore active transforms.
+            const syncPortalWorld = () => {
+              const camera = root.querySelector<HTMLElement>("[data-door-camera-rig]");
+              const stage = camera?.parentElement;
+              const portalWorld = root.querySelector<HTMLElement>("[data-door-portal-world]");
+              if (!camera || !stage || !portalWorld) return;
+
+              const rigW = getCssSize(camera, "width") || camera.offsetWidth;
+              const rigH = getCssSize(camera, "height") || camera.offsetHeight;
+              if (!rigW || !rigH) return;
+              const pushScale = getDoorPushScale();
+
+              // Rig's untransformed top-left in viewport coords while pinned
+              // (pinned section sits at viewport origin). left: 50% +
+              // translateX(-50%) → offsetLeft already includes the 50%, so
+              // subtract half the rig width for the visual edge.
+              const rigLeft = stage.offsetLeft + camera.offsetLeft - rigW / 2;
+              const rigTop = stage.offsetTop + camera.offsetTop;
+
+              // Scale origin: transform-origin 50% 66%.
+              const originX = rigLeft + rigW * 0.5;
+              const originY = rigTop + rigH * 0.66;
+
+              // Viewport point that maps onto the viewport center at full push.
+              const targetX = originX + (window.innerWidth / 2 - originX) / pushScale;
+              const targetY = originY + (window.innerHeight / 2 - originY) / pushScale;
+
+              // Portal box: left 50% / top 13%, width 56%, height 84% of rig,
+              // translateX(-50%).
+              const portalLeft = rigLeft + rigW * 0.22;
+              const portalTop = rigTop + rigH * 0.13;
+
+              portalWorld.style.left = `${targetX - portalLeft}px`;
+              portalWorld.style.top = `${targetY - portalTop}px`;
+              portalWorld.style.width = `${window.innerWidth}px`;
+              portalWorld.style.height = `${window.innerHeight}px`;
+              portalWorld.style.transform = `translate(-50%, -50%) scale(${1 / pushScale})`;
+            };
+            syncPortalWorld();
 
             const doorTransition = gsap.timeline({
               scrollTrigger: {
@@ -558,7 +603,10 @@ export function RedesignHomepage() {
                 scrub: true,
                 invalidateOnRefresh: true,
                 onUpdate: (self) => scrubDoorVideo(Math.min(1, self.progress / 0.76)),
-                onRefresh: (self) => scrubDoorVideo(Math.min(1, self.progress / 0.76)),
+                onRefresh: (self) => {
+                  scrubDoorVideo(Math.min(1, self.progress / 0.76));
+                  syncPortalWorld();
+                },
               },
             });
             doorTransition
@@ -602,6 +650,50 @@ export function RedesignHomepage() {
     return () => cleanup();
   }, []);
 
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+
+    const animatedScenes = root.querySelectorAll<HTMLElement>(
+      "[data-scene='shift-scroll'], [data-scene='door-scroll']",
+    );
+    const sceneObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const element = entry.target as HTMLElement;
+          if (entry.isIntersecting) {
+            delete element.dataset.animOff;
+          } else {
+            element.dataset.animOff = "";
+          }
+        }
+      },
+      { rootMargin: "40% 0%" },
+    );
+    animatedScenes.forEach((scene) => sceneObserver.observe(scene));
+
+    const doorVideo = root.querySelector<HTMLVideoElement>("[data-door-video]");
+    let videoObserver: IntersectionObserver | null = null;
+    if (doorVideo) {
+      videoObserver = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) {
+            doorVideo.preload = "auto";
+            videoObserver?.disconnect();
+            videoObserver = null;
+          }
+        },
+        { rootMargin: "100% 0%" },
+      );
+      videoObserver.observe(doorVideo);
+    }
+
+    return () => {
+      sceneObserver.disconnect();
+      videoObserver?.disconnect();
+    };
+  }, []);
+
   return (
     <main className={styles.page} data-redesign-homepage ref={rootRef}>
       <HeroSection />
@@ -624,7 +716,9 @@ function HeroSection() {
         className={styles.heroImage}
         fetchPriority="high"
         loading="eager"
-        src="/hero-greek-gods-original-faithful-uhd-4k.png"
+        src="/hero-greek-gods-1920.webp"
+        srcSet="/hero-greek-gods-1280.webp 1280w, /hero-greek-gods-1920.webp 1920w, /hero-greek-gods-2560.webp 2560w"
+        sizes="100vw"
       />
       <header className={styles.nav}>
         <Link aria-label="Antenna home" className={styles.brand} href="/">
@@ -704,7 +798,7 @@ function ShiftScene() {
                       alt=""
                       decoding="async"
                       loading="lazy"
-                      src="/redesign/second-screen/act-1-information-internet-front.png"
+                      src="/redesign/second-screen/act-1-information-internet-front.webp"
                     />
                   </span>
                 </span>
@@ -726,7 +820,7 @@ function ShiftScene() {
                       alt=""
                       decoding="async"
                       loading="lazy"
-                      src="/redesign/second-screen/act-2-individual-card-shatter-sheet.png"
+                      src="/redesign/second-screen/act-2-individual-card-shatter-sheet.webp"
                     />
                   </span>
                 </span>
@@ -745,7 +839,7 @@ function ShiftScene() {
                     <img
                       alt=""
                       loading="lazy"
-                      src="/redesign/second-screen/act-3-agent-social-graph.png"
+                      src="/redesign/second-screen/act-3-agent-social-graph.webp"
                     />
                   </span>
                 </span>
@@ -1064,26 +1158,12 @@ function ConsoleSocialGlyph({ type }: { type: "github" | "x" }) {
       <span className={styles.consoleSocialIcon} data-social-icon="github">
         <span className={styles.consoleSocialFrame}>
           <svg className={styles.consoleSocialSvg} fill="none" preserveAspectRatio="none" viewBox="0 0 25.2 25.2">
-            <foreignObject height="45.2" width="45.2" x="-10" y="-10">
-              <div
-                style={{
-                  backdropFilter: "blur(5px)",
-                  WebkitBackdropFilter: "blur(5px)",
-                  clipPath: "url(#profile_github_blur_clip)",
-                  height: "100%",
-                  width: "100%",
-                }}
-              />
-            </foreignObject>
-            <g data-figma-bg-blur-radius="10">
+            <g>
               <rect fill="#F3EFE7" fillOpacity="0.3" height="24.6" rx="12.3" width="24.6" x="0.3" y="0.3" />
               <rect height="24.6" rx="12.3" stroke="url(#profile_github_stroke)" strokeWidth="0.6" width="24.6" x="0.3" y="0.3" />
               <path d="M12.6 5.80043C16.4675 5.80043 19.6 8.7827 19.6 12.4647C19.599 15.328 17.6805 17.8718 14.8315 18.7872C14.4815 18.8539 14.35 18.6454 14.35 18.4707C14.35 18.2455 14.359 17.5291 14.359 16.638C14.359 16.0135 14.1405 15.6136 13.8865 15.4051C15.444 15.2385 17.0805 14.672 17.0805 12.1148C17.0805 11.3818 16.809 10.7901 16.363 10.3241C16.433 10.1574 16.678 9.47436 16.293 8.55802C16.293 8.55802 15.7065 8.37475 14.368 9.24111C13.808 9.09116 13.213 9.01642 12.618 9.01642C12.023 9.01642 11.428 9.09116 10.868 9.24111C9.5295 8.38332 8.943 8.55802 8.943 8.55802C8.558 9.47436 8.803 10.1574 8.873 10.3241C8.427 10.7906 8.1555 11.3903 8.1555 12.1148C8.1555 14.6639 9.783 15.239 11.3405 15.4056C11.139 15.5722 10.9555 15.864 10.894 16.2967C10.4915 16.4719 9.485 16.7551 8.8555 15.7469C8.724 15.547 8.3305 15.0557 7.7795 15.0638C7.193 15.0724 7.5435 15.3803 7.788 15.5051C8.0855 15.6631 8.4265 16.2548 8.5055 16.4466C8.6455 16.8213 9.1005 17.5382 10.859 17.2297C10.859 17.7881 10.868 18.3126 10.868 18.4707C10.868 18.6459 10.7365 18.8453 10.3865 18.7872C7.527 17.8809 5.5985 15.3337 5.6 12.4642C5.6 8.78222 8.7325 5.80043 12.6 5.80043Z" fill="#1C2A1D" />
             </g>
             <defs>
-              <clipPath id="profile_github_blur_clip" transform="translate(10 10)">
-                <rect height="24.6" rx="12.3" width="24.6" x="0.3" y="0.3" />
-              </clipPath>
               <linearGradient gradientUnits="userSpaceOnUse" id="profile_github_stroke" x1="0.6" x2="29.8394" y1="0.799951" y2="35.4">
                 <stop stopColor="white" stopOpacity="0.6" />
                 <stop offset="1" stopColor="#B88F4F" stopOpacity="0.2" />
@@ -1099,26 +1179,12 @@ function ConsoleSocialGlyph({ type }: { type: "github" | "x" }) {
     <span className={styles.consoleSocialIcon} data-social-icon="x">
       <span className={styles.consoleSocialFrame}>
         <svg className={styles.consoleSocialSvg} fill="none" preserveAspectRatio="none" viewBox="0 0 25.2 25.2">
-          <foreignObject height="45.2" width="45.2" x="-10" y="-10">
-            <div
-              style={{
-                backdropFilter: "blur(5px)",
-                WebkitBackdropFilter: "blur(5px)",
-                clipPath: "url(#profile_x_blur_clip)",
-                height: "100%",
-                width: "100%",
-              }}
-            />
-          </foreignObject>
-          <g data-figma-bg-blur-radius="10">
+          <g>
             <path d="M12.6 0.300195C19.3931 0.300195 24.8998 5.8069 24.8998 12.6C24.8998 19.3931 19.3931 24.8998 12.6 24.8998C5.8069 24.8998 0.300195 19.3931 0.300195 12.6C0.300195 5.8069 5.8069 0.300195 12.6 0.300195Z" fill="#F3EFE7" fillOpacity="0.3" />
             <path d="M12.6 0.300195C19.3931 0.300195 24.8998 5.8069 24.8998 12.6C24.8998 19.3931 19.3931 24.8998 12.6 24.8998C5.8069 24.8998 0.300195 19.3931 0.300195 12.6C0.300195 5.8069 5.8069 0.300195 12.6 0.300195Z" stroke="url(#profile_x_stroke)" strokeWidth="0.6" />
             <path d="M13.7415 11.6811L18.209 6.6H17.1505L13.2712 11.0118L10.1731 6.6H6.6L11.2849 13.2715L6.6 18.6H7.65849L11.7547 13.9408L15.0264 18.6H18.6L13.7415 11.6811ZM12.2915 13.3302L11.817 12.666L8.04009 7.38H9.66604L12.7142 11.646L13.1887 12.3102L17.1509 17.8555H15.525L12.292 13.3306L12.2915 13.3302Z" fill="#1C2A1D" />
           </g>
           <defs>
-            <clipPath id="profile_x_blur_clip" transform="translate(10 10)">
-              <path d="M12.6 0.300195C19.3931 0.300195 24.8998 5.8069 24.8998 12.6C24.8998 19.3931 19.3931 24.8998 12.6 24.8998C5.8069 24.8998 0.300195 19.3931 0.300195 12.6C0.300195 5.8069 5.8069 0.300195 12.6 0.300195Z" />
-            </clipPath>
             <linearGradient gradientUnits="userSpaceOnUse" id="profile_x_stroke" x1="0.6" x2="29.8394" y1="0.799951" y2="35.4">
               <stop stopColor="white" stopOpacity="0.6" />
               <stop offset="1" stopColor="#B88F4F" stopOpacity="0.2" />
@@ -1147,8 +1213,8 @@ function ReasonsFeed({
   onChange: (id: string | null) => void;
 }) {
   return (
-    <section className={styles.reasonsSection} data-scene="reasons-feed">
-      <img alt="" className={styles.reasonsBackground} loading="lazy" src="/redesign/figma/reasons-field-bg.png" />
+    <section className={styles.reasonsSection} data-scene="reasons-feed" id="reasons">
+      <img alt="" className={styles.reasonsBackground} loading="lazy" src="/redesign/figma/reasons-field-bg-2560.webp" />
       <div className={styles.reasonsVeil} />
       <div className={styles.reasonsHeader}>
         <h2>Antenna notices relevance before people do.</h2>
@@ -1207,8 +1273,8 @@ function ReasonPerson({
 
 function DoorAndRooms() {
   return (
-    <section className={styles.doorSection} data-scene="door-scroll">
-      <div className={`${styles.peopleHosts} ${styles.doorFullWorld}`} data-door-full-world aria-hidden="true">
+    <section className={styles.doorSection} data-scene="door-scroll" id="rooms">
+      <div className={`${styles.peopleHosts} ${styles.doorFullWorld}`} data-door-full-world>
         <PeopleHostsContent imageLoading="lazy" />
       </div>
       <div className={styles.sectionHeader} data-door-header>
@@ -1232,8 +1298,13 @@ function DoorAndRooms() {
               className={styles.doorPortalBg}
               data-door-portal-bg
               loading="lazy"
-              src="/redesign/figma/people-hosts-bg.png"
+              src="/redesign/figma/people-hosts-bg-2560.webp"
             />
+            <div className={styles.doorPortalWorld} data-door-portal-world>
+              <div className={`${styles.peopleHosts} ${styles.doorPortalWorldInner}`}>
+                <PeopleHostsContent imageLoading="lazy" />
+              </div>
+            </div>
           </div>
           <div className={styles.doorVideoWrap} aria-hidden="true">
             <video
@@ -1241,11 +1312,11 @@ function DoorAndRooms() {
               data-door-video
               muted
               playsInline
-              poster="/redesign/figma/rooms-door.png"
+              poster="/redesign/figma/rooms-door.webp"
               preload="metadata"
             >
-              <source src="/redesign/figma/rooms-door-transition-transparent.webm" type="video/webm" />
-              <source src="/redesign/figma/rooms-door-transition.mp4" type="video/mp4" />
+              <source src="/redesign/figma/rooms-door-transition-transparent-768.webm" type="video/webm" />
+              <source src="/redesign/figma/rooms-door-transition-alpha-768.mp4" type='video/mp4; codecs="hvc1"' />
             </video>
           </div>
         </div>
@@ -1269,7 +1340,7 @@ function PeopleHostsContent({ imageLoading }: { imageLoading: "eager" | "lazy" }
         className={styles.peopleHostsBg}
         data-door-full-bg
         loading={imageLoading}
-        src="/redesign/figma/people-hosts-bg.png"
+        src="/redesign/figma/people-hosts-bg-2560.webp"
       />
       <div className={styles.peopleHostsContent} data-door-full-content>
         <h2>What are you bringing into the room?</h2>
@@ -1353,7 +1424,7 @@ function FAQSection({
   onChange: (index: number) => void;
 }) {
   return (
-    <section className={styles.faqSection} data-scene="faq">
+    <section className={styles.faqSection} data-scene="faq" id="faq">
       <div className={styles.faqPanel}>
         <h2 className={styles.faqTitle}>FAQ</h2>
         <div className={styles.faqList}>
@@ -1440,8 +1511,8 @@ function FooterSection() {
           <div>
             <h3>PRODUCT</h3>
             <a href="#shift">How it works</a>
-            <a href="#shift">Reasons</a>
-            <a href="#shift">Rooms</a>
+            <a href="#reasons">Reasons</a>
+            <a href="#rooms">Rooms</a>
             <a href="/me">Identity card</a>
           </div>
           <div>

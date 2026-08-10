@@ -20,7 +20,7 @@ const profileConsoleIcons = {
   location: "/redesign/figma/profile-icon-location.svg",
 } as const;
 
-const profileConsoleBackground = "/redesign/figma/profile-console-bg.png";
+const profileConsoleBackground = "/redesign/figma/profile-console-bg.webp";
 
 const consoleCopy = {
   en: {

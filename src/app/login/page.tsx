@@ -133,7 +133,7 @@ export default function LoginPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full font-mono text-sm px-4 py-2.5 bg-transparent outline-none"
+                  className="w-full font-mono text-sm px-4 py-2.5 bg-transparent outline-none max-[1150px]:min-h-11"
                   style={{
                     border: "1px solid rgba(184, 173, 158, 0.3)",
                     color: "#f2eadf",
@@ -146,7 +146,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full font-mono text-sm px-4 py-2.5 transition-colors"
+                className="w-full font-mono text-sm px-4 py-2.5 transition-colors max-[1150px]:min-h-11"
                 style={{
                   border: "1px solid rgba(196, 168, 98, 0.5)",
                   color: "#c4a862",
@@ -174,7 +174,7 @@ export default function LoginPage() {
             {/* Google */}
             <button
               onClick={handleGoogleLogin}
-              className="w-full font-mono text-sm px-4 py-2.5 transition-colors flex items-center justify-center gap-3"
+              className="w-full font-mono text-sm px-4 py-2.5 transition-colors flex items-center justify-center gap-3 max-[1150px]:min-h-11"
               style={{
                 border: "1px solid rgba(184, 173, 158, 0.25)",
                 color: "#f2eadf",
@@ -216,7 +216,7 @@ export default function LoginPage() {
                   autoComplete="one-time-code"
                   value={code}
                   onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                  className="w-full font-mono text-2xl tracking-[0.3em] text-center px-4 py-3 bg-transparent outline-none"
+                  className="w-full font-mono text-2xl tracking-[0.3em] text-center px-4 py-3 bg-transparent outline-none max-[1150px]:min-h-11"
                   style={{
                     border: "1px solid rgba(184, 173, 158, 0.3)",
                     color: "#f2eadf",
@@ -231,7 +231,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading || code.length < 6}
-                className="w-full font-mono text-sm px-4 py-2.5 transition-colors"
+                className="w-full font-mono text-sm px-4 py-2.5 transition-colors max-[1150px]:min-h-11"
                 style={{
                   border: "1px solid rgba(196, 168, 98, 0.5)",
                   color: "#c4a862",
@@ -251,14 +251,14 @@ export default function LoginPage() {
                   setCode("");
                   setError(null);
                 }}
-                className="font-mono text-xs text-[#d2c5b6] hover:text-[#f2eadf] transition-colors"
+                className="inline-flex items-center font-mono text-xs text-[#d2c5b6] hover:text-[#f2eadf] transition-colors max-[1150px]:min-h-11 max-[1150px]:py-3"
               >
                 ← Change email
               </button>
               <button
                 onClick={handleResend}
                 disabled={loading}
-                className="font-mono text-xs text-[#c4a862] hover:text-[#e2c46e] transition-colors disabled:opacity-50"
+                className="inline-flex items-center font-mono text-xs text-[#c4a862] hover:text-[#e2c46e] transition-colors disabled:opacity-50 max-[1150px]:min-h-11 max-[1150px]:py-3"
               >
                 Resend code
               </button>

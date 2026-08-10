@@ -69,7 +69,7 @@ interface ProfileEditorProps {
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
-    <label className="mb-1.5 block font-mono text-[10px] uppercase tracking-[0.14em] text-[#d8cab8]">
+    <label className="mb-1.5 block font-mono text-[12px] min-[1151px]:text-[10px] uppercase tracking-[0.14em] text-[#d8cab8]">
       {children}
     </label>
   );
@@ -95,11 +95,11 @@ function TextInput({
   return (
     <div>
       <div className="mb-1.5 flex items-center justify-between gap-3">
-        <label className="block font-mono text-[10px] uppercase tracking-[0.14em] text-[#d8cab8]">
+        <label className="block font-mono text-[12px] min-[1151px]:text-[10px] uppercase tracking-[0.14em] text-[#d8cab8]">
           {label}
         </label>
         {showCount && (
-          <span className="shrink-0 font-mono text-[10px] text-[#d8cab8]/62">
+          <span className="shrink-0 font-mono text-[12px] min-[1151px]:text-[10px] text-[#d8cab8]/62">
             {value.length}/{maxLength}
           </span>
         )}
@@ -112,7 +112,7 @@ function TextInput({
         className="w-full border border-[#d7b866]/24 bg-[#070807]/70 px-3 py-2.5 font-mono text-sm text-[#A89888] outline-none transition-colors placeholder:text-[#d8cab8]/48 focus:border-[#e2c46e]/70"
       />
       {helper && (
-        <p className="mt-1.5 font-mono text-[10px] leading-relaxed text-[#d8cab8]/72">{helper}</p>
+        <p className="mt-1.5 font-mono text-[12px] min-[1151px]:text-[10px] leading-relaxed text-[#d8cab8]/72">{helper}</p>
       )}
     </div>
   );
@@ -136,11 +136,11 @@ function TextArea({
   return (
     <div>
       <div className="mb-1.5 flex items-center justify-between gap-3">
-        <label className="block font-mono text-[10px] uppercase tracking-[0.14em] text-[#d8cab8]">
+        <label className="block font-mono text-[12px] min-[1151px]:text-[10px] uppercase tracking-[0.14em] text-[#d8cab8]">
           {label}
         </label>
         {maxLength && (
-          <span className="shrink-0 font-mono text-[10px] text-[#d8cab8]/62">
+          <span className="shrink-0 font-mono text-[12px] min-[1151px]:text-[10px] text-[#d8cab8]/62">
             {value.length}/{maxLength}
           </span>
         )}
@@ -217,7 +217,7 @@ export function ProfileEditor({
   return (
     <div className="space-y-5">
       <EngravedPanel quiet className="space-y-4 p-4">
-        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#e2c46e]">
+        <p className="font-mono text-[12px] min-[1151px]:text-[10px] uppercase tracking-[0.16em] text-[#e2c46e]">
           {t.publicCard}
         </p>
         <div className="grid gap-4 md:grid-cols-2">
@@ -229,11 +229,11 @@ export function ProfileEditor({
           <div>
             <div className="mb-1.5 flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
-                <label className="block font-mono text-[10px] uppercase tracking-[0.14em] text-[#d8cab8]">
+                <label className="block font-mono text-[12px] min-[1151px]:text-[10px] uppercase tracking-[0.14em] text-[#d8cab8]">
                   {t.publicSlug}
                 </label>
                 {slugStatus === "checking" && (
-                  <span className="font-mono text-[10px] text-[#d8cab8]/60">…</span>
+                  <span className="font-mono text-[12px] min-[1151px]:text-[10px] text-[#d8cab8]/60">…</span>
                 )}
                 {slugStatus === "available" && (
                   <Check size={12} className="text-emerald-300" />
@@ -241,7 +241,7 @@ export function ProfileEditor({
                 {slugStatus === "taken" && (
                   <span className="inline-flex items-center gap-1">
                     <AlertCircle size={12} className="text-red-300" />
-                    <span className="font-mono text-[10px] text-red-300">{t.slugTaken}</span>
+                    <span className="font-mono text-[12px] min-[1151px]:text-[10px] text-red-300">{t.slugTaken}</span>
                   </span>
                 )}
               </div>
@@ -259,7 +259,7 @@ export function ProfileEditor({
                   : "border-[#d7b866]/24"
               }`}
             />
-            <p className="mt-1.5 font-mono text-[10px] leading-relaxed text-[#d8cab8]/72">{t.publicSlugHint}</p>
+            <p className="mt-1.5 font-mono text-[12px] min-[1151px]:text-[10px] leading-relaxed text-[#d8cab8]/72">{t.publicSlugHint}</p>
           </div>
         </div>
         <div className="space-y-4 border-t border-[#d7b866]/12 pt-4">
@@ -283,7 +283,7 @@ export function ProfileEditor({
                     interestTags: profileDraft.interestTags.filter((item) => item !== tag),
                   })
                 }
-                className="inline-flex items-center gap-1 border border-[#d7b866]/20 bg-[#d7b866]/8 px-2.5 py-1 font-mono text-[10px] text-[#d8cab8] transition-colors hover:border-red-300/45 hover:text-red-200"
+                className="inline-flex items-center gap-1 border border-[#d7b866]/20 bg-[#d7b866]/8 px-2.5 py-1 font-mono text-[12px] min-[1151px]:text-[10px] text-[#d8cab8] transition-colors hover:border-red-300/45 hover:text-red-200 max-[1150px]:min-h-11 max-[1150px]:py-2.5"
               >
                 {tag}
                 <X size={12} />
@@ -309,7 +309,7 @@ export function ProfileEditor({
             <button
               onClick={addTag}
               disabled={!tagInput.trim() || profileDraft.interestTags.length >= 5}
-              className="inline-flex items-center justify-center border border-[#d7b866]/40 px-3 text-[#e2c46e] transition-colors hover:bg-[#d7b866]/12 disabled:opacity-40"
+              className="inline-flex items-center justify-center border border-[#d7b866]/40 px-3 text-[#e2c46e] transition-colors hover:bg-[#d7b866]/12 disabled:opacity-40 max-[1150px]:min-h-11 max-[1150px]:min-w-11"
               aria-label={t.addInterestTag}
             >
               <Plus size={16} />
@@ -336,7 +336,7 @@ export function ProfileEditor({
       </EngravedPanel>
 
       <EngravedPanel quiet className="profile-editor-signal-panel space-y-4 p-4">
-        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#e2c46e]">
+        <p className="font-mono text-[12px] min-[1151px]:text-[10px] uppercase tracking-[0.16em] text-[#e2c46e]">
           {t.signalDetails}
         </p>
         <div className="profile-editor-signal-grid grid gap-4">
@@ -356,7 +356,7 @@ export function ProfileEditor({
               <button
                 onClick={onUpdateGps}
                 disabled={gpsState === "requesting"}
-                className="profile-editor-gps-button inline-flex items-center gap-1.5 border border-[#d7b866]/24 px-3 py-2.5 font-mono text-xs text-[#A89888] transition-colors hover:border-[#d7b866]/50 hover:text-[#e2c46e] disabled:opacity-50"
+                className="profile-editor-gps-button inline-flex items-center gap-1.5 border border-[#d7b866]/24 px-3 py-2.5 font-mono text-xs text-[#A89888] transition-colors hover:border-[#d7b866]/50 hover:text-[#e2c46e] disabled:opacity-50 max-[1150px]:min-h-11"
               >
                 <RefreshCw size={14} className={gpsState === "requesting" ? "animate-spin" : ""} />
                 <span className="truncate">{gpsActionLabel}</span>
@@ -405,10 +405,10 @@ export function ProfileEditor({
 
       <EngravedPanel quiet className="space-y-4 p-4">
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#e2c46e]">
+          <p className="font-mono text-[12px] min-[1151px]:text-[10px] uppercase tracking-[0.16em] text-[#e2c46e]">
             {t.profileContext}
           </p>
-          <p className="mt-1 font-mono text-[11px] leading-relaxed text-[#d8cab8]">
+          <p className="mt-1 font-mono text-[12px] min-[1151px]:text-[11px] leading-relaxed text-[#d8cab8]">
             {t.contextBody}
           </p>
         </div>
@@ -420,7 +420,7 @@ export function ProfileEditor({
           rows={6}
           maxLength={PROFILE_MORE_INFORMATION_MAX_LENGTH}
         />
-        <p className="border border-[#d7b866]/18 bg-black/10 p-3 font-mono text-[11px] leading-relaxed text-[#d8cab8]">
+        <p className="border border-[#d7b866]/18 bg-black/10 p-3 font-mono text-[12px] min-[1151px]:text-[11px] leading-relaxed text-[#d8cab8]">
           {t.contextAgentOnlyHint}
         </p>
       </EngravedPanel>
@@ -429,7 +429,7 @@ export function ProfileEditor({
         <button
           onClick={saveProfile}
           disabled={saveState === "saving"}
-          className="inline-flex w-fit items-center gap-2 border border-[#d7b866]/44 bg-[#d7b866]/10 px-4 py-2.5 font-mono text-xs text-[#e2c46e] transition-colors hover:bg-[#d7b866]/16 disabled:opacity-50"
+          className="inline-flex w-fit items-center gap-2 border border-[#d7b866]/44 bg-[#d7b866]/10 px-4 py-2.5 font-mono text-xs text-[#e2c46e] transition-colors hover:bg-[#d7b866]/16 disabled:opacity-50 max-[1150px]:min-h-11"
         >
           {saveState === "saved" ? <Check size={15} /> : <Save size={15} />}
           {saveProfileLabel}

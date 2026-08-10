@@ -1,6 +1,25 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode, type CSSProperties } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+  type CSSProperties,
+} from "react";
+
+const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
+
+function subscribeToReducedMotion(onChange: () => void) {
+  const query = window.matchMedia(reducedMotionQuery);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+
+function getReducedMotionSnapshot() {
+  return window.matchMedia(reducedMotionQuery).matches;
+}
 
 export function ScrollReveal({
   children,
@@ -15,8 +34,14 @@ export function ScrollReveal({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const reducedMotion = useSyncExternalStore(
+    subscribeToReducedMotion,
+    getReducedMotionSnapshot,
+    () => false,
+  );
 
   useEffect(() => {
+    if (reducedMotion) return;
     const el = ref.current;
     if (!el) return;
     const io = new IntersectionObserver(
@@ -30,7 +55,9 @@ export function ScrollReveal({
     );
     io.observe(el);
     return () => io.disconnect();
-  }, []);
+  }, [reducedMotion]);
+
+  const isVisible = reducedMotion || visible;
 
   return (
     <div
@@ -38,11 +65,13 @@ export function ScrollReveal({
       className={className}
       style={{
         ...style,
-        opacity: visible ? 1 : 0,
-        transform: visible
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible
           ? (style?.transform || "translateY(0)")
           : `translateY(${offset}px)`,
-        transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
+        transition: reducedMotion
+          ? "none"
+          : "opacity 0.8s ease-out, transform 0.8s ease-out",
       }}
     >
       {children}

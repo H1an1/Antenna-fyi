@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { parseMoreInformation } from "@/lib/profile";
 import type { Metadata } from "next";
+import { cache } from "react";
 import { PublicPageClient } from "./PublicPageClient";
 
 const SUPABASE_URL = "https://bcudjloikmpcqwcptuyd.supabase.co";
@@ -27,7 +28,7 @@ type PublicProfile = {
   more_information?: string;
 };
 
-async function getProfile(slug: string): Promise<PublicProfile | null> {
+const getProfile = cache(async (slug: string): Promise<PublicProfile | null> => {
   try {
     const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     const { data, error } = await sb.rpc("get_profile_by_slug", { p_slug: slug });
@@ -36,7 +37,7 @@ async function getProfile(slug: string): Promise<PublicProfile | null> {
   } catch {
     return null;
   }
-}
+});
 
 export async function generateMetadata({
   params,

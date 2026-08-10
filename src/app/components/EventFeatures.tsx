@@ -111,9 +111,9 @@ export function EventFeatures() {
           ].map((f) => (
             <div
               key={f.title}
-              className="border border-[#b8ad9e]/10 p-6 backdrop-blur-sm"
+              className="border border-[#b8ad9e]/10 p-6"
               style={{
-                backgroundColor: "rgba(42, 34, 24, 0.6)",
+                backgroundColor: "rgba(42, 34, 24, 0.72)",
                 minHeight: "180px",
               }}
             >
@@ -121,7 +121,7 @@ export function EventFeatures() {
               <h3 className="font-serif text-lg text-[#e8e0d4] mb-2">
                 {f.title}
               </h3>
-              <p className="font-mono text-[11px] md:text-[12px] text-[#b8ad9e] leading-relaxed">
+              <p className="font-mono text-[12px] text-[#b8ad9e] leading-relaxed">
                 {f.desc}
               </p>
             </div>

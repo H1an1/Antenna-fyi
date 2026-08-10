@@ -44,14 +44,14 @@ export function InstallBlock() {
     >
       {/* Tabs */}
       <div
-        className="flex gap-1 px-4 pt-3 pb-2"
+        className="flex gap-1 overflow-x-auto px-4 pt-3 pb-2"
         style={{ borderBottom: "1px solid rgba(184, 173, 158, 0.08)" }}
       >
         {PLATFORMS.map((m) => (
           <button
             key={m}
             onClick={() => setActive(m)}
-            className="font-mono text-xs px-3 py-1 transition-colors rounded-sm"
+            className="shrink-0 font-mono text-xs px-3 py-1 transition-colors rounded-sm max-[1150px]:min-h-11"
             style={{
               color: active === m ? "#c4a862" : "rgba(184, 173, 158, 0.5)",
               backgroundColor:
@@ -65,12 +65,12 @@ export function InstallBlock() {
 
       {/* Command + copy */}
       <div className="flex items-start justify-between gap-3 px-5 py-3">
-        <code className="font-mono text-[11px] md:text-[13px] text-[#e8dfcc] select-all break-words whitespace-pre-wrap">
+        <code className="font-mono text-[12px] md:text-[13px] text-[#e8dfcc] select-all break-words whitespace-pre-wrap">
           {COMMANDS[active]}
         </code>
         <button
           onClick={handleCopy}
-          className="shrink-0 p-1.5 rounded transition-colors"
+          className="shrink-0 p-1.5 rounded transition-colors max-[1150px]:inline-flex max-[1150px]:min-h-11 max-[1150px]:min-w-11 max-[1150px]:items-center max-[1150px]:justify-center"
           style={{
             border: "1px solid rgba(184, 173, 158, 0.2)",
             color: copied ? "#c4a862" : "rgba(184, 173, 158, 0.5)",
@@ -95,7 +95,7 @@ export function InstallBlock() {
         className="px-5 pb-3"
         style={{ borderTop: "1px solid rgba(184, 173, 158, 0.05)" }}
       >
-        <p className="font-mono text-[10px] text-[#b8ad9e]/60 pt-2">
+        <p className="font-mono text-[12px] min-[1151px]:text-[10px] text-[#b8ad9e]/60 pt-2">
           {NOTES[active]}
         </p>
       </div>

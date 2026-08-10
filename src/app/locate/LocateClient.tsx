@@ -277,12 +277,12 @@ export default function LocateClient() {
                   border: "1px solid rgba(184, 173, 158, 0.1)",
                 }}
               >
-                <p className="font-mono text-[11px] text-[#b8ad9e]/70 mb-1">Your location (blurred ~150m)</p>
+                <p className="font-mono text-[12px] min-[1151px]:text-[11px] text-[#b8ad9e]/70 mb-1">Your location (blurred ~150m)</p>
                 <p className="font-mono text-[13px] text-[#e8e0d4]">
                   {coords.lat.toFixed(3)}, {coords.lng.toFixed(3)}
                 </p>
                 {areaName && (
-                  <p className="font-mono text-[11px] text-[#c4a862] mt-1">{areaName}</p>
+                  <p className="font-mono text-[12px] min-[1151px]:text-[11px] text-[#c4a862] mt-1">{areaName}</p>
                 )}
               </div>
             )}
@@ -294,7 +294,7 @@ export default function LocateClient() {
             <button
               onClick={handleRefresh}
               disabled={refreshing}
-              className="font-mono text-xs px-4 py-2 transition-colors"
+              className="font-mono text-xs px-4 py-2 transition-colors max-[1150px]:min-h-11"
               style={{
                 border: "1px solid rgba(184, 173, 158, 0.2)",
                 color: refreshing ? "rgba(184, 173, 158, 0.3)" : "#c4a862",
@@ -308,7 +308,7 @@ export default function LocateClient() {
             </button>
 
             {lastUpdate && (
-              <p className="font-mono text-[10px] text-[#b8ad9e]/50 mt-3">
+              <p className="font-mono text-[12px] min-[1151px]:text-[10px] text-[#b8ad9e]/50 mt-3">
                 Last update: {lastUpdate}
               </p>
             )}
@@ -331,15 +331,29 @@ export default function LocateClient() {
           </div>
         )}
 
-        {/* Debug log — small text at bottom */}
+        {/* Debug log — collapsed unless troubleshooting is needed. */}
         {debugLog.length > 0 && (
-          <div className="mt-6 pt-4" style={{ borderTop: "1px solid rgba(184, 173, 158, 0.05)" }}>
-            {debugLog.map((msg, i) => (
-              <p key={i} className="font-mono text-[9px] text-[#b8ad9e]/30 leading-relaxed">
-                {msg}
-              </p>
-            ))}
-          </div>
+          <>
+            <details className="mt-6 pt-4 text-left min-[1151px]:hidden" style={{ borderTop: "1px solid rgba(184, 173, 158, 0.05)" }}>
+              <summary className="flex min-h-11 cursor-pointer items-center font-mono text-[12px] text-[#b8ad9e]/50">
+                Debug log
+              </summary>
+              <div className="mt-2">
+                {debugLog.map((msg, i) => (
+                  <p key={i} className="font-mono text-[9px] text-[#b8ad9e]/30 leading-relaxed">
+                    {msg}
+                  </p>
+                ))}
+              </div>
+            </details>
+            <div className="mt-6 pt-4 max-[1150px]:hidden" style={{ borderTop: "1px solid rgba(184, 173, 158, 0.05)" }}>
+              {debugLog.map((msg, i) => (
+                <p key={i} className="font-mono text-[9px] text-[#b8ad9e]/30 leading-relaxed">
+                  {msg}
+                </p>
+              ))}
+            </div>
+          </>
         )}
       </div>
     </main>
